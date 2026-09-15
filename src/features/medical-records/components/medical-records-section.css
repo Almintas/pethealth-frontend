@@ -1,0 +1,109 @@
+.medical-records-section {
+  margin-bottom: 2rem;
+}
+
+.medical-records-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.medical-records-section__header h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.medical-records-section__add-button {
+  padding: 0.55rem 0.9rem;
+  border: none;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+.medical-records-section__add-button:hover {
+  background: #1d4ed8;
+}
+
+.medical-records-section__form-panel {
+  margin-bottom: 1rem;
+}
+
+.medical-records-section__status {
+  margin: 0;
+  color: #475569;
+}
+
+.medical-records-section__error {
+  margin: 0;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.5rem;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.medical-records-section__empty {
+  margin: 0;
+  padding: 1rem 1.125rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.75rem;
+  color: #64748b;
+  background: #f8fafc;
+}
+
+.medical-records-section__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+
+.medical-records-section__card {
+  padding: 1rem 1.125rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.medical-records-section__card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.medical-records-section__card-title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.medical-records-section__card-date {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.medical-records-section__card-type {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.medical-records-section__card-text {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: #334155;
+  white-space: pre-wrap;
+}

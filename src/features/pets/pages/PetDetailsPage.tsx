@@ -2,13 +2,13 @@ import { useApolloClient } from '@apollo/client/react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import { MedicalRecordsSection } from '../../medical-records';
 import * as petsService from '../pets.service';
 import type { Pet } from '../types';
 import { formatPetDate } from '../utils/format-pet-date';
 import './pet-details-page.css';
 
 const FUTURE_SECTIONS = [
-  'Medical Records',
   'Vaccinations',
   'Medications',
   'Appointments',
@@ -132,6 +132,8 @@ export function PetDetailsPage() {
                 <dd>{formatPetDate(pet.createdAt)}</dd>
               </div>
             </dl>
+
+            <MedicalRecordsSection petId={pet.id} />
 
             <div className="pet-details__future">
               <h2>Health &amp; care</h2>
