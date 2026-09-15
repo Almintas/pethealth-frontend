@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { PetForm } from '../components/PetForm';
 import { MY_PETS_QUERY } from '../graphql';
@@ -79,20 +80,22 @@ export function PetsPage() {
         {!loading && !error && pets.length > 0 ? (
           <ul className="pets-page__list">
             {pets.map((pet) => (
-              <li key={pet.id} className="pets-page__card">
-                <h2 className="pets-page__name">{pet.name}</h2>
-                <dl className="pets-page__meta">
-                  <div>
-                    <dt>Species</dt>
-                    <dd>{pet.species}</dd>
-                  </div>
-                  {pet.breed ? (
+              <li key={pet.id}>
+                <Link className="pets-page__card" to={`/pets/${pet.id}`}>
+                  <h2 className="pets-page__name">{pet.name}</h2>
+                  <dl className="pets-page__meta">
                     <div>
-                      <dt>Breed</dt>
-                      <dd>{pet.breed}</dd>
+                      <dt>Species</dt>
+                      <dd>{pet.species}</dd>
                     </div>
-                  ) : null}
-                </dl>
+                    {pet.breed ? (
+                      <div>
+                        <dt>Breed</dt>
+                        <dd>{pet.breed}</dd>
+                      </div>
+                    ) : null}
+                  </dl>
+                </Link>
               </li>
             ))}
           </ul>

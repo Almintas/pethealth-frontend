@@ -1,0 +1,142 @@
+.pet-details {
+  flex: 1;
+  padding: 2rem 1.5rem;
+}
+
+.pet-details__container {
+  width: 100%;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+
+.pet-details__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.pet-details__back {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.pet-details__back:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+.pet-details__edit {
+  padding: 0.55rem 0.9rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #64748b;
+  background: #f8fafc;
+  cursor: not-allowed;
+}
+
+.pet-details__status {
+  margin: 0;
+  color: #475569;
+}
+
+.pet-details__error {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.5rem;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+}
+
+.pet-details__header {
+  margin-bottom: 1.5rem;
+}
+
+.pet-details__header h1 {
+  margin: 0 0 0.35rem;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.pet-details__subtitle {
+  margin: 0;
+  color: #64748b;
+}
+
+.pet-details__facts {
+  margin: 0 0 2rem;
+  padding: 1.25rem;
+  display: grid;
+  gap: 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+@media (min-width: 640px) {
+  .pet-details__facts {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.pet-details__facts div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.pet-details__facts dt {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.pet-details__facts dd {
+  margin: 0;
+  color: #0f172a;
+}
+
+.pet-details__future h2 {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.pet-details__future-grid {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 720px) {
+  .pet-details__future-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.pet-details__future-card {
+  padding: 1rem 1.125rem;
+  border: 1px dashed #cbd5e1;
+  border-radius: 0.75rem;
+  background: #f8fafc;
+}
+
+.pet-details__future-card h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.pet-details__future-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #64748b;
+}

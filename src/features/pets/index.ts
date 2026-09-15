@@ -1,3 +1,4 @@
+export { PetDetailsPage } from './pages/PetDetailsPage';
 export { PetsPage } from './pages/PetsPage';
 export * as petsService from './pets.service';
 export {
