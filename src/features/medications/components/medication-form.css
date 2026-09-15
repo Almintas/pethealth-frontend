@@ -1,0 +1,153 @@
+.medication-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.medication-form__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+}
+
+.medication-form__fields {
+  display: grid;
+  gap: 1rem;
+}
+
+.medication-form__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 560px) {
+  .medication-form__row--split {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .medication-form__row--dosage {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.medication-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.medication-form__label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.medication-form__required {
+  color: #dc2626;
+}
+
+.medication-form__input,
+.medication-form__textarea {
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font: inherit;
+  color: #0f172a;
+  background: #fff;
+}
+
+.medication-form__textarea {
+  min-height: 5rem;
+  resize: vertical;
+}
+
+.medication-form__input:focus,
+.medication-form__textarea:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 1px;
+  border-color: #3b82f6;
+}
+
+.medication-form__input--error,
+.medication-form__textarea--error {
+  border-color: #dc2626;
+}
+
+.medication-form__checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.medication-form__checkbox-row input {
+  width: 1rem;
+  height: 1rem;
+}
+
+.medication-form__error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #dc2626;
+}
+
+.medication-form__alert {
+  margin: 0;
+  padding: 0.75rem 0.875rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+}
+
+.medication-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.medication-form__submit {
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+.medication-form__submit:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.medication-form__submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.medication-form__cancel {
+  padding: 0.65rem 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #334155;
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.medication-form__cancel:hover:not(:disabled) {
+  background: #f8fafc;
+}
+
+.medication-form__cancel:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}

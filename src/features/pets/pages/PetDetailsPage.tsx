@@ -3,17 +3,14 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { MedicalRecordsSection } from '../../medical-records';
+import { MedicationsSection } from '../../medications';
 import { VaccinationsSection } from '../../vaccinations';
 import * as petsService from '../pets.service';
 import type { Pet } from '../types';
 import { formatPetDate } from '../utils/format-pet-date';
 import './pet-details-page.css';
 
-const FUTURE_SECTIONS = [
-  'Medications',
-  'Appointments',
-  'Reminders',
-] as const;
+const FUTURE_SECTIONS = ['Appointments', 'Reminders'] as const;
 
 export function PetDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -135,6 +132,7 @@ export function PetDetailsPage() {
 
             <MedicalRecordsSection petId={pet.id} />
             <VaccinationsSection petId={pet.id} />
+            <MedicationsSection petId={pet.id} />
 
             <div className="pet-details__future">
               <h2>Health &amp; care</h2>
