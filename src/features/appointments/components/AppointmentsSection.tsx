@@ -1,0 +1,137 @@
+import { useApolloClient, useQuery } from '@apollo/client/react';
+import { useState } from 'react';
+import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import { APPOINTMENTS_QUERY } from '../graphql';
+import * as appointmentsService from '../appointments.service';
+import type {
+  AppointmentsQueryResult,
+  AppointmentsQueryVariables,
+  CreateAppointmentInput,
+} from '../types';
+import { formatAppointmentDateTime } from '../utils/format-appointment-datetime';
+import { AppointmentForm } from './AppointmentForm';
+import './appointments-section.css';
+
+type AppointmentsSectionProps = {
+  petId: string;
+};
+
+export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
+  const client = useApolloClient();
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const { data, loading, error, refetch } = useQuery<
+    AppointmentsQueryResult,
+    AppointmentsQueryVariables
+  >(APPOINTMENTS_QUERY, {
+    variables: { petId },
+    fetchPolicy: 'network-only',
+  });
+
+  const appointments = data?.appointments ?? [];
+
+  const handleCreateAppointment = async (input: CreateAppointmentInput) => {
+    await appointmentsService.createAppointment(client, input);
+    await refetch();
+    setIsFormOpen(false);
+  };
+
+  return (
+    <section
+      className="appointments-section"
+      aria-labelledby="appointments-title"
+    >
+      <div className="appointments-section__header">
+        <h2 id="appointments-title">Appointments</h2>
+        {!loading && !error ? (
+          <button
+            type="button"
+            className="appointments-section__add-button"
+            onClick={() => setIsFormOpen((open) => !open)}
+            aria-expanded={isFormOpen}
+            aria-controls="appointment-form-panel"
+          >
+            {isFormOpen ? 'Close form' : 'Add Appointment'}
+          </button>
+        ) : null}
+      </div>
+
+      {isFormOpen && !loading && !error ? (
+        <div
+          id="appointment-form-panel"
+          className="appointments-section__form-panel"
+        >
+          <AppointmentForm
+            petId={petId}
+            onSubmit={handleCreateAppointment}
+            onCancel={() => setIsFormOpen(false)}
+          />
+        </div>
+      ) : null}
+
+      {loading ? (
+        <p className="appointments-section__status" role="status">
+          Loading appointments…
+        </p>
+      ) : null}
+
+      {error ? (
+        <p className="appointments-section__error" role="alert">
+          {getAuthErrorMessage(error)}
+        </p>
+      ) : null}
+
+      {!loading && !error && appointments.length === 0 ? (
+        <p className="appointments-section__empty">
+          No appointments yet for this pet.
+        </p>
+      ) : null}
+
+      {!loading && !error && appointments.length > 0 ? (
+        <ul className="appointments-section__list">
+          {appointments.map((appointment) => (
+            <li key={appointment.id} className="appointments-section__card">
+              <div className="appointments-section__card-header">
+                <h3 className="appointments-section__card-title">
+                  {appointment.type}
+                </h3>
+                <span className="appointments-section__status-badge">
+                  {appointment.status}
+                </span>
+              </div>
+              <dl className="appointments-section__meta">
+                <div>
+                  <dt>Scheduled</dt>
+                  <dd>{formatAppointmentDateTime(appointment.scheduledAt)}</dd>
+                </div>
+                {appointment.clinicName ? (
+                  <div>
+                    <dt>Clinic</dt>
+                    <dd>{appointment.clinicName}</dd>
+                  </div>
+                ) : null}
+                {appointment.veterinarianName ? (
+                  <div>
+                    <dt>Veterinarian</dt>
+                    <dd>{appointment.veterinarianName}</dd>
+                  </div>
+                ) : null}
+                {appointment.reason ? (
+                  <div>
+                    <dt>Reason</dt>
+                    <dd>{appointment.reason}</dd>
+                  </div>
+                ) : null}
+                {appointment.notes ? (
+                  <div>
+                    <dt>Notes</dt>
+                    <dd>{appointment.notes}</dd>
+                  </div>
+                ) : null}
+              </dl>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+    </section>
+  );
+}

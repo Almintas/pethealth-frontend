@@ -2,6 +2,7 @@ import { useApolloClient } from '@apollo/client/react';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import { AppointmentsSection } from '../../appointments';
 import { MedicalRecordsSection } from '../../medical-records';
 import { MedicationsSection } from '../../medications';
 import { VaccinationsSection } from '../../vaccinations';
@@ -10,7 +11,7 @@ import type { Pet } from '../types';
 import { formatPetDate } from '../utils/format-pet-date';
 import './pet-details-page.css';
 
-const FUTURE_SECTIONS = ['Appointments', 'Reminders'] as const;
+const FUTURE_SECTIONS = ['Reminders'] as const;
 
 export function PetDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -133,6 +134,7 @@ export function PetDetailsPage() {
             <MedicalRecordsSection petId={pet.id} />
             <VaccinationsSection petId={pet.id} />
             <MedicationsSection petId={pet.id} />
+            <AppointmentsSection petId={pet.id} />
 
             <div className="pet-details__future">
               <h2>Health &amp; care</h2>
