@@ -1,0 +1,29 @@
+.loading-skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-3);
+  padding: var(--ph-space-2) 0;
+}
+
+.loading-skeleton__line {
+  height: 0.85rem;
+  border-radius: var(--ph-radius-full);
+  background: linear-gradient(
+    90deg,
+    var(--ph-color-surface-muted) 0%,
+    var(--ph-color-surface-hover) 50%,
+    var(--ph-color-surface-muted) 100%
+  );
+  background-size: 200% 100%;
+  animation: loading-skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes loading-skeleton-shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}

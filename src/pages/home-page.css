@@ -1,53 +1,156 @@
 .home-page {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-6);
+}
+
+.home-page__welcome {
+  background: var(--ph-color-surface);
+  border-color: var(--ph-color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+.home-page__welcome::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: var(--ph-color-primary);
+  opacity: 0.85;
+}
+
+.home-page__title {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--ph-color-text);
+}
+
+.home-page__subtitle {
+  margin: var(--ph-space-2) 0 0;
+  font-size: 1rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.home-page__section-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 2rem 1.5rem;
+  justify-content: space-between;
+  gap: var(--ph-space-3);
+  margin-bottom: var(--ph-space-4);
 }
 
-.home-page__card {
-  width: 100%;
-  max-width: 32rem;
-  padding: 2rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
-}
-
-.home-page h1 {
-  margin: 0 0 0.5rem;
-  font-size: 1.75rem;
-  font-weight: 600;
-}
-
-.home-page__greeting {
-  margin: 0 0 1.5rem;
-  color: #334155;
-}
-
-.home-page__details {
-  margin: 0 0 1.5rem;
-  display: grid;
-  gap: 1rem;
-}
-
-.home-page__details div {
-  display: grid;
-  gap: 0.25rem;
-}
-
-.home-page__details dt {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: #64748b;
-}
-
-.home-page__details dd {
+.home-page__section-header h2 {
   margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--ph-color-text);
+}
+
+.home-page__pet-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+  gap: var(--ph-space-4);
+}
+
+.home-page__pet-card {
+  display: flex;
+  gap: var(--ph-space-4);
+  padding: var(--ph-space-4);
+  text-decoration: none;
+  background: var(--ph-color-surface);
+  transition: box-shadow 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.home-page__pet-card:hover {
+  box-shadow: var(--ph-shadow-md);
+  transform: translateY(-1px);
+  border-color: var(--ph-color-border-strong);
+  background: var(--ph-color-surface-elevated);
+}
+
+.home-page__pet-body h3 {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--ph-color-text);
+}
+
+.home-page__pet-species {
+  margin: var(--ph-space-1) 0 0;
+  font-size: 0.9375rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.home-page__pet-meta {
+  margin: var(--ph-space-1) 0 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-text-muted);
+}
+
+.home-page__pet-cta {
+  display: inline-block;
+  margin-top: var(--ph-space-3);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+}
+
+.home-page__upcoming-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ph-space-4);
+}
+
+@media (max-width: 800px) {
+  .home-page__upcoming-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.home-page__upcoming-panel {
+  background: var(--ph-color-surface);
+}
+
+.home-page__upcoming-panel h3 {
+  margin: 0 0 var(--ph-space-4);
   font-size: 1rem;
-  color: #0f172a;
+  font-weight: 700;
+  color: var(--ph-color-text);
+}
+
+.home-page__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-3);
+}
+
+.home-page__timeline-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ph-space-3);
+  padding: var(--ph-space-3);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-color-surface-muted);
+  border: 1px solid var(--ph-color-border);
+}
+
+.home-page__timeline-item strong {
+  font-size: 0.9375rem;
+  color: var(--ph-color-text);
+}
+
+.home-page__timeline-item p {
+  margin: var(--ph-space-1) 0 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-text-secondary);
 }

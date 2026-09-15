@@ -9,6 +9,9 @@ import type {
   VaccinationsQueryVariables,
 } from '../types';
 import * as vaccinationsService from '../vaccinations.service';
+import { EmptyState } from '../../../components/EmptyState';
+import { ErrorAlert } from '../../../components/ErrorAlert';
+import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
 import { VaccinationForm } from './VaccinationForm';
 import './vaccinations-section.css';
 
@@ -37,11 +40,18 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
 
   return (
     <section
+      id="vaccinations"
       className="vaccinations-section"
       aria-labelledby="vaccinations-title"
     >
       <div className="vaccinations-section__header">
-        <h2 id="vaccinations-title">Vaccinations</h2>
+        <div>
+          <h2 id="vaccinations-title">Vaccinations</h2>
+          <p className="vaccinations-section__description">
+            Immunization history and booster schedules.
+            {!loading && !error ? ` (${vaccinations.length})` : ''}
+          </p>
+        </div>
         {!loading && !error ? (
           <button
             type="button"
@@ -68,22 +78,15 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
         </div>
       ) : null}
 
-      {loading ? (
-        <p className="vaccinations-section__status" role="status">
-          Loading vaccinations…
-        </p>
-      ) : null}
+      {loading ? <LoadingSkeleton lines={3} label="Loading vaccinations" /> : null}
 
-      {error ? (
-        <p className="vaccinations-section__error" role="alert">
-          {getAuthErrorMessage(error)}
-        </p>
-      ) : null}
+      {error ? <ErrorAlert message={getAuthErrorMessage(error)} /> : null}
 
       {!loading && !error && vaccinations.length === 0 ? (
-        <p className="vaccinations-section__empty">
-          No vaccination records yet for this pet.
-        </p>
+        <EmptyState
+          title="No vaccinations yet"
+          description="Record vaccines and upcoming boosters for this pet."
+        />
       ) : null}
 
       {!loading && !error && vaccinations.length > 0 ? (

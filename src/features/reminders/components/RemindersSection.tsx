@@ -9,6 +9,13 @@ import {
   type RemindersQueryResult,
   type RemindersQueryVariables,
 } from '../types';
+import { EmptyState } from '../../../components/EmptyState';
+import { ErrorAlert } from '../../../components/ErrorAlert';
+import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
+import {
+  StatusBadge,
+  reminderStatusTone,
+} from '../../../components/StatusBadge';
 import { formatReminderDateTime } from '../utils/format-reminder-datetime';
 import { ReminderForm } from './ReminderForm';
 import './reminders-section.css';
@@ -67,9 +74,15 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
   };
 
   return (
-    <section className="reminders-section" aria-labelledby="reminders-title">
+    <section id="reminders" className="reminders-section" aria-labelledby="reminders-title">
       <div className="reminders-section__header">
-        <h2 id="reminders-title">Reminders</h2>
+        <div>
+          <h2 id="reminders-title">Reminders</h2>
+          <p className="reminders-section__description">
+            Care tasks and due dates for this pet.
+            {!loading && !error ? ` (${reminders.length})` : ''}
+          </p>
+        </div>
         {!loading && !error ? (
           <button
             type="button"
@@ -93,24 +106,17 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
         </div>
       ) : null}
 
-      {loading ? (
-        <p className="reminders-section__status" role="status">Loading reminders…</p>
-      ) : null}
+      {loading ? <LoadingSkeleton lines={3} label="Loading reminders" /> : null}
 
-      {error ? (
-        <p className="reminders-section__error" role="alert">
-          {getAuthErrorMessage(error)}
-        </p>
-      ) : null}
+      {error ? <ErrorAlert message={getAuthErrorMessage(error)} /> : null}
 
-      {actionError ? (
-        <p className="reminders-section__error" role="alert">{actionError}</p>
-      ) : null}
+      {actionError ? <ErrorAlert message={actionError} /> : null}
 
       {!loading && !error && reminders.length === 0 ? (
-        <p className="reminders-section__empty">
-          No reminders yet for this pet.
-        </p>
+        <EmptyState
+          title="No reminders yet"
+          description="Create a reminder for vaccinations, medications, or general care."
+        />
       ) : null}
 
       {!loading && !error && reminders.length > 0 ? (
@@ -128,9 +134,10 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
                   <h3 className="reminders-section__card-title">
                     {reminder.title}
                   </h3>
-                  <span className="reminders-section__status-badge">
-                    {reminder.status}
-                  </span>
+                  <StatusBadge
+                    label={reminder.status}
+                    tone={reminderStatusTone(reminder.status)}
+                  />
                 </div>
 
                 <dl className="reminders-section__meta">

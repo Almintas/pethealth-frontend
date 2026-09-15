@@ -1,0 +1,211 @@
+.appointments-section,
+.reminders-section,
+.medications-section,
+.medical-records-section,
+.vaccinations-section {
+  margin-top: var(--ph-space-6);
+  padding: var(--ph-space-5);
+  background: var(--ph-color-surface);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-lg);
+  box-shadow: var(--ph-shadow-sm);
+}
+
+.appointments-section__header,
+.reminders-section__header,
+.medications-section__header,
+.medical-records-section__header,
+.vaccinations-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--ph-space-3);
+  margin-bottom: var(--ph-space-4);
+}
+
+.appointments-section__header h2,
+.reminders-section__header h2,
+.medications-section__header h2,
+.medical-records-section__header h2,
+.vaccinations-section__header h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--ph-color-text);
+}
+
+.appointments-section__description,
+.reminders-section__description,
+.medications-section__description,
+.medical-records-section__description,
+.vaccinations-section__description {
+  margin: var(--ph-space-1) 0 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.appointments-section__add-button,
+.reminders-section__add-button,
+.medications-section__add-button,
+.medical-records-section__add-button,
+.vaccinations-section__add-button {
+  padding: 0.5rem 0.875rem;
+  border: 1px solid var(--ph-color-border-strong);
+  border-radius: var(--ph-radius-md);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+  background: var(--ph-color-surface-elevated);
+  cursor: pointer;
+}
+
+.appointments-section__add-button:hover:not(:disabled),
+.reminders-section__add-button:hover:not(:disabled),
+.medications-section__add-button:hover:not(:disabled),
+.medical-records-section__add-button:hover:not(:disabled),
+.vaccinations-section__add-button:hover:not(:disabled) {
+  background: var(--ph-color-primary-soft);
+}
+
+.appointments-section__form-panel,
+.reminders-section__form-panel,
+.medications-section__form-panel,
+.medical-records-section__form-panel,
+.vaccinations-section__form-panel {
+  margin-bottom: var(--ph-space-4);
+  padding: var(--ph-space-4);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-color-input-bg);
+  border: 1px solid var(--ph-color-border);
+}
+
+.appointments-section__list,
+.reminders-section__list,
+.medications-section__list,
+.medical-records-section__list,
+.vaccinations-section__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-3);
+}
+
+.appointments-section__card,
+.reminders-section__card,
+.medications-section__card,
+.medical-records-section__card,
+.vaccinations-section__card {
+  padding: var(--ph-space-4);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-md);
+  background: var(--ph-color-surface-elevated);
+}
+
+.appointments-section__card-header,
+.reminders-section__card-header,
+.medications-section__card-header,
+.medical-records-section__card-header,
+.vaccinations-section__card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ph-space-2);
+  margin-bottom: var(--ph-space-3);
+}
+
+.appointments-section__card-title,
+.reminders-section__card-title,
+.medications-section__card-title,
+.medical-records-section__card-title,
+.vaccinations-section__card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ph-color-text);
+}
+
+.appointments-section__meta,
+.reminders-section__meta,
+.medications-section__meta,
+.medical-records-section__meta,
+.vaccinations-section__meta {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--ph-space-3) var(--ph-space-4);
+}
+
+.appointments-section__meta dt,
+.reminders-section__meta dt,
+.medications-section__meta dt,
+.medical-records-section__meta dt,
+.vaccinations-section__meta dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--ph-color-text-muted);
+}
+
+.appointments-section__meta dd,
+.reminders-section__meta dd,
+.medications-section__meta dd,
+.medical-records-section__meta dd,
+.vaccinations-section__meta dd {
+  margin: var(--ph-space-1) 0 0;
+  font-size: 0.9375rem;
+  color: var(--ph-color-text);
+}
+
+.reminders-section__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ph-space-2);
+  margin-top: var(--ph-space-3);
+}
+
+.reminders-section__action {
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--ph-radius-sm);
+  border: 1px solid var(--ph-color-border-strong);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--ph-color-surface-elevated);
+  color: var(--ph-color-text);
+}
+
+.reminders-section__action--complete {
+  color: var(--ph-color-success);
+  border-color: rgba(52, 211, 153, 0.35);
+}
+
+.reminders-section__action--dismiss {
+  color: var(--ph-color-text-secondary);
+}
+
+.medical-records-section__card-date {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ph-color-text-muted);
+}
+
+.medical-records-section__card-type {
+  margin: 0 0 var(--ph-space-2);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+}
+
+.medical-records-section__card-text {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+  line-height: 1.55;
+}

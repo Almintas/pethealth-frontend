@@ -1,6 +1,9 @@
 import { useApolloClient } from '@apollo/client/react';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
+import { ErrorAlert } from '../../../components/ErrorAlert';
+import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
+import { PetAvatar } from '../../../components/PetAvatar';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { AppointmentsSection } from '../../appointments';
 import { RemindersSection } from '../../reminders';
@@ -9,16 +12,27 @@ import { MedicationsSection } from '../../medications';
 import { VaccinationsSection } from '../../vaccinations';
 import * as petsService from '../pets.service';
 import type { Pet } from '../types';
+import { formatPetAge } from '../../../utils/format-pet-age';
 import { formatPetDate } from '../utils/format-pet-date';
 import './pet-details-page.css';
+
+const sectionLinks = [
+  { id: 'medical-records', label: 'Medical Records' },
+  { id: 'vaccinations', label: 'Vaccinations' },
+  { id: 'medications', label: 'Medications' },
+  { id: 'appointments', label: 'Appointments' },
+  { id: 'reminders', label: 'Reminders' },
+] as const;
 
 export function PetDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const client = useApolloClient();
+  const navigate = useNavigate();
   const [pet, setPet] = useState<Pet | null>(null);
   const [loading, setLoading] = useState(Boolean(id));
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!id) {
@@ -65,45 +79,89 @@ export function PetDetailsPage() {
     };
   }, [client, id]);
 
+  const handleDelete = async () => {
+    if (!pet) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete ${pet.name}? This cannot be undone.`,
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setIsDeleting(true);
+    setErrorMessage(null);
+
+    try {
+      await petsService.deletePet(client, pet.id);
+      void navigate('/pets', { replace: true });
+    } catch (error) {
+      setErrorMessage(getAuthErrorMessage(error));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const age = pet ? formatPetAge(pet.birthDate) : null;
+  const subtitleParts = pet
+    ? [pet.breed || pet.species, pet.gender, age].filter(Boolean)
+    : [];
+
   return (
-    <section className="pet-details" aria-labelledby="pet-details-title">
-      <div className="pet-details__container">
-        <div className="pet-details__toolbar">
-          <Link className="pet-details__back" to="/pets">Back to Pets</Link>
-          <button
-            type="button"
-            className="pet-details__edit"
-            disabled
-            title="Edit pet — coming soon"
-          >
-            Edit Pet
-          </button>
-        </div>
+    <section className="pet-details ph-page" aria-labelledby="pet-details-title">
+      <div className="pet-details__toolbar">
+        <Link className="ph-link ph-link--muted" to="/pets">← Back to Pets</Link>
+      </div>
 
-        {loading ? (
-          <p className="pet-details__status" role="status">Loading pet…</p>
-        ) : null}
+      {loading ? <LoadingSkeleton lines={5} label="Loading pet profile" /> : null}
+      {errorMessage ? <ErrorAlert message={errorMessage} /> : null}
 
-        {errorMessage ? (
-          <p className="pet-details__error" role="alert">{errorMessage}</p>
-        ) : null}
+      {!loading && !errorMessage && notFound ? (
+        <ErrorAlert message="Pet not found." />
+      ) : null}
 
-        {!loading && !errorMessage && notFound ? (
-          <p className="pet-details__error" role="alert">Pet not found.</p>
-        ) : null}
-
-        {!loading && !errorMessage && !notFound && pet ? (
-          <>
-            <header className="pet-details__header">
-              <h1 id="pet-details-title">{pet.name}</h1>
-              <p className="pet-details__subtitle">{pet.species}</p>
-            </header>
-
-            <dl className="pet-details__facts">
+      {!loading && !errorMessage && !notFound && pet ? (
+        <>
+          <header className="pet-details__hero ph-card ph-card--pad">
+            <div className="pet-details__hero-main">
+              <PetAvatar species={pet.species} name={pet.name} size="lg" />
               <div>
-                <dt>Name</dt>
-                <dd>{pet.name}</dd>
+                <h1 id="pet-details-title">{pet.name}</h1>
+                <p className="pet-details__subtitle">
+                  {subtitleParts.join(' · ')}
+                </p>
               </div>
+            </div>
+
+            <div className="pet-details__actions">
+              <button
+                type="button"
+                className="ph-btn ph-btn--secondary"
+                disabled
+                title="Edit pet — coming soon"
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="ph-btn ph-btn--danger-ghost"
+                onClick={() => void handleDelete()}
+                disabled={isDeleting}
+              >
+                {isDeleting ? 'Deleting…' : 'Delete'}
+              </button>
+            </div>
+          </header>
+
+          <section className="pet-details__overview ph-card ph-card--pad" aria-labelledby="health-overview-title">
+            <h2 id="health-overview-title">Health overview</h2>
+            <p className="pet-details__overview-copy">
+              Key details and quick links to this pet&apos;s health records.
+            </p>
+            <dl className="pet-details__facts">
               <div>
                 <dt>Species</dt>
                 <dd>{pet.species}</dd>
@@ -121,23 +179,27 @@ export function PetDetailsPage() {
                 <dd>{formatPetDate(pet.birthDate)}</dd>
               </div>
               <div>
-                <dt>Microchip number</dt>
+                <dt>Microchip</dt>
                 <dd>{pet.microchipNumber ?? 'Not provided'}</dd>
-              </div>
-              <div>
-                <dt>Created date</dt>
-                <dd>{formatPetDate(pet.createdAt)}</dd>
               </div>
             </dl>
 
-            <MedicalRecordsSection petId={pet.id} />
-            <VaccinationsSection petId={pet.id} />
-            <MedicationsSection petId={pet.id} />
-            <AppointmentsSection petId={pet.id} />
-            <RemindersSection petId={pet.id} />
-          </>
-        ) : null}
-      </div>
+            <nav className="pet-details__section-nav" aria-label="Pet health sections">
+              {sectionLinks.map((link) => (
+                <a key={link.id} className="pet-details__section-link" href={`#${link.id}`}>
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </section>
+
+          <MedicalRecordsSection petId={pet.id} />
+          <VaccinationsSection petId={pet.id} />
+          <MedicationsSection petId={pet.id} />
+          <AppointmentsSection petId={pet.id} />
+          <RemindersSection petId={pet.id} />
+        </>
+      ) : null}
     </section>
   );
 }

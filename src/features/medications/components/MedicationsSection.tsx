@@ -9,6 +9,13 @@ import type {
   MedicationsQueryResult,
   MedicationsQueryVariables,
 } from '../types';
+import { EmptyState } from '../../../components/EmptyState';
+import { ErrorAlert } from '../../../components/ErrorAlert';
+import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
+import {
+  StatusBadge,
+  medicationStatusTone,
+} from '../../../components/StatusBadge';
 import { MedicationForm } from './MedicationForm';
 import './medications-section.css';
 
@@ -37,11 +44,18 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
 
   return (
     <section
+      id="medications"
       className="medications-section"
       aria-labelledby="medications-title"
     >
       <div className="medications-section__header">
-        <h2 id="medications-title">Medications</h2>
+        <div>
+          <h2 id="medications-title">Medications</h2>
+          <p className="medications-section__description">
+            Prescriptions and treatment plans for this pet.
+            {!loading && !error ? ` (${medications.length})` : ''}
+          </p>
+        </div>
         {!loading && !error ? (
           <button
             type="button"
@@ -68,22 +82,15 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
         </div>
       ) : null}
 
-      {loading ? (
-        <p className="medications-section__status" role="status">
-          Loading medications…
-        </p>
-      ) : null}
+      {loading ? <LoadingSkeleton lines={3} label="Loading medications" /> : null}
 
-      {error ? (
-        <p className="medications-section__error" role="alert">
-          {getAuthErrorMessage(error)}
-        </p>
-      ) : null}
+      {error ? <ErrorAlert message={getAuthErrorMessage(error)} /> : null}
 
       {!loading && !error && medications.length === 0 ? (
-        <p className="medications-section__empty">
-          No medication records yet for this pet.
-        </p>
+        <EmptyState
+          title="No medications yet"
+          description="Track active prescriptions and dosage details here."
+        />
       ) : null}
 
       {!loading && !error && medications.length > 0 ? (
@@ -94,16 +101,10 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
                 <h3 className="medications-section__card-title">
                   {medication.name}
                 </h3>
-                <span
-                  className={[
-                    'medications-section__status-badge',
-                    medication.isActive
-                      ? 'medications-section__status-badge--active'
-                      : 'medications-section__status-badge--inactive',
-                  ].join(' ')}
-                >
-                  {medication.isActive ? 'Active' : 'Inactive'}
-                </span>
+                <StatusBadge
+                  label={medication.isActive ? 'ACTIVE' : 'INACTIVE'}
+                  tone={medicationStatusTone(medication.isActive)}
+                />
               </div>
               <dl className="medications-section__meta">
                 <div>

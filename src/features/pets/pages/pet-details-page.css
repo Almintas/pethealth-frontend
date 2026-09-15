@@ -1,142 +1,101 @@
-.pet-details {
-  flex: 1;
-  padding: 2rem 1.5rem;
-}
-
-.pet-details__container {
-  width: 100%;
-  max-width: 56rem;
-  margin: 0 auto;
-}
-
 .pet-details__toolbar {
+  margin-bottom: var(--ph-space-4);
+}
+
+.pet-details__hero {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: var(--ph-space-4);
+  margin-bottom: var(--ph-space-5);
+  background: var(--ph-color-surface);
 }
 
-.pet-details__back {
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: #2563eb;
-  text-decoration: none;
+.pet-details__hero-main {
+  display: flex;
+  align-items: center;
+  gap: var(--ph-space-4);
 }
 
-.pet-details__back:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
-}
-
-.pet-details__edit {
-  padding: 0.55rem 0.9rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.5rem;
-  font: inherit;
-  font-weight: 600;
-  color: #64748b;
-  background: #f8fafc;
-  cursor: not-allowed;
-}
-
-.pet-details__status {
+.pet-details__hero h1 {
   margin: 0;
-  color: #475569;
-}
-
-.pet-details__error {
-  margin: 0 0 1rem;
-  padding: 0.75rem 0.875rem;
-  border-radius: 0.5rem;
-  color: #b91c1c;
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-}
-
-.pet-details__header {
-  margin-bottom: 1.5rem;
-}
-
-.pet-details__header h1 {
-  margin: 0 0 0.35rem;
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  font-weight: 800;
+  color: var(--ph-color-text);
 }
 
 .pet-details__subtitle {
+  margin: var(--ph-space-2) 0 0;
+  font-size: 1rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.pet-details__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ph-space-2);
+}
+
+.pet-details__overview {
+  margin-bottom: var(--ph-space-5);
+  background: var(--ph-color-surface-elevated);
+}
+
+.pet-details__overview h2 {
   margin: 0;
-  color: #64748b;
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.pet-details__overview-copy {
+  margin: var(--ph-space-2) 0 var(--ph-space-4);
+  font-size: 0.9375rem;
+  color: var(--ph-color-text-secondary);
 }
 
 .pet-details__facts {
-  margin: 0 0 2rem;
-  padding: 1.25rem;
+  margin: 0;
   display: grid;
-  gap: 1rem;
-  border: 1px solid #e2e8f0;
-  border-radius: 0.75rem;
-  background: #ffffff;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-}
-
-@media (min-width: 640px) {
-  .pet-details__facts {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.pet-details__facts div {
-  display: grid;
-  gap: 0.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: var(--ph-space-4);
 }
 
 .pet-details__facts dt {
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: 0.75rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #64748b;
+  color: var(--ph-color-text-muted);
 }
 
 .pet-details__facts dd {
-  margin: 0;
-  color: #0f172a;
+  margin: var(--ph-space-1) 0 0;
+  font-size: 0.9375rem;
+  color: var(--ph-color-text);
 }
 
-.pet-details__future h2 {
-  margin: 0 0 1rem;
-  font-size: 1.25rem;
+.pet-details__section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ph-space-2);
+  margin-top: var(--ph-space-5);
+  padding-top: var(--ph-space-4);
+  border-top: 1px solid var(--ph-color-border);
+}
+
+.pet-details__section-link {
+  padding: 0.45rem 0.75rem;
+  border-radius: var(--ph-radius-full);
+  font-size: 0.8125rem;
   font-weight: 600;
+  text-decoration: none;
+  color: var(--ph-color-primary);
+  background: var(--ph-color-primary-muted);
+  border: 1px solid rgba(45, 212, 191, 0.2);
 }
 
-.pet-details__future-grid {
-  display: grid;
-  gap: 1rem;
-}
-
-@media (min-width: 720px) {
-  .pet-details__future-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-.pet-details__future-card {
-  padding: 1rem 1.125rem;
-  border: 1px dashed #cbd5e1;
-  border-radius: 0.75rem;
-  background: #f8fafc;
-}
-
-.pet-details__future-card h3 {
-  margin: 0 0 0.35rem;
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-.pet-details__future-card p {
-  margin: 0;
-  font-size: 0.9rem;
-  color: #64748b;
+.pet-details__section-link:hover {
+  background: var(--ph-color-primary-soft);
+  color: var(--ph-color-primary-hover);
 }

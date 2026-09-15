@@ -9,6 +9,9 @@ import type {
   MedicalRecordsQueryResult,
   MedicalRecordsQueryVariables,
 } from '../types';
+import { EmptyState } from '../../../components/EmptyState';
+import { ErrorAlert } from '../../../components/ErrorAlert';
+import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
 import { MedicalRecordForm } from './MedicalRecordForm';
 import './medical-records-section.css';
 
@@ -37,11 +40,18 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
 
   return (
     <section
+      id="medical-records"
       className="medical-records-section"
       aria-labelledby="medical-records-title"
     >
       <div className="medical-records-section__header">
-        <h2 id="medical-records-title">Medical Records</h2>
+        <div>
+          <h2 id="medical-records-title">Medical Records</h2>
+          <p className="medical-records-section__description">
+            Visit notes, diagnoses, and clinical history.
+            {!loading && !error ? ` (${records.length})` : ''}
+          </p>
+        </div>
         {!loading && !error ? (
           <button
             type="button"
@@ -69,21 +79,16 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
       ) : null}
 
       {loading ? (
-        <p className="medical-records-section__status" role="status">
-          Loading medical records…
-        </p>
+        <LoadingSkeleton lines={3} label="Loading medical records" />
       ) : null}
 
-      {error ? (
-        <p className="medical-records-section__error" role="alert">
-          {getAuthErrorMessage(error)}
-        </p>
-      ) : null}
+      {error ? <ErrorAlert message={getAuthErrorMessage(error)} /> : null}
 
       {!loading && !error && records.length === 0 ? (
-        <p className="medical-records-section__empty">
-          No medical records yet for this pet.
-        </p>
+        <EmptyState
+          title="No medical records yet"
+          description="Add records after vet visits or procedures."
+        />
       ) : null}
 
       {!loading && !error && records.length > 0 ? (

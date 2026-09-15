@@ -8,6 +8,13 @@ import type {
   AppointmentsQueryVariables,
   CreateAppointmentInput,
 } from '../types';
+import { EmptyState } from '../../../components/EmptyState';
+import { ErrorAlert } from '../../../components/ErrorAlert';
+import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
+import {
+  StatusBadge,
+  appointmentStatusTone,
+} from '../../../components/StatusBadge';
 import { formatAppointmentDateTime } from '../utils/format-appointment-datetime';
 import { AppointmentForm } from './AppointmentForm';
 import './appointments-section.css';
@@ -37,11 +44,18 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
 
   return (
     <section
+      id="appointments"
       className="appointments-section"
       aria-labelledby="appointments-title"
     >
       <div className="appointments-section__header">
-        <h2 id="appointments-title">Appointments</h2>
+        <div>
+          <h2 id="appointments-title">Appointments</h2>
+          <p className="appointments-section__description">
+            Scheduled visits and follow-ups for this pet.
+            {!loading && !error ? ` (${appointments.length})` : ''}
+          </p>
+        </div>
         {!loading && !error ? (
           <button
             type="button"
@@ -69,21 +83,16 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
       ) : null}
 
       {loading ? (
-        <p className="appointments-section__status" role="status">
-          Loading appointments…
-        </p>
+        <LoadingSkeleton lines={3} label="Loading appointments" />
       ) : null}
 
-      {error ? (
-        <p className="appointments-section__error" role="alert">
-          {getAuthErrorMessage(error)}
-        </p>
-      ) : null}
+      {error ? <ErrorAlert message={getAuthErrorMessage(error)} /> : null}
 
       {!loading && !error && appointments.length === 0 ? (
-        <p className="appointments-section__empty">
-          No appointments yet for this pet.
-        </p>
+        <EmptyState
+          title="No appointments yet"
+          description="Add an appointment when you schedule a visit or check-up."
+        />
       ) : null}
 
       {!loading && !error && appointments.length > 0 ? (
@@ -94,9 +103,10 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
                 <h3 className="appointments-section__card-title">
                   {appointment.type}
                 </h3>
-                <span className="appointments-section__status-badge">
-                  {appointment.status}
-                </span>
+                <StatusBadge
+                  label={appointment.status}
+                  tone={appointmentStatusTone(appointment.status)}
+                />
               </div>
               <dl className="appointments-section__meta">
                 <div>
