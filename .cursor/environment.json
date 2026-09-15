@@ -1,0 +1,16 @@
+{
+  "name": "pethealth-frontend",
+  "install": "npm ci",
+  "terminals": [
+    {
+      "name": "dev-server",
+      "command": "BROWSER=none PORT=3000 npm start"
+    }
+  ],
+  "ports": [
+    {
+      "name": "CRA dev server",
+      "port": 3000
+    }
+  ]
+}
