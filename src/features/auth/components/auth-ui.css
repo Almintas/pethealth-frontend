@@ -132,6 +132,7 @@
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
+  display: inline;
 }
 
 .auth-switch__button:hover {

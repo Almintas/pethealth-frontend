@@ -1,23 +1,12 @@
-import { useState } from 'react';
 import { useAuth } from '../features/auth';
 import './home-page.css';
 
 export function HomePage() {
-  const { user, logout } = useAuth();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { user } = useAuth();
 
   if (!user) {
     return null;
   }
-
-  const handleLogout = async () => {
-    setIsLoggingOut(true);
-    try {
-      await logout();
-    } finally {
-      setIsLoggingOut(false);
-    }
-  };
 
   return (
     <section className="home-page" aria-labelledby="dashboard-title">
@@ -35,15 +24,6 @@ export function HomePage() {
             <dd>{user.role}</dd>
           </div>
         </dl>
-
-        <button
-          type="button"
-          className="home-page__logout"
-          onClick={() => void handleLogout()}
-          disabled={isLoggingOut}
-        >
-          {isLoggingOut ? 'Signing out…' : 'Logout'}
-        </button>
       </div>
     </section>
   );

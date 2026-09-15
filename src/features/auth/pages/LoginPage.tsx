@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { Link } from 'react-router';
 import { AuthFormField } from '../components/AuthFormField';
 import { AuthShell } from '../components/AuthShell';
 import { useAuth } from '../useAuth';
@@ -10,11 +11,7 @@ import {
   type LoginField,
 } from '../utils/validation';
 
-type LoginPageProps = {
-  onSwitchToRegister: () => void;
-};
-
-export function LoginPage({ onSwitchToRegister }: LoginPageProps) {
+export function LoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -88,14 +85,9 @@ export function LoginPage({ onSwitchToRegister }: LoginPageProps) {
 
       <p className="auth-switch">
         Don&apos;t have an account?{' '}
-        <button
-          type="button"
-          className="auth-switch__button"
-          onClick={onSwitchToRegister}
-          disabled={isSubmitting}
-        >
+        <Link className="auth-switch__button" to="/register">
           Create one
-        </button>
+        </Link>
       </p>
     </AuthShell>
   );

@@ -51,23 +51,3 @@
   font-size: 1rem;
   color: #0f172a;
 }
-
-.home-page__logout {
-  padding: 0.65rem 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  font: inherit;
-  font-weight: 600;
-  color: #ffffff;
-  background: #dc2626;
-  cursor: pointer;
-}
-
-.home-page__logout:hover:not(:disabled) {
-  background: #b91c1c;
-}
-
-.home-page__logout:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
