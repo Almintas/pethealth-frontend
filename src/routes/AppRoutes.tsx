@@ -3,6 +3,7 @@ import { LoginPage } from '../features/auth/pages/LoginPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
 import { MainLayout } from '../layouts/MainLayout';
+import { PetsPage } from '../features/pets';
 import { HomePage } from '../pages/HomePage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicRoute } from './PublicRoute';
@@ -35,6 +36,7 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthenticatedLayout />}>
           <Route path="/dashboard" element={<HomePage />} />
+          <Route path="/pets" element={<PetsPage />} />
         </Route>
       </Route>
     </Routes>

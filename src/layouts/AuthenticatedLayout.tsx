@@ -30,6 +30,9 @@ export function AuthenticatedLayout() {
           >
             Dashboard
           </NavLink>
+          <NavLink className="authenticated-layout__link" to="/pets">
+            Pets
+          </NavLink>
           <button
             type="button"
             className="authenticated-layout__logout"
