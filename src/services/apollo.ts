@@ -1,4 +1,6 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client';
+import { SetContextLink } from '@apollo/client/link/context';
+import { getAccessToken } from '../features/auth/token-storage';
 
 function getGraphqlUrl(): string {
   const url = import.meta.env.VITE_GRAPHQL_URL;
@@ -10,9 +12,23 @@ function getGraphqlUrl(): string {
   return url;
 }
 
+const authLink = new SetContextLink((prevContext) => {
+  const token = getAccessToken();
+  const headers = prevContext.headers ?? {};
+
+  return {
+    headers: {
+      ...headers,
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+    },
+  };
+});
+
+const httpLink = new HttpLink({
+  uri: getGraphqlUrl(),
+});
+
 export const apolloClient = new ApolloClient({
-  link: new HttpLink({
-    uri: getGraphqlUrl(),
-  }),
+  link: ApolloLink.from([authLink, httpLink]),
   cache: new InMemoryCache(),
 });
