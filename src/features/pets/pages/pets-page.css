@@ -10,6 +10,10 @@
 }
 
 .pets-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
@@ -22,6 +26,26 @@
 .pets-page__subtitle {
   margin: 0;
   color: #64748b;
+}
+
+.pets-page__add-button {
+  flex-shrink: 0;
+  padding: 0.55rem 0.9rem;
+  border: none;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: #2563eb;
+  cursor: pointer;
+}
+
+.pets-page__add-button:hover {
+  background: #1d4ed8;
+}
+
+.pets-page__form-panel {
+  margin-bottom: 1.5rem;
 }
 
 .pets-page__status,
