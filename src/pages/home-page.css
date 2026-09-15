@@ -1,20 +1,73 @@
 .home-page {
   flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 2rem 1.5rem;
+}
+
+.home-page__card {
+  width: 100%;
+  max-width: 32rem;
   padding: 2rem;
-  text-align: center;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
 }
 
 .home-page h1 {
-  margin: 0 0 0.75rem;
-  font-size: 2rem;
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
   font-weight: 600;
 }
 
-.home-page__message {
-  margin: 0;
+.home-page__greeting {
+  margin: 0 0 1.5rem;
   color: #334155;
+}
+
+.home-page__details {
+  margin: 0 0 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.home-page__details div {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.home-page__details dt {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+
+.home-page__details dd {
+  margin: 0;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.home-page__logout {
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #ffffff;
+  background: #dc2626;
+  cursor: pointer;
+}
+
+.home-page__logout:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.home-page__logout:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
