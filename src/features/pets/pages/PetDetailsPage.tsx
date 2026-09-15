@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { AppointmentsSection } from '../../appointments';
+import { RemindersSection } from '../../reminders';
 import { MedicalRecordsSection } from '../../medical-records';
 import { MedicationsSection } from '../../medications';
 import { VaccinationsSection } from '../../vaccinations';
@@ -10,8 +11,6 @@ import * as petsService from '../pets.service';
 import type { Pet } from '../types';
 import { formatPetDate } from '../utils/format-pet-date';
 import './pet-details-page.css';
-
-const FUTURE_SECTIONS = ['Reminders'] as const;
 
 export function PetDetailsPage() {
   const { id } = useParams<{ id: string }>();
@@ -135,22 +134,7 @@ export function PetDetailsPage() {
             <VaccinationsSection petId={pet.id} />
             <MedicationsSection petId={pet.id} />
             <AppointmentsSection petId={pet.id} />
-
-            <div className="pet-details__future">
-              <h2>Health &amp; care</h2>
-              <div className="pet-details__future-grid">
-                {FUTURE_SECTIONS.map((section) => (
-                  <section
-                    key={section}
-                    className="pet-details__future-card"
-                    aria-label={`${section} coming soon`}
-                  >
-                    <h3>{section}</h3>
-                    <p>Coming soon — this feature will be available in a future update.</p>
-                  </section>
-                ))}
-              </div>
-            </div>
+            <RemindersSection petId={pet.id} />
           </>
         ) : null}
       </div>
