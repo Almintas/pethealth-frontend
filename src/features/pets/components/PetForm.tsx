@@ -1,6 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
-import type { CreatePetInput, Pet } from '../types';
+import type { CreatePetInput, Pet, UpdatePetInput } from '../types';
 import './pet-form.css';
 
 export type PetFormValues = {
@@ -70,6 +70,10 @@ export function buildCreatePetInput(values: PetFormValues): CreatePetInput {
   return input;
 }
 
+export function buildUpdatePetInput(values: PetFormValues): UpdatePetInput {
+  return buildCreatePetInput(values);
+}
+
 function validatePetForm(values: PetFormValues): PetFormFieldErrors {
   const errors: PetFormFieldErrors = {};
 
@@ -88,14 +92,23 @@ function hasFieldErrors(errors: PetFormFieldErrors): boolean {
   return Object.keys(errors).length > 0;
 }
 
-type PetFormProps = {
-  mode: 'create' | 'edit';
+type PetFormBaseProps = {
   title: string;
   submitLabel: string;
-  initialPet?: Pet;
-  onSubmit: (input: CreatePetInput) => Promise<void>;
   onCancel: () => void;
 };
+
+type PetFormProps =
+  | (PetFormBaseProps & {
+      mode: 'create';
+      onSubmit: (input: CreatePetInput) => Promise<void>;
+      initialPet?: never;
+    })
+  | (PetFormBaseProps & {
+      mode: 'edit';
+      initialPet: Pet;
+      onSubmit: (input: UpdatePetInput) => Promise<void>;
+    });
 
 export function PetForm({
   mode,
@@ -130,8 +143,14 @@ export function PetForm({
 
     setIsSubmitting(true);
     try {
-      await onSubmit(buildCreatePetInput(values));
-      setValues(emptyPetFormValues);
+      if (mode === 'edit') {
+        await onSubmit(buildUpdatePetInput(values));
+      } else {
+        await onSubmit(buildCreatePetInput(values));
+      }
+      if (mode === 'create') {
+        setValues(emptyPetFormValues);
+      }
       setFieldErrors({});
     } catch (error) {
       setFormError(getAuthErrorMessage(error));
@@ -140,15 +159,17 @@ export function PetForm({
     }
   };
 
+  const fieldId = (name: string) => `pet-${mode}-${name}`;
+
   return (
     <form
       className="pet-form"
       onSubmit={handleSubmit}
       noValidate
-      aria-labelledby="pet-form-title"
+      aria-labelledby={`pet-form-title-${mode}`}
       data-form-mode={mode}
     >
-      <h2 id="pet-form-title" className="pet-form__title">{title}</h2>
+      <h2 id={`pet-form-title-${mode}`} className="pet-form__title">{title}</h2>
 
       {formError ? (
         <p className="pet-form__alert" role="alert">{formError}</p>
@@ -157,11 +178,11 @@ export function PetForm({
       <div className="pet-form__fields">
         <div className="pet-form__row pet-form__row--split">
           <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor="pet-name">
+            <label className="pet-form__label" htmlFor={fieldId('name')}>
               Name <span className="pet-form__required" aria-hidden="true">*</span>
             </label>
             <input
-              id="pet-name"
+              id={fieldId('name')}
               name="name"
               className={[
                 'pet-form__input',
@@ -182,11 +203,11 @@ export function PetForm({
           </div>
 
           <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor="pet-species">
+            <label className="pet-form__label" htmlFor={fieldId('species')}>
               Species <span className="pet-form__required" aria-hidden="true">*</span>
             </label>
             <input
-              id="pet-species"
+              id={fieldId('species')}
               name="species"
               className={[
                 'pet-form__input',
@@ -209,9 +230,9 @@ export function PetForm({
 
         <div className="pet-form__row pet-form__row--split">
           <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor="pet-breed">Breed</label>
+            <label className="pet-form__label" htmlFor={fieldId('breed')}>Breed</label>
             <input
-              id="pet-breed"
+              id={fieldId('breed')}
               name="breed"
               className="pet-form__input"
               value={values.breed}
@@ -222,9 +243,9 @@ export function PetForm({
           </div>
 
           <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor="pet-gender">Gender</label>
+            <label className="pet-form__label" htmlFor={fieldId('gender')}>Gender</label>
             <input
-              id="pet-gender"
+              id={fieldId('gender')}
               name="gender"
               className="pet-form__input"
               value={values.gender}
@@ -237,11 +258,11 @@ export function PetForm({
 
         <div className="pet-form__row pet-form__row--split">
           <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor="pet-birth-date">
+            <label className="pet-form__label" htmlFor={fieldId('birth-date')}>
               Birth date
             </label>
             <input
-              id="pet-birth-date"
+              id={fieldId('birth-date')}
               name="birthDate"
               type="date"
               className="pet-form__input"
@@ -252,11 +273,11 @@ export function PetForm({
           </div>
 
           <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor="pet-microchip">
+            <label className="pet-form__label" htmlFor={fieldId('microchip')}>
               Microchip number
             </label>
             <input
-              id="pet-microchip"
+              id={fieldId('microchip')}
               name="microchipNumber"
               className="pet-form__input"
               value={values.microchipNumber}

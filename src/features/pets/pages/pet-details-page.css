@@ -2,6 +2,22 @@
   margin-bottom: var(--ph-space-4);
 }
 
+.pet-details__success {
+  margin: 0 0 var(--ph-space-4);
+  padding: var(--ph-space-3) var(--ph-space-4);
+  border-radius: var(--ph-radius-md);
+  font-size: 0.875rem;
+  color: #6ee7b7;
+  background: var(--ph-color-success-soft);
+  border: 1px solid rgba(52, 211, 153, 0.28);
+}
+
+.pet-details__edit-panel {
+  margin-bottom: var(--ph-space-5);
+  background: var(--ph-color-surface-elevated);
+  border-color: var(--ph-color-border-strong);
+}
+
 .pet-details__hero {
   display: flex;
   flex-wrap: wrap;

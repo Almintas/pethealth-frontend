@@ -10,8 +10,9 @@ import { RemindersSection } from '../../reminders';
 import { MedicalRecordsSection } from '../../medical-records';
 import { MedicationsSection } from '../../medications';
 import { VaccinationsSection } from '../../vaccinations';
+import { PetForm } from '../components/PetForm';
 import * as petsService from '../pets.service';
-import type { Pet } from '../types';
+import type { Pet, UpdatePetInput } from '../types';
 import { formatPetAge } from '../../../utils/format-pet-age';
 import { formatPetDate } from '../utils/format-pet-date';
 import './pet-details-page.css';
@@ -33,6 +34,8 @@ export function PetDetailsPage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!id) {
@@ -79,6 +82,20 @@ export function PetDetailsPage() {
     };
   }, [client, id]);
 
+  const handleUpdatePet = async (input: UpdatePetInput) => {
+    if (!pet) {
+      return;
+    }
+
+    setErrorMessage(null);
+    setSuccessMessage(null);
+
+    const updatedPet = await petsService.updatePet(client, pet.id, input);
+    setPet(updatedPet);
+    setIsEditing(false);
+    setSuccessMessage('Pet details updated.');
+  };
+
   const handleDelete = async () => {
     if (!pet) {
       return;
@@ -118,6 +135,9 @@ export function PetDetailsPage() {
 
       {loading ? <LoadingSkeleton lines={5} label="Loading pet profile" /> : null}
       {errorMessage ? <ErrorAlert message={errorMessage} /> : null}
+      {successMessage ? (
+        <p className="pet-details__success" role="status">{successMessage}</p>
+      ) : null}
 
       {!loading && !errorMessage && notFound ? (
         <ErrorAlert message="Pet not found." />
@@ -137,24 +157,47 @@ export function PetDetailsPage() {
             </div>
 
             <div className="pet-details__actions">
-              <button
-                type="button"
-                className="ph-btn ph-btn--secondary"
-                disabled
-                title="Edit pet — coming soon"
-              >
-                Edit
-              </button>
+              {!isEditing ? (
+                <button
+                  type="button"
+                  className="ph-btn ph-btn--secondary"
+                  onClick={() => {
+                    setSuccessMessage(null);
+                    setIsEditing(true);
+                  }}
+                  aria-expanded={isEditing}
+                  aria-controls="pet-edit-panel"
+                >
+                  Edit
+                </button>
+              ) : null}
               <button
                 type="button"
                 className="ph-btn ph-btn--danger-ghost"
                 onClick={() => void handleDelete()}
-                disabled={isDeleting}
+                disabled={isDeleting || isEditing}
               >
                 {isDeleting ? 'Deleting…' : 'Delete'}
               </button>
             </div>
           </header>
+
+          {isEditing ? (
+            <div
+              id="pet-edit-panel"
+              className="pet-details__edit-panel ph-card ph-card--pad"
+            >
+              <PetForm
+                key={pet.updatedAt}
+                mode="edit"
+                title="Edit pet"
+                submitLabel="Save changes"
+                initialPet={pet}
+                onSubmit={handleUpdatePet}
+                onCancel={() => setIsEditing(false)}
+              />
+            </div>
+          ) : null}
 
           <section className="pet-details__overview ph-card ph-card--pad" aria-labelledby="health-overview-title">
             <h2 id="health-overview-title">Health overview</h2>
