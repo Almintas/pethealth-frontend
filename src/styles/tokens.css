@@ -4,34 +4,34 @@
   --ph-font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto,
     sans-serif;
 
-  /* Page & surfaces */
-  --ph-color-bg: #0f1720;
-  --ph-color-surface: #17212b;
-  --ph-color-surface-elevated: #1d2a36;
-  --ph-color-surface-muted: #15202a;
-  --ph-color-surface-hover: #223140;
+  /* Page & surfaces (aligned with dashboard / health sections) */
+  --ph-color-bg: #0f141c;
+  --ph-color-surface: #1a222d;
+  --ph-color-surface-elevated: #222b38;
+  --ph-color-surface-muted: #121820;
+  --ph-color-surface-hover: #2a3544;
 
   /* Brand accent */
-  --ph-color-primary: #2dd4bf;
-  --ph-color-primary-hover: #5eead4;
-  --ph-color-primary-soft: rgba(45, 212, 191, 0.14);
-  --ph-color-primary-muted: rgba(45, 212, 191, 0.08);
-  --ph-color-on-primary: #042f2e;
+  --ph-color-primary: #5b9fd4;
+  --ph-color-primary-hover: #7ab4e0;
+  --ph-color-primary-soft: rgba(91, 159, 212, 0.14);
+  --ph-color-primary-muted: rgba(91, 159, 212, 0.08);
+  --ph-color-on-primary: #0f141c;
 
-  --ph-color-secondary: #38bdf8;
-  --ph-color-secondary-soft: rgba(56, 189, 248, 0.14);
+  --ph-color-secondary: #7ab4e0;
+  --ph-color-secondary-soft: rgba(91, 159, 212, 0.14);
 
   /* Text */
-  --ph-color-text: #f1f5f9;
-  --ph-color-text-secondary: #94a3b8;
-  --ph-color-text-muted: #64748b;
+  --ph-color-text: #e8edf5;
+  --ph-color-text-secondary: #9aa8bc;
+  --ph-color-text-muted: #7a8a9e;
 
   /* Borders */
-  --ph-color-border: #293847;
-  --ph-color-border-strong: #334155;
+  --ph-color-border: #2a3544;
+  --ph-color-border-strong: #3d4d63;
 
   /* Inputs */
-  --ph-color-input-bg: #111b24;
+  --ph-color-input-bg: #0f141c;
   --ph-color-input-placeholder: #64748b;
 
   /* Status */
@@ -67,6 +67,6 @@
 
   --ph-sidebar-width: 15.5rem;
   --ph-content-max: 72rem;
-  --ph-focus-ring: 0 0 0 3px rgba(45, 212, 191, 0.35);
+  --ph-focus-ring: 0 0 0 3px rgba(91, 159, 212, 0.4);
   --ph-overlay: rgba(2, 6, 12, 0.62);
 }
