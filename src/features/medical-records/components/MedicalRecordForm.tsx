@@ -102,13 +102,16 @@ type MedicalRecordFormProps = {
   petId: string;
   onSubmit: (input: CreateMedicalRecordInput) => Promise<void>;
   onCancel: () => void;
+  variant?: 'inline' | 'dialog';
 };
 
 export function MedicalRecordForm({
   petId,
   onSubmit,
   onCancel,
+  variant = 'inline',
 }: MedicalRecordFormProps) {
+  const isDialog = variant === 'dialog';
   const [values, setValues] = useState<MedicalRecordFormValues>(
     emptyMedicalRecordFormValues,
   );
@@ -138,7 +141,7 @@ export function MedicalRecordForm({
       setValues(emptyMedicalRecordFormValues);
       setFieldErrors({});
     } catch (error) {
-      setFormError(getAuthErrorMessage(error));
+      setFormError(getAuthErrorMessage(error, 'save-medical-record'));
     } finally {
       setIsSubmitting(false);
     }
@@ -146,14 +149,21 @@ export function MedicalRecordForm({
 
   return (
     <form
-      className="medical-record-form"
+      className={[
+        'medical-record-form',
+        isDialog ? 'medical-record-form--dialog' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onSubmit={handleSubmit}
       noValidate
-      aria-labelledby="medical-record-form-title"
+      aria-labelledby={isDialog ? undefined : 'medical-record-form-title'}
     >
-      <h3 id="medical-record-form-title" className="medical-record-form__title">
-        Add medical record
-      </h3>
+      {!isDialog ? (
+        <h3 id="medical-record-form-title" className="medical-record-form__title">
+          Add medical record
+        </h3>
+      ) : null}
 
       {formError ? (
         <p className="medical-record-form__alert" role="alert">{formError}</p>

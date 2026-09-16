@@ -92,9 +92,16 @@ type ReminderFormProps = {
   petId: string;
   onSubmit: (input: CreateReminderInput) => Promise<void>;
   onCancel: () => void;
+  variant?: 'inline' | 'dialog';
 };
 
-export function ReminderForm({ petId, onSubmit, onCancel }: ReminderFormProps) {
+export function ReminderForm({
+  petId,
+  onSubmit,
+  onCancel,
+  variant = 'inline',
+}: ReminderFormProps) {
+  const isDialog = variant === 'dialog';
   const [values, setValues] = useState<ReminderFormValues>(emptyReminderFormValues);
   const [fieldErrors, setFieldErrors] = useState<ReminderFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -136,7 +143,7 @@ export function ReminderForm({ petId, onSubmit, onCancel }: ReminderFormProps) {
       setValues(emptyReminderFormValues);
       setFieldErrors({});
     } catch (error) {
-      setFormError(getAuthErrorMessage(error));
+      setFormError(getAuthErrorMessage(error, 'save-reminder'));
     } finally {
       setIsSubmitting(false);
     }
@@ -144,14 +151,21 @@ export function ReminderForm({ petId, onSubmit, onCancel }: ReminderFormProps) {
 
   return (
     <form
-      className="reminder-form"
+      className={[
+        'reminder-form',
+        isDialog ? 'reminder-form--dialog' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onSubmit={handleSubmit}
       noValidate
-      aria-labelledby="reminder-form-title"
+      aria-labelledby={isDialog ? undefined : 'reminder-form-title'}
     >
-      <h3 id="reminder-form-title" className="reminder-form__title">
-        Add reminder
-      </h3>
+      {!isDialog ? (
+        <h3 id="reminder-form-title" className="reminder-form__title">
+          Add reminder
+        </h3>
+      ) : null}
 
       {formError ? (
         <p className="reminder-form__alert" role="alert">{formError}</p>

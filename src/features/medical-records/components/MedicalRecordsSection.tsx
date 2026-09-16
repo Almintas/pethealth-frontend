@@ -1,17 +1,17 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
-import { useState } from 'react';
-import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
-import { formatPetDate } from '../../pets/utils/format-pet-date';
+import { useMemo, useState } from 'react';
+import { ErrorAlert, LoadingState } from '../../../components/feedback';
+import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { MEDICAL_RECORDS_QUERY } from '../graphql';
 import * as medicalRecordsService from '../medical-records.service';
 import type {
   CreateMedicalRecordInput,
+  MedicalRecord,
   MedicalRecordsQueryResult,
   MedicalRecordsQueryVariables,
 } from '../types';
-import { EmptyState } from '../../../components/EmptyState';
-import { ErrorAlert } from '../../../components/ErrorAlert';
-import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
+import { MedicalRecordCard } from './MedicalRecordCard';
+import { MedicalRecordDialog } from './MedicalRecordDialog';
 import { MedicalRecordForm } from './MedicalRecordForm';
 import './medical-records-section.css';
 
@@ -19,9 +19,18 @@ type MedicalRecordsSectionProps = {
   petId: string;
 };
 
+function sortRecordsByDate(records: MedicalRecord[]): MedicalRecord[] {
+  return [...records].sort(
+    (left, right) => new Date(right.date).getTime() - new Date(left.date).getTime(),
+  );
+}
+
 export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
   const client = useApolloClient();
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [deletingRecordId, setDeletingRecordId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
+
   const { data, loading, error, refetch } = useQuery<
     MedicalRecordsQueryResult,
     MedicalRecordsQueryVariables
@@ -30,99 +39,125 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
     fetchPolicy: 'network-only',
   });
 
-  const records = data?.medicalRecords ?? [];
+  const records = useMemo(
+    () => sortRecordsByDate(data?.medicalRecords ?? []),
+    [data?.medicalRecords],
+  );
+
+  const openDialog = () => {
+    setActionError(null);
+    setIsDialogOpen(true);
+  };
 
   const handleCreateRecord = async (input: CreateMedicalRecordInput) => {
     await medicalRecordsService.createMedicalRecord(client, input);
     await refetch();
-    setIsFormOpen(false);
+    setIsDialogOpen(false);
   };
+
+  const handleDeleteRecord = async (recordId: string) => {
+    setActionError(null);
+    setDeletingRecordId(recordId);
+    try {
+      await medicalRecordsService.deleteMedicalRecord(client, recordId);
+      await refetch();
+    } catch (deleteError) {
+      setActionError(getUserFacingErrorMessage(deleteError, 'save-medical-record'));
+    } finally {
+      setDeletingRecordId(null);
+    }
+  };
+
+  const recordCountLabel =
+    records.length === 1 ? '1 record' : `${records.length} records`;
 
   return (
     <section
-      id="medical-records"
       className="medical-records-section"
       aria-labelledby="medical-records-title"
     >
-      <div className="medical-records-section__header">
-        <div>
+      <header className="medical-records-section__header">
+        <div className="medical-records-section__heading">
           <h2 id="medical-records-title">Medical Records</h2>
-          <p className="medical-records-section__description">
-            Visit notes, diagnoses, and clinical history.
-            {!loading && !error ? ` (${records.length})` : ''}
-          </p>
+          {!loading && !error ? (
+            <p className="medical-records-section__count" aria-live="polite">
+              {recordCountLabel}
+            </p>
+          ) : null}
         </div>
+
         {!loading && !error ? (
           <button
             type="button"
             className="medical-records-section__add-button"
-            onClick={() => setIsFormOpen((open) => !open)}
-            aria-expanded={isFormOpen}
-            aria-controls="medical-record-form-panel"
+            onClick={openDialog}
           >
-            {isFormOpen ? 'Close form' : 'Add Medical Record'}
+            + Add record
           </button>
         ) : null}
-      </div>
-
-      {isFormOpen && !loading && !error ? (
-        <div
-          id="medical-record-form-panel"
-          className="medical-records-section__form-panel"
-        >
-          <MedicalRecordForm
-            petId={petId}
-            onSubmit={handleCreateRecord}
-            onCancel={() => setIsFormOpen(false)}
-          />
-        </div>
-      ) : null}
+      </header>
 
       {loading ? (
-        <LoadingSkeleton lines={3} label="Loading medical records" />
+        <LoadingState message="Loading medical records…" skeleton />
       ) : null}
 
-      {error ? <ErrorAlert message={getAuthErrorMessage(error)} /> : null}
-
-      {!loading && !error && records.length === 0 ? (
-        <EmptyState
-          title="No medical records yet"
-          description="Add records after vet visits or procedures."
+      {error ? (
+        <ErrorAlert
+          message={getUserFacingErrorMessage(error, 'load-medical-records')}
+          onRetry={() => void refetch()}
+          compact
         />
       ) : null}
 
-      {!loading && !error && records.length > 0 ? (
-        <ul className="medical-records-section__list">
-          {records.map((record) => (
-            <li key={record.id} className="medical-records-section__card">
-              <div className="medical-records-section__card-header">
-                <h3 className="medical-records-section__card-title">
-                  {record.title}
-                </h3>
-                <span className="medical-records-section__card-date">
-                  {formatPetDate(record.date)}
-                </span>
-              </div>
-              <p className="medical-records-section__card-type">{record.type}</p>
-              {record.description ? (
-                <p className="medical-records-section__card-text">
-                  {record.description}
-                </p>
-              ) : null}
-              {!record.description && record.notes ? (
-                <p className="medical-records-section__card-text">
-                  {record.notes}
-                </p>
-              ) : null}
-              {record.description && record.notes ? (
-                <p className="medical-records-section__card-text">
-                  <strong>Notes:</strong> {record.notes}
-                </p>
-              ) : null}
-            </li>
-          ))}
-        </ul>
+      {actionError ? (
+        <ErrorAlert message={actionError} compact />
       ) : null}
+
+      {!loading && !error && records.length === 0 ? (
+        <div className="medical-records-section__empty">
+          <h3 className="medical-records-section__empty-title">
+            No medical records yet
+          </h3>
+          <p className="medical-records-section__empty-text">
+            Track visits, diagnoses, and treatment notes in one place so you and
+            your vet have a clear health history for this pet.
+          </p>
+          <button
+            type="button"
+            className="medical-records-section__empty-action"
+            onClick={openDialog}
+          >
+            Add medical record
+          </button>
+        </div>
+      ) : null}
+
+      {!loading && !error && records.length > 0 ? (
+        <ol className="medical-records-section__timeline">
+          {records.map((record, index) => (
+            <MedicalRecordCard
+              key={record.id}
+              record={record}
+              isLast={index === records.length - 1}
+              isDeleting={deletingRecordId === record.id}
+              onDelete={() => void handleDeleteRecord(record.id)}
+            />
+          ))}
+        </ol>
+      ) : null}
+
+      <MedicalRecordDialog
+        isOpen={isDialogOpen}
+        title="Add medical record"
+        onClose={() => setIsDialogOpen(false)}
+      >
+        <MedicalRecordForm
+          petId={petId}
+          onSubmit={handleCreateRecord}
+          onCancel={() => setIsDialogOpen(false)}
+          variant="dialog"
+        />
+      </MedicalRecordDialog>
     </section>
   );
 }

@@ -153,7 +153,7 @@ export function PetForm({
       }
       setFieldErrors({});
     } catch (error) {
-      setFormError(getAuthErrorMessage(error));
+      setFormError(getAuthErrorMessage(error, 'save-pet'));
     } finally {
       setIsSubmitting(false);
     }

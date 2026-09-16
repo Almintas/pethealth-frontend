@@ -1,10 +1,9 @@
 import { useApolloClient } from '@apollo/client/react';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
-import { ErrorAlert } from '../../../components/ErrorAlert';
-import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
+import { EmptyState, ErrorAlert, LoadingState } from '../../../components/feedback';
 import { PetAvatar } from '../../../components/PetAvatar';
-import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { AppointmentsSection } from '../../appointments';
 import { RemindersSection } from '../../reminders';
 import { MedicalRecordsSection } from '../../medical-records';
@@ -36,6 +35,7 @@ export function PetDetailsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [retryNonce, setRetryNonce] = useState(0);
 
   useEffect(() => {
     if (!id) {
@@ -61,7 +61,7 @@ export function PetDetailsPage() {
         }
       } catch (error) {
         if (!cancelled) {
-          const message = getAuthErrorMessage(error);
+          const message = getUserFacingErrorMessage(error, 'load-pet');
           if (message.toLowerCase().includes('not found')) {
             setNotFound(true);
           } else {
@@ -80,7 +80,7 @@ export function PetDetailsPage() {
     return () => {
       cancelled = true;
     };
-  }, [client, id]);
+  }, [client, id, retryNonce]);
 
   const handleUpdatePet = async (input: UpdatePetInput) => {
     if (!pet) {
@@ -116,7 +116,7 @@ export function PetDetailsPage() {
       await petsService.deletePet(client, pet.id);
       void navigate('/pets', { replace: true });
     } catch (error) {
-      setErrorMessage(getAuthErrorMessage(error));
+      setErrorMessage(getUserFacingErrorMessage(error, 'save-pet'));
     } finally {
       setIsDeleting(false);
     }
@@ -133,14 +133,29 @@ export function PetDetailsPage() {
         <Link className="ph-link ph-link--muted" to="/pets">← Back to Pets</Link>
       </div>
 
-      {loading ? <LoadingSkeleton lines={5} label="Loading pet profile" /> : null}
-      {errorMessage ? <ErrorAlert message={errorMessage} /> : null}
+      {loading ? (
+        <LoadingState message="Loading pet profile…" skeleton skeletonLines={5} />
+      ) : null}
+
+      {errorMessage ? (
+        <ErrorAlert
+          title="Could not load pet"
+          message={errorMessage}
+          onRetry={() => setRetryNonce((current) => current + 1)}
+        />
+      ) : null}
+
       {successMessage ? (
         <p className="pet-details__success" role="status">{successMessage}</p>
       ) : null}
 
       {!loading && !errorMessage && notFound ? (
-        <ErrorAlert message="Pet not found." />
+        <EmptyState
+          title="Pet not found"
+          description="This pet may have been removed or you may not have access to it."
+          actionLabel="Back to pets"
+          actionHref="/pets"
+        />
       ) : null}
 
       {!loading && !errorMessage && !notFound && pet ? (

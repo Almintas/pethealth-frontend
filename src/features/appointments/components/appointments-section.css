@@ -1,1 +1,547 @@
-/* Shared section styles: src/styles/sections.css */
+/* Appointments — dark-first scoped tokens */
+.appointments-section {
+  --apt-bg: #121820;
+  --apt-surface: #1a222d;
+  --apt-surface-elevated: #222b38;
+  --apt-border: #2a3544;
+  --apt-text: #e8edf5;
+  --apt-muted: #9aa8bc;
+  --apt-accent: #5b9fd4;
+  --apt-accent-soft: rgba(91, 159, 212, 0.15);
+  --apt-success-soft: rgba(74, 222, 128, 0.12);
+  --apt-success-text: #86efac;
+  --apt-danger-soft: rgba(248, 113, 113, 0.12);
+  --apt-danger-text: #fca5a5;
+  --apt-neutral-soft: rgba(148, 163, 184, 0.12);
+  --apt-neutral-text: #cbd5e1;
+  --apt-timeline: #3d4d63;
+  --apt-input-bg: #0f141c;
+
+  margin-top: 2rem;
+  padding: 1.35rem 1.25rem;
+  background: var(--apt-bg);
+  border: 1px solid var(--apt-border);
+  border-radius: 14px;
+  color: var(--apt-text);
+}
+
+@media (min-width: 640px) {
+  .appointments-section {
+    padding: 1.5rem 1.5rem;
+  }
+}
+
+.appointments-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.appointments-section__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.appointments-section__heading h2 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--apt-text);
+}
+
+.appointments-section__count {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--apt-muted);
+}
+
+.appointments-section__count-upcoming {
+  color: var(--apt-accent);
+}
+
+.appointments-section__add-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0a0e14;
+  background: var(--apt-accent);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.appointments-section__add-button:hover {
+  filter: brightness(1.08);
+}
+
+.appointments-section__add-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.appointments-section__status,
+.appointments-section__error {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--apt-muted);
+}
+
+.appointments-section__error {
+  color: #fecaca;
+}
+
+.appointments-section__action-error {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  color: #fecaca;
+  background: var(--apt-danger-soft);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 8px;
+}
+
+.appointments-section__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.25rem 1.75rem;
+  background: var(--apt-surface);
+  border: 1px dashed var(--apt-border);
+  border-radius: 12px;
+}
+
+.appointments-section__empty-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.appointments-section__empty-text {
+  margin: 0 0 1.25rem;
+  max-width: 28rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--apt-muted);
+}
+
+.appointments-section__empty-action {
+  padding: 0.55rem 1.15rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #0a0e14;
+  background: var(--apt-accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.appointments-section__empty-action:hover {
+  filter: brightness(1.08);
+}
+
+.appointments-section__empty-action:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.appointments-section__groups {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.appointments-section__group-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--apt-muted);
+}
+
+.appointments-section__upcoming-empty {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--apt-muted);
+  background: var(--apt-surface);
+  border: 1px dashed var(--apt-border);
+  border-radius: 10px;
+}
+
+.appointments-section__history {
+  border-top: 1px solid var(--apt-border);
+  padding-top: 0.5rem;
+}
+
+.appointments-section__history-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--apt-muted);
+  cursor: pointer;
+  list-style: none;
+}
+
+.appointments-section__history-summary::-webkit-details-marker {
+  display: none;
+}
+
+.appointments-section__history-summary::before {
+  content: '▸';
+  font-size: 0.75rem;
+  transition: transform 0.15s ease;
+}
+
+.appointments-section__history[open] .appointments-section__history-summary::before {
+  transform: rotate(90deg);
+}
+
+.appointments-section__history-summary:focus-visible {
+  outline: 2px solid var(--apt-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.appointments-section__history-count {
+  padding: 0.1rem 0.45rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  border-radius: 999px;
+  color: var(--apt-neutral-text);
+  background: var(--apt-neutral-soft);
+}
+
+.appointments-section__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.appointments-section__timeline--history {
+  margin-top: 0.65rem;
+}
+
+.appointments-section__timeline-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 0.85rem;
+  padding-bottom: 1.15rem;
+}
+
+.appointments-section__timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.appointments-section__timeline-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1.25rem;
+  padding-top: 0.35rem;
+}
+
+.appointments-section__timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--apt-accent);
+  box-shadow: 0 0 0 3px var(--apt-accent-soft);
+  flex-shrink: 0;
+}
+
+.appointments-section__timeline-dot--muted {
+  background: var(--apt-muted);
+  box-shadow: 0 0 0 3px var(--apt-neutral-soft);
+}
+
+.appointments-section__timeline-line {
+  flex: 1;
+  width: 2px;
+  min-height: 1rem;
+  margin-top: 0.35rem;
+  background: var(--apt-timeline);
+  border-radius: 1px;
+}
+
+.appointments-section__timeline-item:last-child .appointments-section__timeline-line {
+  display: none;
+}
+
+.appointments-section__record-card {
+  background: var(--apt-surface);
+  border: 1px solid var(--apt-border);
+  border-radius: 12px;
+  padding: 0.95rem 1rem;
+  min-width: 0;
+}
+
+.appointments-section__record-card--history {
+  opacity: 0.82;
+  background: color-mix(in srgb, var(--apt-surface) 92%, var(--apt-bg));
+}
+
+@media (min-width: 640px) {
+  .appointments-section__record-card {
+    padding: 1.05rem 1.15rem;
+  }
+}
+
+.appointments-section__datetime-hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.75rem;
+  margin-bottom: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  background: var(--apt-surface-elevated);
+  border: 1px solid var(--apt-border);
+  border-radius: 8px;
+}
+
+.appointments-section__record-card--history .appointments-section__datetime-hero {
+  opacity: 0.9;
+}
+
+.appointments-section__datetime-date {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--apt-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.appointments-section__datetime-time {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--apt-accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.appointments-section__record-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.appointments-section__record-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--apt-text);
+  word-break: break-word;
+  flex: 1;
+  min-width: 0;
+}
+
+.appointments-section__record-card--history .appointments-section__record-title {
+  font-weight: 600;
+  color: var(--apt-muted);
+}
+
+.appointments-section__status-badge {
+  flex-shrink: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.appointments-section__status-badge--scheduled {
+  color: var(--apt-accent);
+  background: var(--apt-accent-soft);
+  border: 1px solid rgba(91, 159, 212, 0.3);
+}
+
+.appointments-section__status-badge--completed {
+  color: var(--apt-success-text);
+  background: var(--apt-success-soft);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.appointments-section__status-badge--cancelled {
+  color: var(--apt-neutral-text);
+  background: var(--apt-neutral-soft);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.appointments-section__record-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+}
+
+.appointments-section__record-facts div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.65rem;
+  line-height: 1.45;
+}
+
+.appointments-section__record-facts dt {
+  margin: 0;
+  font-weight: 600;
+  color: var(--apt-text);
+  opacity: 0.85;
+}
+
+.appointments-section__record-facts dd {
+  margin: 0;
+  color: var(--apt-muted);
+  word-break: break-word;
+}
+
+.appointments-section__record-snippet {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--apt-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.appointments-section__record-snippet-label {
+  font-weight: 600;
+  color: var(--apt-text);
+  opacity: 0.85;
+}
+
+.appointments-section__record-details {
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+}
+
+.appointments-section__record-details summary {
+  cursor: pointer;
+  color: var(--apt-accent);
+  font-weight: 500;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.appointments-section__record-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.appointments-section__record-details summary::before {
+  content: '▸';
+  font-size: 0.75rem;
+  transition: transform 0.15s ease;
+}
+
+.appointments-section__record-details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.appointments-section__record-details summary:focus-visible {
+  outline: 2px solid var(--apt-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.appointments-section__record-details p {
+  margin: 0.5rem 0 0;
+  padding: 0.65rem 0.75rem;
+  line-height: 1.55;
+  color: var(--apt-muted);
+  background: var(--apt-surface-elevated);
+  border-radius: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.appointments-section__record-actions {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--apt-border);
+}
+
+.appointments-section__delete {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--apt-muted);
+  background: transparent;
+  border: 1px solid var(--apt-border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.appointments-section__delete:hover:not(:disabled) {
+  color: var(--apt-danger-text);
+  border-color: rgba(248, 113, 113, 0.4);
+  background: var(--apt-danger-soft);
+}
+
+.appointments-section__delete:focus-visible {
+  outline: 2px solid var(--apt-accent);
+  outline-offset: 2px;
+}
+
+.appointments-section__delete-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--apt-muted);
+}
+
+.appointments-section__delete-confirm-yes,
+.appointments-section__delete-confirm-no {
+  padding: 0.3rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--apt-border);
+  background: var(--apt-surface-elevated);
+  color: var(--apt-text);
+}
+
+.appointments-section__delete-confirm-yes {
+  color: #fecaca;
+  border-color: rgba(248, 113, 113, 0.45);
+  background: var(--apt-danger-soft);
+}
+
+.appointments-section__delete-confirm-yes:disabled,
+.appointments-section__delete-confirm-no:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.appointments-section__delete-confirm-yes:focus-visible,
+.appointments-section__delete-confirm-no:focus-visible {
+  outline: 2px solid var(--apt-accent);
+  outline-offset: 2px;
+}

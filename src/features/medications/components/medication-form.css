@@ -1,1 +1,181 @@
-/* Shared form styles: src/styles/forms.css */
+.medication-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.medication-form__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--med-text, #e8edf5);
+}
+
+.medication-form__alert {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  color: #fecaca;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 8px;
+}
+
+.medication-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.medication-form__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+@media (min-width: 560px) {
+  .medication-form__row--split {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem 1rem;
+  }
+
+  .medication-form__row--dosage {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.85rem 1rem;
+  }
+}
+
+@media (max-width: 559px) {
+  .medication-form__row--dosage {
+    grid-template-columns: 1fr;
+  }
+}
+
+.medication-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.medication-form__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--med-muted, #9aa8bc);
+}
+
+.medication-form__required {
+  color: #f87171;
+}
+
+.medication-form__input,
+.medication-form__textarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: var(--med-text, #e8edf5);
+  background: var(--med-input-bg, #0f141c);
+  border: 1px solid var(--med-border, #2a3544);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.medication-form__input--error {
+  border-color: rgba(248, 113, 113, 0.65);
+}
+
+.medication-form__input:focus-visible,
+.medication-form__textarea:focus-visible {
+  outline: 2px solid var(--med-accent, #5b9fd4);
+  outline-offset: 1px;
+  border-color: var(--med-accent, #5b9fd4);
+}
+
+.medication-form__textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.medication-form__error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: #fca5a5;
+}
+
+.medication-form__checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.medication-form__checkbox-row input {
+  width: 1rem;
+  height: 1rem;
+  accent-color: var(--med-accent, #5b9fd4);
+}
+
+.medication-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.medication-form--dialog .medication-form__actions {
+  margin-top: 0.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--med-border, #2a3544);
+}
+
+.medication-form__submit {
+  padding: 0.55rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #0a0e14;
+  background: var(--med-accent, #5b9fd4);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.medication-form__submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.medication-form__submit:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.medication-form__submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.medication-form__cancel {
+  padding: 0.55rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--med-muted, #9aa8bc);
+  background: transparent;
+  border: 1px solid var(--med-border, #2a3544);
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.medication-form__cancel:hover:not(:disabled) {
+  color: var(--med-text, #e8edf5);
+  border-color: #3d4d63;
+}
+
+.medication-form__cancel:focus-visible {
+  outline: 2px solid var(--med-accent, #5b9fd4);
+  outline-offset: 2px;
+}
+
+.medication-form__cancel:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

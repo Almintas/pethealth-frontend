@@ -1,21 +1,21 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
-import { useState } from 'react';
-import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
-import { formatPetDate } from '../../pets/utils/format-pet-date';
+import { useMemo, useState } from 'react';
+import { ErrorAlert, LoadingState } from '../../../components/feedback';
+import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { MEDICATIONS_QUERY } from '../graphql';
 import * as medicationsService from '../medications.service';
 import type {
   CreateMedicationInput,
+  Medication,
   MedicationsQueryResult,
   MedicationsQueryVariables,
 } from '../types';
-import { EmptyState } from '../../../components/EmptyState';
-import { ErrorAlert } from '../../../components/ErrorAlert';
-import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
 import {
-  StatusBadge,
-  medicationStatusTone,
-} from '../../../components/StatusBadge';
+  getMedicationTreatmentStatus,
+  isMedicationHistoryStatus,
+} from '../utils/get-medication-treatment-status';
+import { MedicationCard } from './MedicationCard';
+import { MedicationDialog } from './MedicationDialog';
 import { MedicationForm } from './MedicationForm';
 import './medications-section.css';
 
@@ -23,9 +23,37 @@ type MedicationsSectionProps = {
   petId: string;
 };
 
+function sortMedications(medications: Medication[]): Medication[] {
+  const sortPriority = (medication: Medication): number => {
+    const status = getMedicationTreatmentStatus(medication);
+    if (status === 'ongoing' || status === 'active') {
+      return 0;
+    }
+    if (status === 'completed') {
+      return 1;
+    }
+    return 2;
+  };
+
+  return [...medications].sort((left, right) => {
+    const priorityDelta = sortPriority(left) - sortPriority(right);
+    if (priorityDelta !== 0) {
+      return priorityDelta;
+    }
+    return (
+      new Date(right.startDate).getTime() - new Date(left.startDate).getTime()
+    );
+  });
+}
+
 export function MedicationsSection({ petId }: MedicationsSectionProps) {
   const client = useApolloClient();
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [deletingMedicationId, setDeletingMedicationId] = useState<string | null>(
+    null,
+  );
+  const [actionError, setActionError] = useState<string | null>(null);
+
   const { data, loading, error, refetch } = useQuery<
     MedicationsQueryResult,
     MedicationsQueryVariables
@@ -34,104 +62,148 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
     fetchPolicy: 'network-only',
   });
 
-  const medications = data?.medications ?? [];
+  const medications = useMemo(
+    () => sortMedications(data?.medications ?? []),
+    [data?.medications],
+  );
+
+  const activeCount = useMemo(
+    () =>
+      medications.filter(
+        (medication) => !isMedicationHistoryStatus(
+          getMedicationTreatmentStatus(medication),
+        ),
+      ).length,
+    [medications],
+  );
+
+  const openDialog = () => {
+    setActionError(null);
+    setIsDialogOpen(true);
+  };
 
   const handleCreateMedication = async (input: CreateMedicationInput) => {
     await medicationsService.createMedication(client, input);
     await refetch();
-    setIsFormOpen(false);
+    setIsDialogOpen(false);
   };
+
+  const handleDeleteMedication = async (medicationId: string) => {
+    setActionError(null);
+    setDeletingMedicationId(medicationId);
+    try {
+      await medicationsService.deleteMedication(client, medicationId);
+      await refetch();
+    } catch (deleteError) {
+      setActionError(getUserFacingErrorMessage(deleteError, 'save-medication'));
+    } finally {
+      setDeletingMedicationId(null);
+    }
+  };
+
+  const countLabel =
+    medications.length === 1
+      ? '1 medication'
+      : `${medications.length} medications`;
+
+  const activeCountLabel =
+    activeCount === 0
+      ? null
+      : activeCount === 1
+        ? '1 active'
+        : `${activeCount} active`;
 
   return (
     <section
-      id="medications"
       className="medications-section"
       aria-labelledby="medications-title"
     >
-      <div className="medications-section__header">
-        <div>
+      <header className="medications-section__header">
+        <div className="medications-section__heading">
           <h2 id="medications-title">Medications</h2>
-          <p className="medications-section__description">
-            Prescriptions and treatment plans for this pet.
-            {!loading && !error ? ` (${medications.length})` : ''}
-          </p>
+          {!loading && !error ? (
+            <p className="medications-section__count" aria-live="polite">
+              {countLabel}
+              {activeCountLabel ? (
+                <span className="medications-section__count-active">
+                  {' '}
+                  · {activeCountLabel}
+                </span>
+              ) : null}
+            </p>
+          ) : null}
         </div>
+
         {!loading && !error ? (
           <button
             type="button"
             className="medications-section__add-button"
-            onClick={() => setIsFormOpen((open) => !open)}
-            aria-expanded={isFormOpen}
-            aria-controls="medication-form-panel"
+            onClick={openDialog}
           >
-            {isFormOpen ? 'Close form' : 'Add Medication'}
+            + Add medication
           </button>
         ) : null}
-      </div>
+      </header>
 
-      {isFormOpen && !loading && !error ? (
-        <div
-          id="medication-form-panel"
-          className="medications-section__form-panel"
-        >
-          <MedicationForm
-            petId={petId}
-            onSubmit={handleCreateMedication}
-            onCancel={() => setIsFormOpen(false)}
-          />
-        </div>
+      {loading ? (
+        <LoadingState message="Loading medications…" skeleton />
       ) : null}
 
-      {loading ? <LoadingSkeleton lines={3} label="Loading medications" /> : null}
-
-      {error ? <ErrorAlert message={getAuthErrorMessage(error)} /> : null}
-
-      {!loading && !error && medications.length === 0 ? (
-        <EmptyState
-          title="No medications yet"
-          description="Track active prescriptions and dosage details here."
+      {error ? (
+        <ErrorAlert
+          message={getUserFacingErrorMessage(error, 'load-medications')}
+          onRetry={() => void refetch()}
+          compact
         />
       ) : null}
 
-      {!loading && !error && medications.length > 0 ? (
-        <ul className="medications-section__list">
-          {medications.map((medication) => (
-            <li key={medication.id} className="medications-section__card">
-              <div className="medications-section__card-header">
-                <h3 className="medications-section__card-title">
-                  {medication.name}
-                </h3>
-                <StatusBadge
-                  label={medication.isActive ? 'ACTIVE' : 'INACTIVE'}
-                  tone={medicationStatusTone(medication.isActive)}
-                />
-              </div>
-              <dl className="medications-section__meta">
-                <div>
-                  <dt>Dosage</dt>
-                  <dd>
-                    {medication.dosage} {medication.dosageUnit}
-                  </dd>
-                </div>
-                <div>
-                  <dt>Frequency</dt>
-                  <dd>{medication.frequency}</dd>
-                </div>
-                <div>
-                  <dt>Start date</dt>
-                  <dd>{formatPetDate(medication.startDate)}</dd>
-                </div>
-                {medication.endDate ? (
-                  <div>
-                    <dt>End date</dt>
-                    <dd>{formatPetDate(medication.endDate)}</dd>
-                  </div>
-                ) : null}
-              </dl>
-            </li>
-          ))}
-        </ul>
+      {actionError ? (
+        <ErrorAlert message={actionError} compact />
       ) : null}
+
+      {!loading && !error && medications.length === 0 ? (
+        <div className="medications-section__empty">
+          <h3 className="medications-section__empty-title">No medications yet</h3>
+          <p className="medications-section__empty-text">
+            Log prescriptions, dosages, and schedules so you know what your pet
+            is taking now and what they have taken in the past.
+          </p>
+          <button
+            type="button"
+            className="medications-section__empty-action"
+            onClick={openDialog}
+          >
+            Add medication
+          </button>
+        </div>
+      ) : null}
+
+      {!loading && !error && medications.length > 0 ? (
+        <ol className="medications-section__timeline">
+          {medications.map((medication, index) => (
+            <MedicationCard
+              key={medication.id}
+              medication={medication}
+              isLast={index === medications.length - 1}
+              isDeleting={deletingMedicationId === medication.id}
+              onDelete={() => void handleDeleteMedication(medication.id)}
+            />
+          ))}
+        </ol>
+      ) : null}
+
+      <MedicationDialog
+        isOpen={isDialogOpen}
+        title="Add medication"
+        onClose={() => setIsDialogOpen(false)}
+      >
+        <MedicationForm
+          petId={petId}
+          onSubmit={handleCreateMedication}
+          onCancel={() => setIsDialogOpen(false)}
+          variant="dialog"
+        />
+      </MedicationDialog>
     </section>
   );
 }

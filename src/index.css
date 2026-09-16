@@ -2,6 +2,7 @@
 @import './styles/ui.css';
 @import './styles/forms.css';
 @import './styles/sections.css';
+@import './components/feedback/feedback.css';
 
 *,
 *::before,

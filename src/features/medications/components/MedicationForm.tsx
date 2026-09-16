@@ -123,13 +123,16 @@ type MedicationFormProps = {
   petId: string;
   onSubmit: (input: CreateMedicationInput) => Promise<void>;
   onCancel: () => void;
+  variant?: 'inline' | 'dialog';
 };
 
 export function MedicationForm({
   petId,
   onSubmit,
   onCancel,
+  variant = 'inline',
 }: MedicationFormProps) {
+  const isDialog = variant === 'dialog';
   const [values, setValues] = useState<MedicationFormValues>(
     emptyMedicationFormValues,
   );
@@ -163,7 +166,7 @@ export function MedicationForm({
       setValues(emptyMedicationFormValues);
       setFieldErrors({});
     } catch (error) {
-      setFormError(getAuthErrorMessage(error));
+      setFormError(getAuthErrorMessage(error, 'save-medication'));
     } finally {
       setIsSubmitting(false);
     }
@@ -171,14 +174,21 @@ export function MedicationForm({
 
   return (
     <form
-      className="medication-form"
+      className={[
+        'medication-form',
+        isDialog ? 'medication-form--dialog' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onSubmit={handleSubmit}
       noValidate
-      aria-labelledby="medication-form-title"
+      aria-labelledby={isDialog ? undefined : 'medication-form-title'}
     >
-      <h3 id="medication-form-title" className="medication-form__title">
-        Add medication
-      </h3>
+      {!isDialog ? (
+        <h3 id="medication-form-title" className="medication-form__title">
+          Add medication
+        </h3>
+      ) : null}
 
       {formError ? (
         <p className="medication-form__alert" role="alert">{formError}</p>

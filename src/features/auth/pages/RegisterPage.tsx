@@ -47,7 +47,7 @@ export function RegisterPage() {
         password,
       });
     } catch (error) {
-      setFormError(getAuthErrorMessage(error));
+      setFormError(getAuthErrorMessage(error, 'auth'));
     } finally {
       setIsSubmitting(false);
     }

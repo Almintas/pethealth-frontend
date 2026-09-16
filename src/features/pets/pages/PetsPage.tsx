@@ -1,11 +1,9 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { EmptyState } from '../../../components/EmptyState';
-import { ErrorAlert } from '../../../components/ErrorAlert';
-import { LoadingSkeleton } from '../../../components/LoadingSkeleton';
+import { EmptyState, ErrorAlert, LoadingState } from '../../../components/feedback';
 import { PetAvatar } from '../../../components/PetAvatar';
-import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { PetForm } from '../components/PetForm';
 import { MY_PETS_QUERY } from '../graphql';
 import * as petsService from '../pets.service';
@@ -65,22 +63,25 @@ export function PetsPage() {
         </div>
       ) : null}
 
-      {loading ? <LoadingSkeleton lines={4} label="Loading pets" /> : null}
-      {error ? <ErrorAlert message={getAuthErrorMessage(error)} /> : null}
+      {loading ? (
+        <LoadingState message="Loading your pets…" skeleton skeletonLines={4} />
+      ) : null}
+
+      {error ? (
+        <ErrorAlert
+          title="Could not load pets"
+          message={getUserFacingErrorMessage(error, 'load-pets')}
+          onRetry={() => void refetch()}
+        />
+      ) : null}
 
       {!loading && !error && pets.length === 0 ? (
         <EmptyState
+          section
           title="No pets yet"
-          description="Add your first pet to start keeping their health information organized."
-          action={
-            <button
-              type="button"
-              className="ph-btn ph-btn--primary"
-              onClick={() => setIsFormOpen(true)}
-            >
-              + Add Pet
-            </button>
-          }
+          description="Create a pet profile to track vaccinations, medications, visits, and reminders."
+          actionLabel="Add your first pet"
+          onAction={() => setIsFormOpen(true)}
         />
       ) : null}
 

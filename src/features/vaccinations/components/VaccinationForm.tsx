@@ -98,13 +98,16 @@ type VaccinationFormProps = {
   petId: string;
   onSubmit: (input: CreateVaccinationInput) => Promise<void>;
   onCancel: () => void;
+  variant?: 'inline' | 'dialog';
 };
 
 export function VaccinationForm({
   petId,
   onSubmit,
   onCancel,
+  variant = 'inline',
 }: VaccinationFormProps) {
+  const isDialog = variant === 'dialog';
   const [values, setValues] = useState<VaccinationFormValues>(
     emptyVaccinationFormValues,
   );
@@ -134,7 +137,7 @@ export function VaccinationForm({
       setValues(emptyVaccinationFormValues);
       setFieldErrors({});
     } catch (error) {
-      setFormError(getAuthErrorMessage(error));
+      setFormError(getAuthErrorMessage(error, 'save-vaccination'));
     } finally {
       setIsSubmitting(false);
     }
@@ -142,14 +145,21 @@ export function VaccinationForm({
 
   return (
     <form
-      className="vaccination-form"
+      className={[
+        'vaccination-form',
+        isDialog ? 'vaccination-form--dialog' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onSubmit={handleSubmit}
       noValidate
-      aria-labelledby="vaccination-form-title"
+      aria-labelledby={isDialog ? undefined : 'vaccination-form-title'}
     >
-      <h3 id="vaccination-form-title" className="vaccination-form__title">
-        Add vaccination
-      </h3>
+      {!isDialog ? (
+        <h3 id="vaccination-form-title" className="vaccination-form__title">
+          Add vaccination
+        </h3>
+      ) : null}
 
       {formError ? (
         <p className="vaccination-form__alert" role="alert">{formError}</p>

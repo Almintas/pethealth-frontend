@@ -98,13 +98,16 @@ type AppointmentFormProps = {
   petId: string;
   onSubmit: (input: CreateAppointmentInput) => Promise<void>;
   onCancel: () => void;
+  variant?: 'inline' | 'dialog';
 };
 
 export function AppointmentForm({
   petId,
   onSubmit,
   onCancel,
+  variant = 'inline',
 }: AppointmentFormProps) {
+  const isDialog = variant === 'dialog';
   const [values, setValues] = useState<AppointmentFormValues>(
     emptyAppointmentFormValues,
   );
@@ -138,7 +141,7 @@ export function AppointmentForm({
       setValues(emptyAppointmentFormValues);
       setFieldErrors({});
     } catch (error) {
-      setFormError(getAuthErrorMessage(error));
+      setFormError(getAuthErrorMessage(error, 'save-appointment'));
     } finally {
       setIsSubmitting(false);
     }
@@ -146,14 +149,21 @@ export function AppointmentForm({
 
   return (
     <form
-      className="appointment-form"
+      className={[
+        'appointment-form',
+        isDialog ? 'appointment-form--dialog' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       onSubmit={handleSubmit}
       noValidate
-      aria-labelledby="appointment-form-title"
+      aria-labelledby={isDialog ? undefined : 'appointment-form-title'}
     >
-      <h3 id="appointment-form-title" className="appointment-form__title">
-        Add appointment
-      </h3>
+      {!isDialog ? (
+        <h3 id="appointment-form-title" className="appointment-form__title">
+          Add appointment
+        </h3>
+      ) : null}
 
       {formError ? (
         <p className="appointment-form__alert" role="alert">{formError}</p>
