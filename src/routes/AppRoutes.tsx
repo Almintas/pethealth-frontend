@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import { LoginPage } from '../features/auth/pages/LoginPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
@@ -41,6 +41,8 @@ export function AppRoutes() {
           <Route path="/pets/:id" element={<PetDetailsPage />} />
         </Route>
       </Route>
+
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

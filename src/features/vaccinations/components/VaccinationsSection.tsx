@@ -134,7 +134,17 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
       ) : null}
 
       {!loading && !error && vaccinations.length === 0 ? (
-        <div className="vaccinations-section__empty">
+        <div
+          className={[
+            'vaccinations-section__empty',
+            readOnly ? 'ph-clinic-empty' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {readOnly ? (
+            <span className="ph-clinic-badge">Managed by your veterinary clinic</span>
+          ) : null}
           <h3 className="vaccinations-section__empty-title">
             {sectionCopy.emptyTitle}
           </h3>

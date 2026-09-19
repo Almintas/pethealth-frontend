@@ -1,0 +1,25 @@
+[class$='-dialog__backdrop'] {
+  background: var(--ph-overlay) !important;
+}
+
+[class$='-dialog__panel'] {
+  background: var(--ph-color-surface) !important;
+  border: 1px solid var(--ph-color-border) !important;
+  box-shadow: var(--ph-shadow-lg) !important;
+}
+
+[class$='-dialog__close'] {
+  border-color: var(--ph-color-border) !important;
+  border-radius: var(--ph-radius-sm) !important;
+}
+
+[class$='-dialog__close']:hover {
+  background: var(--ph-color-surface-muted) !important;
+  border-color: var(--ph-color-border-strong) !important;
+}
+
+[class$='-dialog__title'] {
+  font-size: 1.0625rem !important;
+  font-weight: 600 !important;
+  color: var(--ph-color-text) !important;
+}

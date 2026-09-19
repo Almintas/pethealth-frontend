@@ -10,11 +10,11 @@ const ALLOWED_MIME_TYPES = new Set([
 
 export function validatePetPhotoFile(file: File): string | null {
   if (!ALLOWED_MIME_TYPES.has(file.type)) {
-    return 'Use a JPG, PNG, or WebP image.';
+    return 'Please choose a JPG, PNG, or WebP image.';
   }
 
   if (file.size > PET_PHOTO_MAX_BYTES) {
-    return 'Photo must be 5 MB or smaller.';
+    return 'The image must be smaller than 5 MB.';
   }
 
   return null;

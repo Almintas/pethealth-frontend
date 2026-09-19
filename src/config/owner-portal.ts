@@ -1,6 +1,6 @@
 /**
- * Owner Portal UX flags — veterinary data is clinic-managed in the future Vet System.
- * Backend authorization should align before production.
+ * Owner Portal UX flags — veterinary data is clinic-managed by the future Vet System.
+ * The API rejects owner mutations for vet health data; this flag controls UI affordances.
  */
 export const isVeterinaryHealthDataReadOnly = true;
 

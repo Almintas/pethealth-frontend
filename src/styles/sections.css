@@ -9,6 +9,7 @@
   border: 1px solid var(--ph-color-border);
   border-radius: var(--ph-radius-lg);
   box-shadow: var(--ph-shadow-sm);
+  scroll-margin-top: var(--ph-space-4);
 }
 
 .appointments-section__header,

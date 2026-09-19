@@ -29,11 +29,16 @@ export function PetsPage() {
     photoIntent,
   }: PetFormSubmitPayload<CreatePetInput>) => {
     const created = await petsService.createPet(client, input);
-    if (photoIntent.kind !== 'unchanged') {
-      await petsService.applyPetPhotoIntent(created.id, photoIntent);
+    try {
+      if (photoIntent.kind !== 'unchanged') {
+        await petsService.applyPetPhotoIntent(client, created.id, photoIntent);
+      }
+      await refetch();
+      setIsFormOpen(false);
+    } catch (error) {
+      await refetch();
+      throw error;
     }
-    await refetch();
-    setIsFormOpen(false);
   };
 
   return (
@@ -100,7 +105,10 @@ export function PetsPage() {
 
             return (
               <li key={pet.id}>
-                <Link className="pets-page__card ph-card" to={`/pets/${pet.id}`}>
+                <Link
+                  className="pets-page__card ph-card ph-card--interactive"
+                  to={`/pets/${pet.id}`}
+                >
                   <PetAvatar
                     species={pet.species}
                     name={pet.name}

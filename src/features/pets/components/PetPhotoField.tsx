@@ -88,6 +88,15 @@ export function PetPhotoField({
       return;
     }
 
+    if (
+      hasExistingOnly &&
+      !window.confirm(
+        'Remove this pet’s profile photo? You can add a new one anytime.',
+      )
+    ) {
+      return;
+    }
+
     if (previewUrl?.startsWith('blob:')) {
       URL.revokeObjectURL(previewUrl);
     }

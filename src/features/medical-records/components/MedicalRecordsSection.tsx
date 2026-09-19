@@ -126,7 +126,17 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
       ) : null}
 
       {!loading && !error && records.length === 0 ? (
-        <div className="medical-records-section__empty">
+        <div
+          className={[
+            'medical-records-section__empty',
+            readOnly ? 'ph-clinic-empty' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {readOnly ? (
+            <span className="ph-clinic-badge">Managed by your veterinary clinic</span>
+          ) : null}
           <h3 className="medical-records-section__empty-title">
             {sectionCopy.emptyTitle}
           </h3>

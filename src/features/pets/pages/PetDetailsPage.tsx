@@ -10,6 +10,7 @@ import { MedicalRecordsSection } from '../../medical-records';
 import { MedicationsSection } from '../../medications';
 import { VaccinationsSection } from '../../vaccinations';
 import { PetForm } from '../components/PetForm';
+import { PetProfilePhotoControls } from '../components/PetProfilePhotoControls';
 import * as petsService from '../pets.service';
 import type { PetFormSubmitPayload } from '../components/PetForm';
 import type { Pet, UpdatePetInput } from '../types';
@@ -96,8 +97,24 @@ export function PetDetailsPage() {
 
     await petsService.updatePet(client, pet.id, input);
 
-    if (photoIntent.kind !== 'unchanged') {
-      await petsService.applyPetPhotoIntent(pet.id, photoIntent);
+    try {
+      if (photoIntent.kind !== 'unchanged') {
+        const photoUpdated = await petsService.applyPetPhotoIntent(
+          client,
+          pet.id,
+          photoIntent,
+        );
+        if (photoUpdated) {
+          setPet(photoUpdated);
+        }
+      }
+    } catch (photoError) {
+      const refreshedAfterFailedPhoto = await petsService.fetchPetById(
+        client,
+        pet.id,
+      );
+      setPet(refreshedAfterFailedPhoto);
+      throw photoError;
     }
 
     const refreshedPet = await petsService.fetchPetById(client, pet.id);
@@ -176,12 +193,23 @@ export function PetDetailsPage() {
         <>
           <header className="pet-details__hero ph-card ph-card--pad">
             <div className="pet-details__hero-main">
-              <PetAvatar
-                species={pet.species}
-                name={pet.name}
-                photoUrl={pet.photoUrl}
-                size="lg"
-              />
+              {!isEditing ? (
+                <PetProfilePhotoControls
+                  pet={pet}
+                  onPetUpdated={(updated) => {
+                    setPet(updated);
+                    setSuccessMessage('Profile photo updated.');
+                  }}
+                  disabled={isDeleting}
+                />
+              ) : (
+                <PetAvatar
+                  species={pet.species}
+                  name={pet.name}
+                  photoUrl={pet.photoUrl}
+                  size="lg"
+                />
+              )}
               <div>
                 <h1 id="pet-details-title">{pet.name}</h1>
                 <p className="pet-details__subtitle">

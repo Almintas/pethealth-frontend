@@ -45,9 +45,9 @@
 
 .medical-records-section__heading h2 {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--mr-text);
 }
 
@@ -58,8 +58,19 @@
 }
 
 .medical-records-section__hint {
-  font-weight: 400;
-  color: var(--mr-muted);
+  display: inline-flex;
+  align-items: center;
+  margin-left: var(--ph-space-2);
+  padding: 0.15rem 0.45rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ph-color-text-secondary);
+  background: var(--ph-color-surface-muted);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-full);
+  vertical-align: middle;
 }
 
 .medical-records-section__add-button {
@@ -114,10 +125,15 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 2rem 1.25rem 1.75rem;
+  gap: var(--ph-space-3);
+  padding: var(--ph-space-6) var(--ph-space-5);
   background: var(--mr-surface);
   border: 1px dashed var(--mr-border);
-  border-radius: 12px;
+  border-radius: var(--ph-radius-lg);
+}
+
+.medical-records-section__empty.ph-clinic-empty {
+  border-style: solid;
 }
 
 .medical-records-section__empty-icon {

@@ -105,7 +105,7 @@
   width: 100%;
   min-height: 2.75rem;
   padding: 0.625rem 0.75rem;
-  border: 1px solid var(--ph-color-border-strong);
+  border: 1px solid var(--ph-color-border);
   border-radius: var(--ph-radius-md);
   font: inherit;
   color: var(--ph-color-text);
@@ -194,14 +194,28 @@
 .medical-record-form__submit,
 .vaccination-form__submit,
 .auth-submit {
-  padding: 0.625rem 1.25rem;
+  min-height: var(--ph-control-height);
+  padding: 0 1.25rem;
   border: none;
   border-radius: var(--ph-radius-md);
   font: inherit;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--ph-color-on-primary);
   background: var(--ph-color-primary);
   cursor: pointer;
+}
+
+.ph-form__submit:focus-visible,
+.pet-form__submit:focus-visible,
+.appointment-form__submit:focus-visible,
+.reminder-form__submit:focus-visible,
+.medication-form__submit:focus-visible,
+.medical-record-form__submit:focus-visible,
+.vaccination-form__submit:focus-visible,
+.auth-submit:focus-visible {
+  outline: none;
+  box-shadow: var(--ph-focus-ring);
 }
 
 .ph-form__submit:hover:not(:disabled),
@@ -222,14 +236,27 @@
 .medication-form__cancel,
 .medical-record-form__cancel,
 .vaccination-form__cancel {
-  padding: 0.625rem 1.25rem;
-  border: 1px solid var(--ph-color-border-strong);
+  min-height: var(--ph-control-height);
+  padding: 0 1.25rem;
+  border: 1px solid var(--ph-color-border);
   border-radius: var(--ph-radius-md);
   font: inherit;
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--ph-color-text-secondary);
-  background: var(--ph-color-surface-elevated);
+  background: var(--ph-color-surface);
   cursor: pointer;
+}
+
+.ph-form__cancel:focus-visible,
+.pet-form__cancel:focus-visible,
+.appointment-form__cancel:focus-visible,
+.reminder-form__cancel:focus-visible,
+.medication-form__cancel:focus-visible,
+.medical-record-form__cancel:focus-visible,
+.vaccination-form__cancel:focus-visible {
+  outline: none;
+  box-shadow: var(--ph-focus-ring);
 }
 
 .ph-form__cancel:hover:not(:disabled),

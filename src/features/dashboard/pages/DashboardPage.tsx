@@ -57,7 +57,7 @@ export function DashboardPage() {
     stats.petCount === 1 ? '1 pet in your care' : `${stats.petCount} pets in your care`;
 
   return (
-    <div className="dashboard-page">
+    <div className="dashboard-page ph-page">
       <header className="dashboard-page__header">
         <div>
           <p className="dashboard-page__eyebrow">Pet health overview</p>

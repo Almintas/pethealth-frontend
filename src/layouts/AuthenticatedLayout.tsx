@@ -1,12 +1,35 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { BrandMark } from '../components/BrandMark';
 import { useAuth } from '../features/auth';
 import './authenticated-layout.css';
 
-const navItems: Array<{ to: string; label: string; end?: boolean }> = [
-  { to: '/dashboard', label: 'Dashboard', end: true },
-  { to: '/pets', label: 'My Pets' },
+const navItems: Array<{
+  to: string;
+  label: string;
+  end?: boolean;
+  icon: ReactNode;
+}> = [
+  {
+    to: '/dashboard',
+    label: 'Dashboard',
+    end: true,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5Z" />
+      </svg>
+    ),
+  },
+  {
+    to: '/pets',
+    label: 'My Pets',
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+        <path d="M4.5 18c1.2-2.5 3.4-4 7.5-4s6.3 1.5 7.5 4" />
+      </svg>
+    ),
+  },
 ];
 
 export function AuthenticatedLayout() {
@@ -72,6 +95,9 @@ export function AuthenticatedLayout() {
               end={item.end}
               onClick={() => setIsMobileNavOpen(false)}
             >
+              <span className="authenticated-layout__link-icon" aria-hidden="true">
+                {item.icon}
+              </span>
               {item.label}
             </NavLink>
           ))}

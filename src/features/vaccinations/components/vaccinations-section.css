@@ -50,15 +50,26 @@
 
 .vaccinations-section__heading h2 {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--vac-text);
 }
 
 .vaccinations-section__hint {
-  font-weight: 400;
-  color: var(--vac-muted);
+  display: inline-flex;
+  align-items: center;
+  margin-left: var(--ph-space-2);
+  padding: 0.15rem 0.45rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ph-color-text-secondary);
+  background: var(--ph-color-surface-muted);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-full);
+  vertical-align: middle;
 }
 
 .vaccinations-section__count {
@@ -110,6 +121,10 @@
   background: var(--vac-danger-soft);
   border: 1px solid rgba(248, 113, 113, 0.35);
   border-radius: 8px;
+}
+
+.vaccinations-section__empty.ph-clinic-empty {
+  border-style: solid;
 }
 
 .vaccinations-section__empty {

@@ -132,7 +132,40 @@ function mapRestPet(payload: Pet): Pet {
   return payload;
 }
 
+function syncPetPhotoInApolloCache(client: ApolloClient, pet: Pet): void {
+  try {
+    client.writeQuery<PetQueryResult, PetQueryVariables>({
+      query: PET_QUERY,
+      variables: { id: pet.id },
+      data: { pet },
+    });
+  } catch {
+    // Pet query may not be in cache yet.
+  }
+
+  try {
+    const existing = client.readQuery<MyPetsQueryResult>({
+      query: MY_PETS_QUERY,
+    });
+    if (!existing?.myPets) {
+      return;
+    }
+
+    client.writeQuery<MyPetsQueryResult>({
+      query: MY_PETS_QUERY,
+      data: {
+        myPets: existing.myPets.map((entry) =>
+          entry.id === pet.id ? { ...entry, photoUrl: pet.photoUrl } : entry,
+        ),
+      },
+    });
+  } catch {
+    // Pets list may not be in cache.
+  }
+}
+
 export async function uploadPetPhoto(
+  client: ApolloClient,
   petId: string,
   file: File,
 ): Promise<Pet> {
@@ -153,10 +186,15 @@ export async function uploadPetPhoto(
   }
 
   const json = (await response.json()) as Pet;
-  return mapRestPet(json);
+  const pet = mapRestPet(json);
+  syncPetPhotoInApolloCache(client, pet);
+  return pet;
 }
 
-export async function removePetPhoto(petId: string): Promise<Pet> {
+export async function removePetPhoto(
+  client: ApolloClient,
+  petId: string,
+): Promise<Pet> {
   const token = getAccessToken();
 
   const response = await fetch(`${getApiBaseUrl()}/pets/${petId}/photo`, {
@@ -171,10 +209,13 @@ export async function removePetPhoto(petId: string): Promise<Pet> {
   }
 
   const json = (await response.json()) as Pet;
-  return mapRestPet(json);
+  const pet = mapRestPet(json);
+  syncPetPhotoInApolloCache(client, pet);
+  return pet;
 }
 
 export async function applyPetPhotoIntent(
+  client: ApolloClient,
   petId: string,
   intent: PetPhotoIntent,
 ): Promise<Pet | undefined> {
@@ -183,8 +224,8 @@ export async function applyPetPhotoIntent(
   }
 
   if (intent.kind === 'upload') {
-    return uploadPetPhoto(petId, intent.file);
+    return uploadPetPhoto(client, petId, intent.file);
   }
 
-  return removePetPhoto(petId);
+  return removePetPhoto(client, petId);
 }

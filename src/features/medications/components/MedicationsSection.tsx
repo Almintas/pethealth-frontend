@@ -174,7 +174,17 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
       ) : null}
 
       {!loading && !error && medications.length === 0 ? (
-        <div className="medications-section__empty">
+        <div
+          className={[
+            'medications-section__empty',
+            readOnly ? 'ph-clinic-empty' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          {readOnly ? (
+            <span className="ph-clinic-badge">Managed by your veterinary clinic</span>
+          ) : null}
           <h3 className="medications-section__empty-title">
             {sectionCopy.emptyTitle}
           </h3>
