@@ -1,0 +1,76 @@
+:root {
+  color-scheme: light;
+
+  --ph-font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto,
+    sans-serif;
+
+  /* Page & surfaces */
+  --ph-color-bg: #f4f6f8;
+  --ph-color-surface: #ffffff;
+  --ph-color-surface-elevated: #fcfdfe;
+  --ph-color-surface-muted: #f8fafc;
+  --ph-color-surface-hover: #eef2f6;
+
+  /* Brand accent — healthcare blue */
+  --ph-color-primary: #2563eb;
+  --ph-color-primary-hover: #1d4ed8;
+  --ph-color-primary-soft: #eff6ff;
+  --ph-color-primary-muted: #f0f7ff;
+  --ph-color-on-primary: #ffffff;
+
+  --ph-color-secondary: #3b82f6;
+  --ph-color-secondary-soft: #eff6ff;
+
+  /* Text */
+  --ph-color-text: #172033;
+  --ph-color-text-secondary: #64748b;
+  --ph-color-text-muted: #94a3b8;
+
+  /* Borders */
+  --ph-color-border: #dce3ea;
+  --ph-color-border-strong: #c5d0db;
+
+  /* Inputs */
+  --ph-color-input-bg: #ffffff;
+  --ph-color-input-placeholder: #94a3b8;
+
+  /* Status */
+  --ph-color-success: #059669;
+  --ph-color-success-soft: #ecfdf5;
+  --ph-color-success-text: #047857;
+  --ph-color-warning: #d97706;
+  --ph-color-warning-soft: #fffbeb;
+  --ph-color-warning-text: #b45309;
+  --ph-color-danger: #dc2626;
+  --ph-color-danger-soft: #fef2f2;
+  --ph-color-danger-text: #b91c1c;
+  --ph-color-info: #2563eb;
+  --ph-color-info-soft: #eff6ff;
+  --ph-color-neutral: #64748b;
+  --ph-color-neutral-soft: #f1f5f9;
+
+  --ph-radius-sm: 0.5rem;
+  --ph-radius-md: 0.625rem;
+  --ph-radius-lg: 0.75rem;
+  --ph-radius-xl: 1rem;
+  --ph-radius-full: 9999px;
+
+  --ph-shadow-sm: 0 1px 2px rgba(23, 32, 51, 0.04);
+  --ph-shadow-md: 0 4px 12px rgba(23, 32, 51, 0.06);
+  --ph-shadow-lg: 0 12px 28px rgba(23, 32, 51, 0.08);
+
+  --ph-space-1: 0.25rem;
+  --ph-space-2: 0.5rem;
+  --ph-space-3: 0.75rem;
+  --ph-space-4: 1rem;
+  --ph-space-5: 1.25rem;
+  --ph-space-6: 1.5rem;
+  --ph-space-8: 2rem;
+  --ph-space-10: 2.5rem;
+
+  --ph-sidebar-width: 15rem;
+  --ph-content-max: 68rem;
+  --ph-control-height: 2.75rem;
+  --ph-focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.22);
+  --ph-overlay: rgba(23, 32, 51, 0.45);
+}

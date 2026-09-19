@@ -1,0 +1,92 @@
+.medication-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0;
+}
+
+@media (min-width: 640px) {
+  .medication-dialog {
+    align-items: center;
+    padding: 1.5rem;
+  }
+}
+
+.medication-dialog__backdrop {
+  position: absolute;
+  inset: 0;
+  border: none;
+  padding: 0;
+  background: rgba(2, 6, 23, 0.72);
+  cursor: pointer;
+}
+
+.medication-dialog__panel {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-height: min(92vh, 48rem);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--med-border, var(--ph-color-border));
+  border-radius: 1rem 1rem 0 0;
+  background: var(--med-surface-elevated, var(--ph-color-surface-elevated));
+  box-shadow: 0 24px 64px rgba(2, 6, 23, 0.45);
+  outline: none;
+}
+
+@media (min-width: 640px) {
+  .medication-dialog__panel {
+    max-width: 36rem;
+    border-radius: 1rem;
+  }
+}
+
+.medication-dialog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--med-border, var(--ph-color-border));
+}
+
+.medication-dialog__title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--med-text, var(--ph-color-text));
+}
+
+.medication-dialog__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--med-border, var(--ph-color-border));
+  border-radius: 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--med-muted, var(--ph-color-text-secondary));
+  background: transparent;
+  cursor: pointer;
+}
+
+.medication-dialog__close:hover {
+  color: var(--med-text, var(--ph-color-text));
+  border-color: var(--ph-color-border-strong);
+}
+
+.medication-dialog__close:focus-visible {
+  outline: 2px solid var(--med-accent, var(--ph-color-primary));
+  outline-offset: 2px;
+}
+
+.medication-dialog__body {
+  overflow: auto;
+  padding: 1rem 1.25rem 1.25rem;
+}

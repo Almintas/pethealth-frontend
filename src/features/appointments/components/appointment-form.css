@@ -1,0 +1,160 @@
+.appointment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.appointment-form__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--apt-text, var(--ph-color-text));
+}
+
+.appointment-form__alert {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  color: var(--ph-color-danger-text);
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 8px;
+}
+
+.appointment-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.appointment-form__row--split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.85rem;
+}
+
+@media (min-width: 560px) {
+  .appointment-form__row--split {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem 1rem;
+  }
+}
+
+.appointment-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.appointment-form__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--apt-muted, var(--ph-color-text-secondary));
+}
+
+.appointment-form__required {
+  color: #f87171;
+}
+
+.appointment-form__input,
+.appointment-form__textarea,
+.appointment-form__select {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: var(--apt-text, var(--ph-color-text));
+  background: var(--apt-input-bg, var(--ph-color-input-bg));
+  border: 1px solid var(--apt-border, var(--ph-color-border));
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.appointment-form__input--error {
+  border-color: rgba(248, 113, 113, 0.65);
+}
+
+.appointment-form__input:focus-visible,
+.appointment-form__textarea:focus-visible,
+.appointment-form__select:focus-visible {
+  outline: 2px solid var(--apt-accent, var(--ph-color-primary));
+  outline-offset: 1px;
+  border-color: var(--apt-accent, var(--ph-color-primary));
+}
+
+.appointment-form__textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.appointment-form__error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-danger-text);
+}
+
+.appointment-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.appointment-form--dialog .appointment-form__actions {
+  margin-top: 0.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--apt-border, var(--ph-color-border));
+}
+
+.appointment-form__submit {
+  padding: 0.55rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ph-color-on-primary);
+  background: var(--apt-accent, var(--ph-color-primary));
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.appointment-form__submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.appointment-form__submit:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.appointment-form__submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.appointment-form__cancel {
+  padding: 0.55rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--apt-muted, var(--ph-color-text-secondary));
+  background: transparent;
+  border: 1px solid var(--apt-border, var(--ph-color-border));
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.appointment-form__cancel:hover:not(:disabled) {
+  color: var(--apt-text, var(--ph-color-text));
+  border-color: var(--ph-color-border-strong);
+}
+
+.appointment-form__cancel:focus-visible {
+  outline: 2px solid var(--apt-accent, var(--ph-color-primary));
+  outline-offset: 2px;
+}
+
+.appointment-form__cancel:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

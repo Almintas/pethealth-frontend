@@ -1,0 +1,157 @@
+.vaccination-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.vaccination-form__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--vac-text, var(--ph-color-text));
+}
+
+.vaccination-form__alert {
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  color: var(--ph-color-danger-text);
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 8px;
+}
+
+.vaccination-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.vaccination-form__row--split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.85rem 1rem;
+}
+
+@media (max-width: 520px) {
+  .vaccination-form__row--split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.vaccination-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.vaccination-form__label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--vac-muted, var(--ph-color-text-secondary));
+}
+
+.vaccination-form__required {
+  color: #f87171;
+}
+
+.vaccination-form__input,
+.vaccination-form__textarea {
+  width: 100%;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: var(--vac-text, var(--ph-color-text));
+  background: var(--vac-input-bg, var(--ph-color-input-bg));
+  border: 1px solid var(--vac-border, var(--ph-color-border));
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.vaccination-form__input--error {
+  border-color: rgba(248, 113, 113, 0.65);
+}
+
+.vaccination-form__input:focus-visible,
+.vaccination-form__textarea:focus-visible {
+  outline: 2px solid var(--vac-accent, var(--ph-color-primary));
+  outline-offset: 1px;
+  border-color: var(--vac-accent, var(--ph-color-primary));
+}
+
+.vaccination-form__textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}
+
+.vaccination-form__error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-danger-text);
+}
+
+.vaccination-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.vaccination-form--dialog .vaccination-form__actions {
+  margin-top: 0.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--vac-border, var(--ph-color-border));
+}
+
+.vaccination-form__submit {
+  padding: 0.55rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ph-color-on-primary);
+  background: var(--vac-accent, var(--ph-color-primary));
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.vaccination-form__submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.vaccination-form__submit:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.vaccination-form__submit:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.vaccination-form__cancel {
+  padding: 0.55rem 1rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--vac-muted, var(--ph-color-text-secondary));
+  background: transparent;
+  border: 1px solid var(--vac-border, var(--ph-color-border));
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.vaccination-form__cancel:hover:not(:disabled) {
+  color: var(--vac-text, var(--ph-color-text));
+  border-color: var(--ph-color-border-strong);
+}
+
+.vaccination-form__cancel:focus-visible {
+  outline: 2px solid var(--vac-accent, var(--ph-color-primary));
+  outline-offset: 2px;
+}
+
+.vaccination-form__cancel:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

@@ -1,0 +1,274 @@
+.ph-form,
+.auth-form,
+.pet-form,
+.appointment-form,
+.reminder-form,
+.medication-form,
+.medical-record-form,
+.vaccination-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-4);
+}
+
+.ph-form__title,
+.pet-form__title,
+.appointment-form__title,
+.reminder-form__title,
+.medication-form__title,
+.medical-record-form__title,
+.vaccination-form__title {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--ph-color-text);
+}
+
+.ph-form__fields,
+.pet-form__fields,
+.appointment-form__fields,
+.reminder-form__fields,
+.medication-form__fields,
+.medical-record-form__fields,
+.vaccination-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-4);
+}
+
+.ph-form__row,
+.pet-form__row,
+.appointment-form__row,
+.reminder-form__row,
+.medication-form__row,
+.medical-record-form__row,
+.vaccination-form__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ph-space-4);
+}
+
+@media (min-width: 560px) {
+  .ph-form__row--split,
+  .pet-form__row--split,
+  .appointment-form__row--split,
+  .reminder-form__row--split,
+  .medication-form__row--split,
+  .medical-record-form__row--split,
+  .vaccination-form__row--split,
+  .auth-form__row--split {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.ph-form__field,
+.pet-form__field,
+.appointment-form__field,
+.reminder-form__field,
+.medication-form__field,
+.medical-record-form__field,
+.vaccination-form__field,
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-2);
+}
+
+.ph-form__label,
+.pet-form__label,
+.appointment-form__label,
+.reminder-form__label,
+.medication-form__label,
+.medical-record-form__label,
+.vaccination-form__label,
+.auth-field__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-text);
+}
+
+.ph-form__input,
+.pet-form__input,
+.appointment-form__input,
+.reminder-form__input,
+.medication-form__input,
+.medical-record-form__input,
+.vaccination-form__input,
+.auth-field__input,
+.ph-form__select,
+.pet-form__select,
+.appointment-form__select,
+.reminder-form__select,
+.medication-form__select,
+.medical-record-form__select,
+.vaccination-form__select {
+  width: 100%;
+  min-height: 2.75rem;
+  padding: 0.625rem 0.75rem;
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-md);
+  font: inherit;
+  color: var(--ph-color-text);
+  background: var(--ph-color-input-bg);
+}
+
+.ph-form__input:focus,
+.pet-form__input:focus,
+.appointment-form__input:focus,
+.reminder-form__input:focus,
+.medication-form__input:focus,
+.medical-record-form__input:focus,
+.vaccination-form__input:focus,
+.auth-field__input:focus,
+.ph-form__select:focus,
+.pet-form__select:focus,
+.appointment-form__select:focus,
+.reminder-form__select:focus,
+.medication-form__select:focus,
+.medical-record-form__select:focus,
+.vaccination-form__select:focus {
+  outline: none;
+  border-color: var(--ph-color-primary);
+  box-shadow: var(--ph-focus-ring);
+}
+
+.ph-form__input--error,
+.pet-form__input--error,
+.appointment-form__input--error,
+.reminder-form__input--error,
+.medication-form__input--error,
+.medical-record-form__input--error,
+.vaccination-form__input--error,
+.auth-field__input--error {
+  border-color: var(--ph-color-danger);
+}
+
+.ph-form__error,
+.pet-form__error,
+.appointment-form__error,
+.reminder-form__error,
+.medication-form__error,
+.medical-record-form__error,
+.vaccination-form__error,
+.auth-field__error {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-danger);
+}
+
+.ph-form__alert,
+.pet-form__alert,
+.appointment-form__alert,
+.reminder-form__alert,
+.medication-form__alert,
+.medical-record-form__alert,
+.vaccination-form__alert,
+.auth-alert {
+  margin: 0;
+  padding: var(--ph-space-3) var(--ph-space-4);
+  border-radius: var(--ph-radius-md);
+  font-size: 0.875rem;
+  background: var(--ph-color-danger-soft);
+  color: var(--ph-color-danger-text);
+  border: 1px solid var(--ph-color-danger-text);
+}
+
+.ph-form__actions,
+.pet-form__actions,
+.appointment-form__actions,
+.reminder-form__actions,
+.medication-form__actions,
+.medical-record-form__actions,
+.vaccination-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ph-space-3);
+  padding-top: var(--ph-space-2);
+}
+
+.ph-form__submit,
+.pet-form__submit,
+.appointment-form__submit,
+.reminder-form__submit,
+.medication-form__submit,
+.medical-record-form__submit,
+.vaccination-form__submit,
+.auth-submit {
+  min-height: var(--ph-control-height);
+  padding: 0 1.25rem;
+  border: none;
+  border-radius: var(--ph-radius-md);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-on-primary);
+  background: var(--ph-color-primary);
+  cursor: pointer;
+}
+
+.ph-form__submit:focus-visible,
+.pet-form__submit:focus-visible,
+.appointment-form__submit:focus-visible,
+.reminder-form__submit:focus-visible,
+.medication-form__submit:focus-visible,
+.medical-record-form__submit:focus-visible,
+.vaccination-form__submit:focus-visible,
+.auth-submit:focus-visible {
+  outline: none;
+  box-shadow: var(--ph-focus-ring);
+}
+
+.ph-form__submit:hover:not(:disabled),
+.pet-form__submit:hover:not(:disabled),
+.appointment-form__submit:hover:not(:disabled),
+.reminder-form__submit:hover:not(:disabled),
+.medication-form__submit:hover:not(:disabled),
+.medical-record-form__submit:hover:not(:disabled),
+.vaccination-form__submit:hover:not(:disabled),
+.auth-submit:hover:not(:disabled) {
+  background: var(--ph-color-primary-hover);
+}
+
+.ph-form__cancel,
+.pet-form__cancel,
+.appointment-form__cancel,
+.reminder-form__cancel,
+.medication-form__cancel,
+.medical-record-form__cancel,
+.vaccination-form__cancel {
+  min-height: var(--ph-control-height);
+  padding: 0 1.25rem;
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-md);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-text-secondary);
+  background: var(--ph-color-surface);
+  cursor: pointer;
+}
+
+.ph-form__cancel:focus-visible,
+.pet-form__cancel:focus-visible,
+.appointment-form__cancel:focus-visible,
+.reminder-form__cancel:focus-visible,
+.medication-form__cancel:focus-visible,
+.medical-record-form__cancel:focus-visible,
+.vaccination-form__cancel:focus-visible {
+  outline: none;
+  box-shadow: var(--ph-focus-ring);
+}
+
+.ph-form__cancel:hover:not(:disabled),
+.pet-form__cancel:hover:not(:disabled),
+.appointment-form__cancel:hover:not(:disabled),
+.reminder-form__cancel:hover:not(:disabled),
+.medication-form__cancel:hover:not(:disabled),
+.medical-record-form__cancel:hover:not(:disabled),
+.vaccination-form__cancel:hover:not(:disabled) {
+  background: var(--ph-color-surface-muted);
+}
+
+.pet-form__required {
+  color: var(--ph-color-danger);
+}

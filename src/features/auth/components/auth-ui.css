@@ -1,0 +1,129 @@
+.auth-shell {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  min-height: 100vh;
+  background: var(--ph-color-bg);
+}
+
+.auth-shell__brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ph-space-8) var(--ph-space-6);
+  background: var(--ph-color-surface-muted);
+  border-right: 1px solid var(--ph-color-border);
+}
+
+.auth-shell__brand-inner {
+  max-width: 22rem;
+}
+
+.auth-shell__logo {
+  margin-bottom: var(--ph-space-4);
+}
+
+.auth-shell__brand-title {
+  margin: 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--ph-color-text);
+}
+
+.auth-shell__brand-copy {
+  margin: var(--ph-space-3) 0 0;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--ph-color-text-secondary);
+}
+
+.auth-shell__panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ph-space-6);
+  background: var(--ph-color-bg);
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 28rem;
+  padding: var(--ph-space-8);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-xl);
+  background: var(--ph-color-surface);
+  box-shadow: var(--ph-shadow-md);
+}
+
+.auth-card__title {
+  margin: 0 0 var(--ph-space-2);
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--ph-color-text);
+}
+
+.auth-card__subtitle {
+  margin: 0 0 var(--ph-space-5);
+  color: var(--ph-color-text-secondary);
+  font-size: 0.95rem;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ph-space-4);
+}
+
+.auth-form__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ph-space-4);
+}
+
+.auth-switch {
+  margin: var(--ph-space-5) 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.auth-switch__button {
+  color: var(--ph-color-primary);
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.auth-switch__button:hover {
+  color: var(--ph-color-primary-hover);
+}
+
+@media (max-width: 900px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-shell__brand {
+    border-right: none;
+    border-bottom: 1px solid var(--ph-color-border);
+    padding: var(--ph-space-6) var(--ph-space-4);
+  }
+
+  .auth-shell__brand-inner {
+    max-width: none;
+    text-align: center;
+  }
+
+  .auth-shell__logo {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .auth-shell__panel {
+    padding: var(--ph-space-4);
+  }
+
+  .auth-card {
+    padding: var(--ph-space-5);
+  }
+}

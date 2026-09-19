@@ -1,0 +1,495 @@
+/* Vaccinations — dark-first scoped tokens (aligned with Medical Records) */
+.vaccinations-section {
+  --vac-bg: var(--ph-color-surface);
+  --vac-surface: var(--ph-color-surface);
+  --vac-surface-elevated: var(--ph-color-surface-elevated);
+  --vac-border: var(--ph-color-border);
+  --vac-text: var(--ph-color-text);
+  --vac-muted: var(--ph-color-text-secondary);
+  --vac-accent: var(--ph-color-primary);
+  --vac-accent-soft: var(--ph-color-primary-soft);
+  --vac-success-soft: var(--ph-color-success-soft);
+  --vac-success-text: var(--ph-color-success-text);
+  --vac-danger: #f87171;
+  --vac-danger-soft: var(--ph-color-danger-soft);
+  --vac-danger-text: var(--ph-color-danger-text);
+  --vac-neutral-soft: var(--ph-color-neutral-soft);
+  --vac-neutral-text: var(--ph-color-text-secondary);
+  --vac-timeline: var(--ph-color-border-strong);
+  --vac-input-bg: var(--ph-color-input-bg);
+
+  margin-top: 2rem;
+  padding: 1.35rem 1.25rem;
+  background: var(--vac-bg);
+  border: 1px solid var(--vac-border);
+  border-radius: 14px;
+  color: var(--vac-text);
+}
+
+@media (min-width: 640px) {
+  .vaccinations-section {
+    padding: 1.5rem 1.5rem;
+  }
+}
+
+.vaccinations-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.vaccinations-section__heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.vaccinations-section__heading h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--vac-text);
+}
+
+.vaccinations-section__hint {
+  display: inline-flex;
+  align-items: center;
+  margin-left: var(--ph-space-2);
+  padding: 0.15rem 0.45rem;
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ph-color-text-secondary);
+  background: var(--ph-color-surface-muted);
+  border: 1px solid var(--ph-color-border);
+  border-radius: var(--ph-radius-full);
+  vertical-align: middle;
+}
+
+.vaccinations-section__count {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--vac-muted);
+}
+
+.vaccinations-section__add-button {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.95rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-on-primary);
+  background: var(--vac-accent);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.vaccinations-section__add-button:hover {
+  filter: brightness(1.08);
+}
+
+.vaccinations-section__add-button:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.vaccinations-section__status,
+.vaccinations-section__error {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--vac-muted);
+}
+
+.vaccinations-section__error {
+  color: var(--ph-color-danger-text);
+}
+
+.vaccinations-section__action-error {
+  margin: 0 0 1rem;
+  padding: 0.65rem 0.85rem;
+  font-size: 0.875rem;
+  color: var(--ph-color-danger-text);
+  background: var(--vac-danger-soft);
+  border: 1px solid rgba(248, 113, 113, 0.35);
+  border-radius: 8px;
+}
+
+.vaccinations-section__empty.ph-clinic-empty {
+  border-style: solid;
+}
+
+.vaccinations-section__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1.25rem 1.75rem;
+  background: var(--vac-surface);
+  border: 1px dashed var(--vac-border);
+  border-radius: 12px;
+}
+
+.vaccinations-section__empty-title {
+  margin: 0 0 0.5rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+
+.vaccinations-section__empty-text {
+  margin: 0 0 1.25rem;
+  max-width: 28rem;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--vac-muted);
+}
+
+.vaccinations-section__empty-action {
+  padding: 0.55rem 1.15rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--ph-color-on-primary);
+  background: var(--vac-accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.vaccinations-section__empty-action:hover {
+  filter: brightness(1.08);
+}
+
+.vaccinations-section__empty-action:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+.vaccinations-section__timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.vaccinations-section__timeline-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 0.85rem;
+  padding-bottom: 1.15rem;
+}
+
+.vaccinations-section__timeline-item:last-child {
+  padding-bottom: 0;
+}
+
+.vaccinations-section__timeline-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 1.25rem;
+  padding-top: 0.35rem;
+}
+
+.vaccinations-section__timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--vac-accent);
+  box-shadow: 0 0 0 3px var(--vac-accent-soft);
+  flex-shrink: 0;
+}
+
+.vaccinations-section__timeline-line {
+  flex: 1;
+  width: 2px;
+  min-height: 1rem;
+  margin-top: 0.35rem;
+  background: var(--vac-timeline);
+  border-radius: 1px;
+}
+
+.vaccinations-section__timeline-item:last-child .vaccinations-section__timeline-line {
+  display: none;
+}
+
+.vaccinations-section__record-card {
+  background: var(--vac-surface);
+  border: 1px solid var(--vac-border);
+  border-radius: 12px;
+  padding: 0.95rem 1rem;
+  min-width: 0;
+}
+
+@media (min-width: 640px) {
+  .vaccinations-section__record-card {
+    padding: 1.05rem 1.15rem;
+  }
+}
+
+.vaccinations-section__record-top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 0.65rem;
+}
+
+.vaccinations-section__record-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  color: var(--vac-text);
+  word-break: break-word;
+  flex: 1;
+  min-width: 0;
+}
+
+.vaccinations-section__status-badge {
+  flex-shrink: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.vaccinations-section__status-badge--valid {
+  color: var(--vac-success-text);
+  background: var(--vac-success-soft);
+  border: 1px solid rgba(74, 222, 128, 0.25);
+}
+
+.vaccinations-section__status-badge--overdue {
+  color: var(--vac-danger-text);
+  background: var(--vac-danger-soft);
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.vaccinations-section__status-badge--none {
+  color: var(--vac-neutral-text);
+  background: var(--vac-neutral-soft);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.vaccinations-section__due-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.65rem;
+  margin-bottom: 0.5rem;
+  padding: 0.55rem 0.7rem;
+  background: var(--vac-surface-elevated);
+  border-radius: 8px;
+  border: 1px solid var(--vac-border);
+}
+
+.vaccinations-section__due-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--vac-muted);
+}
+
+.vaccinations-section__due-date {
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--vac-text);
+}
+
+.vaccinations-section__due-date--valid {
+  color: var(--vac-success-text);
+}
+
+.vaccinations-section__due-date--overdue {
+  color: var(--vac-danger-text);
+}
+
+.vaccinations-section__due-none {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--vac-muted);
+}
+
+.vaccinations-section__administered {
+  margin: 0 0 0.65rem;
+  font-size: 0.8125rem;
+  color: var(--vac-muted);
+}
+
+.vaccinations-section__administered-label {
+  font-weight: 600;
+  margin-right: 0.35rem;
+  color: var(--vac-text);
+  opacity: 0.85;
+}
+
+.vaccinations-section__record-facts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+}
+
+.vaccinations-section__record-facts div {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.35rem 0.65rem;
+  line-height: 1.45;
+}
+
+.vaccinations-section__record-facts dt {
+  margin: 0;
+  font-weight: 600;
+  color: var(--vac-text);
+  opacity: 0.85;
+}
+
+.vaccinations-section__record-facts dd {
+  margin: 0;
+  color: var(--vac-muted);
+  word-break: break-word;
+}
+
+.vaccinations-section__record-snippet {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--vac-muted);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.vaccinations-section__record-snippet-label {
+  font-weight: 600;
+  color: var(--vac-text);
+  opacity: 0.85;
+}
+
+.vaccinations-section__record-details {
+  margin-top: 0.35rem;
+  font-size: 0.875rem;
+}
+
+.vaccinations-section__record-details summary {
+  cursor: pointer;
+  color: var(--vac-accent);
+  font-weight: 500;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.vaccinations-section__record-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.vaccinations-section__record-details summary::before {
+  content: '▸';
+  font-size: 0.75rem;
+  transition: transform 0.15s ease;
+}
+
+.vaccinations-section__record-details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.vaccinations-section__record-details summary:focus-visible {
+  outline: 2px solid var(--vac-accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.vaccinations-section__record-details p {
+  margin: 0.5rem 0 0;
+  padding: 0.65rem 0.75rem;
+  line-height: 1.55;
+  color: var(--vac-muted);
+  background: var(--vac-surface-elevated);
+  border-radius: 8px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.vaccinations-section__record-actions {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--vac-border);
+}
+
+.vaccinations-section__delete {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--vac-muted);
+  background: transparent;
+  border: 1px solid var(--vac-border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.vaccinations-section__delete:hover:not(:disabled) {
+  color: var(--vac-danger);
+  border-color: rgba(248, 113, 113, 0.4);
+  background: var(--vac-danger-soft);
+}
+
+.vaccinations-section__delete:focus-visible {
+  outline: 2px solid var(--vac-accent);
+  outline-offset: 2px;
+}
+
+.vaccinations-section__delete-confirm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--vac-muted);
+}
+
+.vaccinations-section__delete-confirm-yes,
+.vaccinations-section__delete-confirm-no {
+  padding: 0.3rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid var(--vac-border);
+  background: var(--vac-surface-elevated);
+  color: var(--vac-text);
+}
+
+.vaccinations-section__delete-confirm-yes {
+  color: var(--ph-color-danger-text);
+  border-color: rgba(248, 113, 113, 0.45);
+  background: var(--vac-danger-soft);
+}
+
+.vaccinations-section__delete-confirm-yes:disabled,
+.vaccinations-section__delete-confirm-no:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.vaccinations-section__delete-confirm-yes:focus-visible,
+.vaccinations-section__delete-confirm-no:focus-visible {
+  outline: 2px solid var(--vac-accent);
+  outline-offset: 2px;
+}

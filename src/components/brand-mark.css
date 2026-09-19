@@ -1,0 +1,30 @@
+.brand-mark {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.brand-mark--sm {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.brand-mark--md {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.brand-mark svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.brand-mark__tile {
+  fill: var(--ph-color-primary-muted);
+  stroke: var(--ph-color-border);
+  stroke-width: 1;
+}
+
+.brand-mark__paw {
+  fill: var(--ph-color-primary);
+}
