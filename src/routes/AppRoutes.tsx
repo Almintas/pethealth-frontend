@@ -5,9 +5,7 @@ import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
 import { MainLayout } from '../layouts/MainLayout';
 import { PetsPage } from '../features/pets';
 import { PetDetailsPage } from '../features/pets/pages/PetDetailsPage';
-import { AppointmentsPage } from '../pages/AppointmentsPage';
 import { HomePage } from '../pages/HomePage';
-import { RemindersPage } from '../pages/RemindersPage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicRoute } from './PublicRoute';
 import { RootRedirect } from './RootRedirect';
@@ -41,8 +39,6 @@ export function AppRoutes() {
           <Route path="/dashboard" element={<HomePage />} />
           <Route path="/pets" element={<PetsPage />} />
           <Route path="/pets/:id" element={<PetDetailsPage />} />
-          <Route path="/appointments" element={<AppointmentsPage />} />
-          <Route path="/reminders" element={<RemindersPage />} />
         </Route>
       </Route>
     </Routes>

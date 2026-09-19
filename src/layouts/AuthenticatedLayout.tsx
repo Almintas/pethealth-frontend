@@ -7,8 +7,6 @@ import './authenticated-layout.css';
 const navItems: Array<{ to: string; label: string; end?: boolean }> = [
   { to: '/dashboard', label: 'Dashboard', end: true },
   { to: '/pets', label: 'My Pets' },
-  { to: '/appointments', label: 'Appointments' },
-  { to: '/reminders', label: 'Reminders' },
 ];
 
 export function AuthenticatedLayout() {
@@ -60,7 +58,7 @@ export function AuthenticatedLayout() {
           <div>
             <div className="authenticated-layout__brand-name">PetHealth</div>
             <div className="authenticated-layout__brand-tagline">
-              Pet wellness hub
+              Owner portal
             </div>
           </div>
         </div>

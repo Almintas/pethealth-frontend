@@ -1,5 +1,9 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
+import {
+  isVeterinaryHealthDataReadOnly,
+  vetManagedSectionCopy,
+} from '../../../config/owner-portal';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { MEDICAL_RECORDS_QUERY } from '../graphql';
@@ -26,6 +30,8 @@ function sortRecordsByDate(records: MedicalRecord[]): MedicalRecord[] {
 }
 
 export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
+  const readOnly = isVeterinaryHealthDataReadOnly;
+  const sectionCopy = vetManagedSectionCopy.medicalRecords;
   const client = useApolloClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deletingRecordId, setDeletingRecordId] = useState<string | null>(null);
@@ -82,11 +88,17 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
           {!loading && !error ? (
             <p className="medical-records-section__count" aria-live="polite">
               {recordCountLabel}
+              {readOnly ? (
+                <span className="medical-records-section__hint">
+                  {' '}
+                  · {sectionCopy.sectionHint}
+                </span>
+              ) : null}
             </p>
           ) : null}
         </div>
 
-        {!loading && !error ? (
+        {!loading && !error && !readOnly ? (
           <button
             type="button"
             className="medical-records-section__add-button"
@@ -116,19 +128,20 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
       {!loading && !error && records.length === 0 ? (
         <div className="medical-records-section__empty">
           <h3 className="medical-records-section__empty-title">
-            No medical records yet
+            {sectionCopy.emptyTitle}
           </h3>
           <p className="medical-records-section__empty-text">
-            Track visits, diagnoses, and treatment notes in one place so you and
-            your vet have a clear health history for this pet.
+            {sectionCopy.emptyText}
           </p>
-          <button
-            type="button"
-            className="medical-records-section__empty-action"
-            onClick={openDialog}
-          >
-            Add medical record
-          </button>
+          {!readOnly ? (
+            <button
+              type="button"
+              className="medical-records-section__empty-action"
+              onClick={openDialog}
+            >
+              Add medical record
+            </button>
+          ) : null}
         </div>
       ) : null}
 
@@ -140,24 +153,30 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
               record={record}
               isLast={index === records.length - 1}
               isDeleting={deletingRecordId === record.id}
-              onDelete={() => void handleDeleteRecord(record.id)}
+              onDelete={
+                readOnly
+                  ? undefined
+                  : () => void handleDeleteRecord(record.id)
+              }
             />
           ))}
         </ol>
       ) : null}
 
-      <MedicalRecordDialog
-        isOpen={isDialogOpen}
-        title="Add medical record"
-        onClose={() => setIsDialogOpen(false)}
-      >
-        <MedicalRecordForm
-          petId={petId}
-          onSubmit={handleCreateRecord}
-          onCancel={() => setIsDialogOpen(false)}
-          variant="dialog"
-        />
-      </MedicalRecordDialog>
+      {!readOnly ? (
+        <MedicalRecordDialog
+          isOpen={isDialogOpen}
+          title="Add medical record"
+          onClose={() => setIsDialogOpen(false)}
+        >
+          <MedicalRecordForm
+            petId={petId}
+            onSubmit={handleCreateRecord}
+            onCancel={() => setIsDialogOpen(false)}
+            variant="dialog"
+          />
+        </MedicalRecordDialog>
+      ) : null}
     </section>
   );
 }

@@ -1,4 +1,9 @@
 export { RemindersSection } from './components/RemindersSection';
+export type {
+  OwnerNotificationPreferences,
+  ReminderDeliveryState,
+  ReminderNotificationPayload,
+} from './notification-future.types';
 export * as remindersService from './reminders.service';
 export { ReminderStatus, ReminderType, SourceType } from './types';
 export {

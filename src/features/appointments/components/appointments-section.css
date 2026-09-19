@@ -1,21 +1,21 @@
 /* Appointments — dark-first scoped tokens */
 .appointments-section {
-  --apt-bg: #121820;
-  --apt-surface: #1a222d;
-  --apt-surface-elevated: #222b38;
-  --apt-border: #2a3544;
-  --apt-text: #e8edf5;
-  --apt-muted: #9aa8bc;
-  --apt-accent: #5b9fd4;
-  --apt-accent-soft: rgba(91, 159, 212, 0.15);
-  --apt-success-soft: rgba(74, 222, 128, 0.12);
-  --apt-success-text: #86efac;
-  --apt-danger-soft: rgba(248, 113, 113, 0.12);
-  --apt-danger-text: #fca5a5;
-  --apt-neutral-soft: rgba(148, 163, 184, 0.12);
-  --apt-neutral-text: #cbd5e1;
-  --apt-timeline: #3d4d63;
-  --apt-input-bg: #0f141c;
+  --apt-bg: var(--ph-color-surface);
+  --apt-surface: var(--ph-color-surface);
+  --apt-surface-elevated: var(--ph-color-surface-elevated);
+  --apt-border: var(--ph-color-border);
+  --apt-text: var(--ph-color-text);
+  --apt-muted: var(--ph-color-text-secondary);
+  --apt-accent: var(--ph-color-primary);
+  --apt-accent-soft: var(--ph-color-primary-soft);
+  --apt-success-soft: var(--ph-color-success-soft);
+  --apt-success-text: var(--ph-color-success-text);
+  --apt-danger-soft: var(--ph-color-danger-soft);
+  --apt-danger-text: var(--ph-color-danger-text);
+  --apt-neutral-soft: var(--ph-color-neutral-soft);
+  --apt-neutral-text: var(--ph-color-text-secondary);
+  --apt-timeline: var(--ph-color-border-strong);
+  --apt-input-bg: var(--ph-color-input-bg);
 
   margin-top: 2rem;
   padding: 1.35rem 1.25rem;
@@ -72,7 +72,7 @@
   padding: 0.5rem 0.95rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--apt-accent);
   border: none;
   border-radius: 999px;
@@ -97,14 +97,14 @@
 }
 
 .appointments-section__error {
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
 }
 
 .appointments-section__action-error {
   margin: 0 0 1rem;
   padding: 0.65rem 0.85rem;
   font-size: 0.875rem;
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   background: var(--apt-danger-soft);
   border: 1px solid rgba(248, 113, 113, 0.35);
   border-radius: 8px;
@@ -139,7 +139,7 @@
   padding: 0.55rem 1.15rem;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--apt-accent);
   border: none;
   border-radius: 8px;
@@ -529,7 +529,7 @@
 }
 
 .appointments-section__delete-confirm-yes {
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   border-color: rgba(248, 113, 113, 0.45);
   background: var(--apt-danger-soft);
 }

@@ -8,14 +8,14 @@
   margin: 0;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--rem-text, #e8edf5);
+  color: var(--rem-text, var(--ph-color-text));
 }
 
 .reminder-form__alert {
   margin: 0;
   padding: 0.65rem 0.85rem;
   font-size: 0.875rem;
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.35);
   border-radius: 8px;
@@ -50,7 +50,7 @@
 .reminder-form__label {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--rem-muted, #9aa8bc);
+  color: var(--rem-muted, var(--ph-color-text-secondary));
 }
 
 .reminder-form__required {
@@ -64,9 +64,9 @@
   padding: 0.55rem 0.75rem;
   font-size: 0.9375rem;
   font-family: inherit;
-  color: var(--rem-text, #e8edf5);
-  background: var(--rem-input-bg, #0f141c);
-  border: 1px solid var(--rem-border, #2a3544);
+  color: var(--rem-text, var(--ph-color-text));
+  background: var(--rem-input-bg, var(--ph-color-input-bg));
+  border: 1px solid var(--rem-border, var(--ph-color-border));
   border-radius: 8px;
   box-sizing: border-box;
 }
@@ -78,9 +78,9 @@
 .reminder-form__input:focus-visible,
 .reminder-form__textarea:focus-visible,
 .reminder-form__select:focus-visible {
-  outline: 2px solid var(--rem-accent, #5b9fd4);
+  outline: 2px solid var(--rem-accent, var(--ph-color-primary));
   outline-offset: 1px;
-  border-color: var(--rem-accent, #5b9fd4);
+  border-color: var(--rem-accent, var(--ph-color-primary));
 }
 
 .reminder-form__textarea {
@@ -91,7 +91,7 @@
 .reminder-form__error {
   margin: 0;
   font-size: 0.8125rem;
-  color: #fca5a5;
+  color: var(--ph-color-danger-text);
 }
 
 .reminder-form__actions {
@@ -105,15 +105,15 @@
 .reminder-form--dialog .reminder-form__actions {
   margin-top: 0.25rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--rem-border, #2a3544);
+  border-top: 1px solid var(--rem-border, var(--ph-color-border));
 }
 
 .reminder-form__submit {
   padding: 0.55rem 1.25rem;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0a0e14;
-  background: var(--rem-accent, #5b9fd4);
+  color: var(--ph-color-on-primary);
+  background: var(--rem-accent, var(--ph-color-primary));
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -137,20 +137,20 @@
   padding: 0.55rem 1rem;
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--rem-muted, #9aa8bc);
+  color: var(--rem-muted, var(--ph-color-text-secondary));
   background: transparent;
-  border: 1px solid var(--rem-border, #2a3544);
+  border: 1px solid var(--rem-border, var(--ph-color-border));
   border-radius: 8px;
   cursor: pointer;
 }
 
 .reminder-form__cancel:hover:not(:disabled) {
-  color: var(--rem-text, #e8edf5);
-  border-color: #3d4d63;
+  color: var(--rem-text, var(--ph-color-text));
+  border-color: var(--ph-color-border-strong);
 }
 
 .reminder-form__cancel:focus-visible {
-  outline: 2px solid var(--rem-accent, #5b9fd4);
+  outline: 2px solid var(--rem-accent, var(--ph-color-primary));
   outline-offset: 2px;
 }
 

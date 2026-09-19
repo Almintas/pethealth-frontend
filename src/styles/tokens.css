@@ -1,50 +1,53 @@
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   --ph-font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto,
     sans-serif;
 
-  /* Page & surfaces (aligned with dashboard / health sections) */
-  --ph-color-bg: #0f141c;
-  --ph-color-surface: #1a222d;
-  --ph-color-surface-elevated: #222b38;
-  --ph-color-surface-muted: #121820;
-  --ph-color-surface-hover: #2a3544;
+  /* Page & surfaces */
+  --ph-color-bg: #f4f6f8;
+  --ph-color-surface: #ffffff;
+  --ph-color-surface-elevated: #fcfdfe;
+  --ph-color-surface-muted: #f8fafc;
+  --ph-color-surface-hover: #eef2f6;
 
-  /* Brand accent */
-  --ph-color-primary: #5b9fd4;
-  --ph-color-primary-hover: #7ab4e0;
-  --ph-color-primary-soft: rgba(91, 159, 212, 0.14);
-  --ph-color-primary-muted: rgba(91, 159, 212, 0.08);
-  --ph-color-on-primary: #0f141c;
+  /* Brand accent — healthcare blue */
+  --ph-color-primary: #2563eb;
+  --ph-color-primary-hover: #1d4ed8;
+  --ph-color-primary-soft: #eff6ff;
+  --ph-color-primary-muted: #f0f7ff;
+  --ph-color-on-primary: #ffffff;
 
-  --ph-color-secondary: #7ab4e0;
-  --ph-color-secondary-soft: rgba(91, 159, 212, 0.14);
+  --ph-color-secondary: #3b82f6;
+  --ph-color-secondary-soft: #eff6ff;
 
   /* Text */
-  --ph-color-text: #e8edf5;
-  --ph-color-text-secondary: #9aa8bc;
-  --ph-color-text-muted: #7a8a9e;
+  --ph-color-text: #0f172a;
+  --ph-color-text-secondary: #64748b;
+  --ph-color-text-muted: #94a3b8;
 
   /* Borders */
-  --ph-color-border: #2a3544;
-  --ph-color-border-strong: #3d4d63;
+  --ph-color-border: #e2e8f0;
+  --ph-color-border-strong: var(--ph-color-text-secondary);
 
   /* Inputs */
-  --ph-color-input-bg: #0f141c;
-  --ph-color-input-placeholder: #64748b;
+  --ph-color-input-bg: #ffffff;
+  --ph-color-input-placeholder: #94a3b8;
 
   /* Status */
-  --ph-color-success: #34d399;
-  --ph-color-success-soft: rgba(52, 211, 153, 0.16);
-  --ph-color-warning: #fbbf24;
-  --ph-color-warning-soft: rgba(251, 191, 36, 0.16);
-  --ph-color-danger: #f87171;
-  --ph-color-danger-soft: rgba(248, 113, 113, 0.14);
-  --ph-color-info: #38bdf8;
-  --ph-color-info-soft: rgba(56, 189, 248, 0.16);
-  --ph-color-neutral: #94a3b8;
-  --ph-color-neutral-soft: rgba(148, 163, 184, 0.12);
+  --ph-color-success: #059669;
+  --ph-color-success-soft: #ecfdf5;
+  --ph-color-success-text: #047857;
+  --ph-color-warning: #d97706;
+  --ph-color-warning-soft: #fffbeb;
+  --ph-color-warning-text: #b45309;
+  --ph-color-danger: #dc2626;
+  --ph-color-danger-soft: #fef2f2;
+  --ph-color-danger-text: #b91c1c;
+  --ph-color-info: #2563eb;
+  --ph-color-info-soft: #eff6ff;
+  --ph-color-neutral: #64748b;
+  --ph-color-neutral-soft: #f1f5f9;
 
   --ph-radius-sm: 0.5rem;
   --ph-radius-md: 0.75rem;
@@ -52,9 +55,9 @@
   --ph-radius-xl: 1.25rem;
   --ph-radius-full: 9999px;
 
-  --ph-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
-  --ph-shadow-md: 0 8px 24px rgba(0, 0, 0, 0.35);
-  --ph-shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --ph-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --ph-shadow-md: 0 4px 14px rgba(15, 23, 42, 0.06);
+  --ph-shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.08);
 
   --ph-space-1: 0.25rem;
   --ph-space-2: 0.5rem;
@@ -67,6 +70,6 @@
 
   --ph-sidebar-width: 15.5rem;
   --ph-content-max: 72rem;
-  --ph-focus-ring: 0 0 0 3px rgba(91, 159, 212, 0.4);
-  --ph-overlay: rgba(2, 6, 12, 0.62);
+  --ph-focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.28);
+  --ph-overlay: rgba(15, 23, 42, 0.4);
 }

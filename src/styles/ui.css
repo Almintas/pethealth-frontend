@@ -156,8 +156,8 @@ a.ph-card:focus-visible {
 
 .ph-alert--error {
   background: var(--ph-color-danger-soft);
-  color: #fecaca;
-  border-color: rgba(248, 113, 113, 0.35);
+  color: var(--ph-color-danger-text);
+  border-color: var(--ph-color-danger-text);
 }
 
 .ph-stat-grid {

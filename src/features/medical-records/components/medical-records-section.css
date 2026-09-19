@@ -1,17 +1,17 @@
 /* Medical Records — dark-first scoped tokens */
 .medical-records-section {
-  --mr-bg: #121820;
-  --mr-surface: #1a222d;
-  --mr-surface-elevated: #222b38;
-  --mr-border: #2a3544;
-  --mr-text: #e8edf5;
-  --mr-muted: #9aa8bc;
-  --mr-accent: #5b9fd4;
-  --mr-accent-soft: rgba(91, 159, 212, 0.15);
+  --mr-bg: var(--ph-color-surface);
+  --mr-surface: var(--ph-color-surface);
+  --mr-surface-elevated: var(--ph-color-surface-elevated);
+  --mr-border: var(--ph-color-border);
+  --mr-text: var(--ph-color-text);
+  --mr-muted: var(--ph-color-text-secondary);
+  --mr-accent: var(--ph-color-primary);
+  --mr-accent-soft: var(--ph-color-primary-soft);
   --mr-danger: #f87171;
-  --mr-danger-soft: rgba(248, 113, 113, 0.12);
-  --mr-timeline: #3d4d63;
-  --mr-input-bg: #0f141c;
+  --mr-danger-soft: var(--ph-color-danger-soft);
+  --mr-timeline: var(--ph-color-border-strong);
+  --mr-input-bg: var(--ph-color-input-bg);
 
   margin-top: 2rem;
   padding: 1.35rem 1.25rem;
@@ -57,6 +57,11 @@
   color: var(--mr-muted);
 }
 
+.medical-records-section__hint {
+  font-weight: 400;
+  color: var(--mr-muted);
+}
+
 .medical-records-section__add-button {
   flex-shrink: 0;
   display: inline-flex;
@@ -65,7 +70,7 @@
   padding: 0.5rem 0.95rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--mr-accent);
   border: none;
   border-radius: 999px;
@@ -90,14 +95,14 @@
 }
 
 .medical-records-section__error {
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
 }
 
 .medical-records-section__action-error {
   margin: 0 0 1rem;
   padding: 0.65rem 0.85rem;
   font-size: 0.875rem;
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   background: var(--mr-danger-soft);
   border: 1px solid rgba(248, 113, 113, 0.35);
   border-radius: 8px;
@@ -140,7 +145,7 @@
   padding: 0.55rem 1.15rem;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--mr-accent);
   border: none;
   border-radius: 8px;
@@ -398,7 +403,7 @@
 }
 
 .medical-records-section__delete-confirm-yes {
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   border-color: rgba(248, 113, 113, 0.45);
   background: var(--mr-danger-soft);
 }

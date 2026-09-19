@@ -1,4 +1,5 @@
 .pet-avatar {
+  position: relative;
   flex-shrink: 0;
   border-radius: var(--ph-radius-lg);
   overflow: hidden;
@@ -23,6 +24,27 @@
   height: 5.85rem;
 }
 
+.pet-avatar:has(.pet-avatar__photo) {
+  padding: 0;
+}
+
+.pet-avatar__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.pet-avatar__fallback {
+  visibility: hidden;
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .pet-avatar svg {
   width: 100%;
   height: 100%;
@@ -30,19 +52,19 @@
 }
 
 .pet-avatar--dog .pet-avatar__bg {
-  fill: rgba(56, 189, 248, 0.18);
+  fill: #dbeafe;
 }
 
 .pet-avatar--cat .pet-avatar__bg {
-  fill: rgba(244, 114, 182, 0.16);
+  fill: #fce7f3;
 }
 
 .pet-avatar--bird .pet-avatar__bg {
-  fill: rgba(56, 189, 248, 0.14);
+  fill: #e0f2fe;
 }
 
 .pet-avatar--rabbit .pet-avatar__bg {
-  fill: rgba(167, 139, 250, 0.16);
+  fill: #f3e8ff;
 }
 
 .pet-avatar--default .pet-avatar__bg {
@@ -50,15 +72,15 @@
 }
 
 .pet-avatar__face {
-  fill: rgba(241, 245, 249, 0.92);
+  fill: #ffffff;
 }
 
 .pet-avatar__ear {
-  fill: rgba(91, 159, 212, 0.42);
+  fill: #bfdbfe;
 }
 
 .pet-avatar__eye {
-  fill: #0f1720;
+  fill: #1e293b;
 }
 
 .pet-avatar__nose {

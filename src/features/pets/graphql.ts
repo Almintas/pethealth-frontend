@@ -10,6 +10,7 @@ export const PET_FIELDS = gql`
     gender
     birthDate
     microchipNumber
+    photoUrl
     createdAt
     updatedAt
   }

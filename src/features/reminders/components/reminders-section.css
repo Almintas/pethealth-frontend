@@ -1,23 +1,23 @@
 /* Reminders — dark-first scoped tokens */
 .reminders-section {
-  --rem-bg: #121820;
-  --rem-surface: #1a222d;
-  --rem-surface-elevated: #222b38;
-  --rem-border: #2a3544;
-  --rem-text: #e8edf5;
-  --rem-muted: #9aa8bc;
-  --rem-accent: #5b9fd4;
-  --rem-accent-soft: rgba(91, 159, 212, 0.15);
-  --rem-success-soft: rgba(74, 222, 128, 0.12);
-  --rem-success-text: #86efac;
+  --rem-bg: var(--ph-color-surface);
+  --rem-surface: var(--ph-color-surface);
+  --rem-surface-elevated: var(--ph-color-surface-elevated);
+  --rem-border: var(--ph-color-border);
+  --rem-text: var(--ph-color-text);
+  --rem-muted: var(--ph-color-text-secondary);
+  --rem-accent: var(--ph-color-primary);
+  --rem-accent-soft: var(--ph-color-primary-soft);
+  --rem-success-soft: var(--ph-color-success-soft);
+  --rem-success-text: var(--ph-color-success-text);
   --rem-warning-soft: rgba(250, 204, 21, 0.1);
   --rem-warning-text: #fde68a;
-  --rem-danger-soft: rgba(248, 113, 113, 0.12);
-  --rem-danger-text: #fca5a5;
-  --rem-neutral-soft: rgba(148, 163, 184, 0.12);
-  --rem-neutral-text: #cbd5e1;
-  --rem-timeline: #3d4d63;
-  --rem-input-bg: #0f141c;
+  --rem-danger-soft: var(--ph-color-danger-soft);
+  --rem-danger-text: var(--ph-color-danger-text);
+  --rem-neutral-soft: var(--ph-color-neutral-soft);
+  --rem-neutral-text: var(--ph-color-text-secondary);
+  --rem-timeline: var(--ph-color-border-strong);
+  --rem-input-bg: var(--ph-color-input-bg);
 
   margin-top: 2rem;
   padding: 1.35rem 1.25rem;
@@ -71,7 +71,7 @@
   padding: 0.5rem 0.95rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--rem-accent);
   border: none;
   border-radius: 999px;
@@ -96,14 +96,14 @@
 }
 
 .reminders-section__error {
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
 }
 
 .reminders-section__action-error {
   margin: 0 0 1rem;
   padding: 0.65rem 0.85rem;
   font-size: 0.875rem;
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   background: var(--rem-danger-soft);
   border: 1px solid rgba(248, 113, 113, 0.35);
   border-radius: 8px;
@@ -138,7 +138,7 @@
   padding: 0.55rem 1.15rem;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--rem-accent);
   border: none;
   border-radius: 8px;
@@ -548,7 +548,7 @@
 }
 
 .reminders-section__action--complete {
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--rem-success-text);
   border-color: transparent;
 }
@@ -631,7 +631,7 @@
 }
 
 .reminders-section__delete-confirm-yes {
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   border-color: rgba(248, 113, 113, 0.45);
   background: var(--rem-danger-soft);
 }

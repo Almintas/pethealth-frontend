@@ -11,6 +11,7 @@ import { MedicationsSection } from '../../medications';
 import { VaccinationsSection } from '../../vaccinations';
 import { PetForm } from '../components/PetForm';
 import * as petsService from '../pets.service';
+import type { PetFormSubmitPayload } from '../components/PetForm';
 import type { Pet, UpdatePetInput } from '../types';
 import { formatPetAge } from '../../../utils/format-pet-age';
 import { formatPetDate } from '../utils/format-pet-date';
@@ -82,7 +83,10 @@ export function PetDetailsPage() {
     };
   }, [client, id, retryNonce]);
 
-  const handleUpdatePet = async (input: UpdatePetInput) => {
+  const handleUpdatePet = async ({
+    input,
+    photoIntent,
+  }: PetFormSubmitPayload<UpdatePetInput>) => {
     if (!pet) {
       return;
     }
@@ -90,10 +94,20 @@ export function PetDetailsPage() {
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    const updatedPet = await petsService.updatePet(client, pet.id, input);
-    setPet(updatedPet);
+    await petsService.updatePet(client, pet.id, input);
+
+    if (photoIntent.kind !== 'unchanged') {
+      await petsService.applyPetPhotoIntent(pet.id, photoIntent);
+    }
+
+    const refreshedPet = await petsService.fetchPetById(client, pet.id);
+    setPet(refreshedPet);
     setIsEditing(false);
-    setSuccessMessage('Pet details updated.');
+    setSuccessMessage(
+      photoIntent.kind === 'unchanged'
+        ? 'Pet details updated.'
+        : 'Pet details and photo updated.',
+    );
   };
 
   const handleDelete = async () => {
@@ -162,7 +176,12 @@ export function PetDetailsPage() {
         <>
           <header className="pet-details__hero ph-card ph-card--pad">
             <div className="pet-details__hero-main">
-              <PetAvatar species={pet.species} name={pet.name} size="lg" />
+              <PetAvatar
+                species={pet.species}
+                name={pet.name}
+                photoUrl={pet.photoUrl}
+                size="lg"
+              />
               <div>
                 <h1 id="pet-details-title">{pet.name}</h1>
                 <p className="pet-details__subtitle">
@@ -203,7 +222,7 @@ export function PetDetailsPage() {
               className="pet-details__edit-panel ph-card ph-card--pad"
             >
               <PetForm
-                key={pet.updatedAt}
+                key={`edit-${pet.id}`}
                 mode="edit"
                 title="Edit pet"
                 submitLabel="Save changes"

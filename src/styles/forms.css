@@ -169,8 +169,8 @@
   border-radius: var(--ph-radius-md);
   font-size: 0.875rem;
   background: var(--ph-color-danger-soft);
-  color: #fecaca;
-  border: 1px solid rgba(248, 113, 113, 0.35);
+  color: var(--ph-color-danger-text);
+  border: 1px solid var(--ph-color-danger-text);
 }
 
 .ph-form__actions,

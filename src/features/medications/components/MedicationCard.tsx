@@ -13,7 +13,7 @@ type MedicationCardProps = {
   medication: Medication;
   isLast: boolean;
   isDeleting: boolean;
-  onDelete: () => void;
+  onDelete?: () => void;
 };
 
 function formatDosageSummary(medication: Medication): string {
@@ -35,6 +35,9 @@ export function MedicationCard({
   const notesAreLong = notes.length > LONG_NOTES_THRESHOLD;
 
   const handleDeleteClick = () => {
+    if (!onDelete) {
+      return;
+    }
     if (!confirmDelete) {
       setConfirmDelete(true);
       return;
@@ -138,6 +141,7 @@ export function MedicationCard({
           )
         ) : null}
 
+        {onDelete ? (
         <div className="medications-section__record-actions">
           {confirmDelete ? (
             <div className="medications-section__delete-confirm" role="status">
@@ -170,6 +174,7 @@ export function MedicationCard({
             </button>
           )}
         </div>
+        ) : null}
       </article>
     </li>
   );

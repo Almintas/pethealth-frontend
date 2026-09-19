@@ -1,3 +1,7 @@
+/**
+ * Owner-managed reminders (pet-scoped). Notification channels and owner preferences
+ * are documented in ../notification-future.types.ts — not implemented here.
+ */
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';

@@ -1,8 +1,10 @@
+import { useEffect, useState } from 'react';
 import './pet-avatar.css';
 
 type PetAvatarProps = {
   species: string;
   name: string;
+  photoUrl?: string | null;
   size?: 'sm' | 'md' | 'lg';
 };
 
@@ -10,17 +12,55 @@ function resolveSpeciesKey(species: string): string {
   return species.trim().toLowerCase();
 }
 
-export function PetAvatar({ species, name, size = 'md' }: PetAvatarProps) {
+export function PetAvatar({
+  species,
+  name,
+  photoUrl,
+  size = 'md',
+}: PetAvatarProps) {
   const key = resolveSpeciesKey(species);
   const label = `${name} avatar`;
+  const trimmedPhoto = photoUrl?.trim() ?? '';
+  const [photoFailed, setPhotoFailed] = useState(false);
+
+  useEffect(() => {
+    setPhotoFailed(false);
+  }, [trimmedPhoto]);
+
+  const showPhoto = Boolean(trimmedPhoto) && !photoFailed;
+
+  const speciesClass = key.includes('dog')
+    ? 'dog'
+    : key.includes('cat')
+      ? 'cat'
+      : key.includes('bird')
+        ? 'bird'
+        : key.includes('rabbit')
+          ? 'rabbit'
+          : 'default';
 
   return (
     <div
-      className={`pet-avatar pet-avatar--${size} pet-avatar--${key.includes('dog') ? 'dog' : key.includes('cat') ? 'cat' : key.includes('bird') ? 'bird' : key.includes('rabbit') ? 'rabbit' : 'default'}`}
+      className={`pet-avatar pet-avatar--${size} pet-avatar--${speciesClass}`}
       role="img"
       aria-label={label}
     >
-      <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
+      {showPhoto ? (
+        <img
+          className="pet-avatar__photo"
+          src={trimmedPhoto}
+          alt=""
+          decoding="async"
+          loading="lazy"
+          onError={() => setPhotoFailed(true)}
+        />
+      ) : null}
+      <svg
+        viewBox="0 0 64 64"
+        aria-hidden="true"
+        focusable="false"
+        className={showPhoto ? 'pet-avatar__fallback' : undefined}
+      >
         <circle cx="32" cy="32" r="30" className="pet-avatar__bg" />
         {key.includes('dog') ? (
           <>

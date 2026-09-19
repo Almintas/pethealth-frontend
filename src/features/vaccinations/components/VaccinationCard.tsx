@@ -12,7 +12,7 @@ type VaccinationCardProps = {
   vaccination: Vaccination;
   isLast: boolean;
   isDeleting: boolean;
-  onDelete: () => void;
+  onDelete?: () => void;
 };
 
 export function VaccinationCard({
@@ -29,6 +29,9 @@ export function VaccinationCard({
   const notesAreLong = notes.length > LONG_NOTES_THRESHOLD;
 
   const handleDeleteClick = () => {
+    if (!onDelete) {
+      return;
+    }
     if (!confirmDelete) {
       setConfirmDelete(true);
       return;
@@ -129,6 +132,7 @@ export function VaccinationCard({
           )
         ) : null}
 
+        {onDelete ? (
         <div className="vaccinations-section__record-actions">
           {confirmDelete ? (
             <div className="vaccinations-section__delete-confirm" role="status">
@@ -161,6 +165,7 @@ export function VaccinationCard({
             </button>
           )}
         </div>
+        ) : null}
       </article>
     </li>
   );

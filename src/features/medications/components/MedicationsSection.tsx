@@ -1,5 +1,9 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
+import {
+  isVeterinaryHealthDataReadOnly,
+  vetManagedSectionCopy,
+} from '../../../config/owner-portal';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { MEDICATIONS_QUERY } from '../graphql';
@@ -47,6 +51,8 @@ function sortMedications(medications: Medication[]): Medication[] {
 }
 
 export function MedicationsSection({ petId }: MedicationsSectionProps) {
+  const readOnly = isVeterinaryHealthDataReadOnly;
+  const sectionCopy = vetManagedSectionCopy.medications;
   const client = useApolloClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deletingMedicationId, setDeletingMedicationId] = useState<string | null>(
@@ -130,11 +136,17 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
                   · {activeCountLabel}
                 </span>
               ) : null}
+              {readOnly ? (
+                <span className="medications-section__hint">
+                  {' '}
+                  · {sectionCopy.sectionHint}
+                </span>
+              ) : null}
             </p>
           ) : null}
         </div>
 
-        {!loading && !error ? (
+        {!loading && !error && !readOnly ? (
           <button
             type="button"
             className="medications-section__add-button"
@@ -163,18 +175,21 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
 
       {!loading && !error && medications.length === 0 ? (
         <div className="medications-section__empty">
-          <h3 className="medications-section__empty-title">No medications yet</h3>
+          <h3 className="medications-section__empty-title">
+            {sectionCopy.emptyTitle}
+          </h3>
           <p className="medications-section__empty-text">
-            Log prescriptions, dosages, and schedules so you know what your pet
-            is taking now and what they have taken in the past.
+            {sectionCopy.emptyText}
           </p>
-          <button
-            type="button"
-            className="medications-section__empty-action"
-            onClick={openDialog}
-          >
-            Add medication
-          </button>
+          {!readOnly ? (
+            <button
+              type="button"
+              className="medications-section__empty-action"
+              onClick={openDialog}
+            >
+              Add medication
+            </button>
+          ) : null}
         </div>
       ) : null}
 
@@ -186,24 +201,30 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
               medication={medication}
               isLast={index === medications.length - 1}
               isDeleting={deletingMedicationId === medication.id}
-              onDelete={() => void handleDeleteMedication(medication.id)}
+              onDelete={
+                readOnly
+                  ? undefined
+                  : () => void handleDeleteMedication(medication.id)
+              }
             />
           ))}
         </ol>
       ) : null}
 
-      <MedicationDialog
-        isOpen={isDialogOpen}
-        title="Add medication"
-        onClose={() => setIsDialogOpen(false)}
-      >
-        <MedicationForm
-          petId={petId}
-          onSubmit={handleCreateMedication}
-          onCancel={() => setIsDialogOpen(false)}
-          variant="dialog"
-        />
-      </MedicationDialog>
+      {!readOnly ? (
+        <MedicationDialog
+          isOpen={isDialogOpen}
+          title="Add medication"
+          onClose={() => setIsDialogOpen(false)}
+        >
+          <MedicationForm
+            petId={petId}
+            onSubmit={handleCreateMedication}
+            onCancel={() => setIsDialogOpen(false)}
+            variant="dialog"
+          />
+        </MedicationDialog>
+      ) : null}
     </section>
   );
 }

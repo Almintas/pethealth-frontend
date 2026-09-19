@@ -8,7 +8,7 @@ type MedicalRecordCardProps = {
   record: MedicalRecord;
   isLast: boolean;
   isDeleting: boolean;
-  onDelete: () => void;
+  onDelete?: () => void;
 };
 
 export function MedicalRecordCard({
@@ -25,6 +25,9 @@ export function MedicalRecordCard({
   const notesIsLong = notes.length > LONG_TEXT_THRESHOLD;
 
   const handleDeleteClick = () => {
+    if (!onDelete) {
+      return;
+    }
     if (!confirmDelete) {
       setConfirmDelete(true);
       return;
@@ -99,6 +102,7 @@ export function MedicalRecordCard({
           )
         ) : null}
 
+        {onDelete ? (
         <div className="medical-records-section__record-actions">
           {confirmDelete ? (
             <div className="medical-records-section__delete-confirm" role="status">
@@ -131,6 +135,7 @@ export function MedicalRecordCard({
             </button>
           )}
         </div>
+        ) : null}
       </article>
     </li>
   );

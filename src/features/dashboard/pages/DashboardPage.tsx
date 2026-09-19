@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { PetAvatar } from '../../../components/PetAvatar';
 import { useAuth } from '../../auth';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { formatAppointmentDateTime } from '../../appointments/utils/format-appointment-datetime';
@@ -30,11 +31,6 @@ function upcomingKindLabel(kind: DashboardUpcomingItem['kind']): string {
     case 'medication':
       return 'Medication';
   }
-}
-
-function speciesInitial(species: string): string {
-  const trimmed = species.trim();
-  return trimmed ? trimmed.charAt(0).toUpperCase() : '?';
 }
 
 export function DashboardPage() {
@@ -101,7 +97,7 @@ export function DashboardPage() {
         <section className="dashboard-page__empty" aria-labelledby="dashboard-empty-title">
           <h2 id="dashboard-empty-title">Welcome to PetHealth</h2>
           <p>
-            Create a pet profile to log vaccinations, medications, appointments,
+            Create a pet profile to view clinic health information, appointments,
             and reminders in one place.
           </p>
           <Link className="dashboard-page__cta" to="/pets">
@@ -287,11 +283,13 @@ export function DashboardPage() {
                         className="dashboard-page__pet-card"
                         to={`/pets/${summary.pet.id}`}
                       >
-                        <span
-                          className="dashboard-page__pet-avatar"
-                          aria-hidden="true"
-                        >
-                          {speciesInitial(summary.pet.species)}
+                        <span className="dashboard-page__pet-avatar">
+                          <PetAvatar
+                            species={summary.pet.species}
+                            name={summary.pet.name}
+                            photoUrl={summary.pet.photoUrl}
+                            size="md"
+                          />
                         </span>
                         <div className="dashboard-page__pet-body">
                           <h3 className="dashboard-page__pet-name">{summary.pet.name}</h3>

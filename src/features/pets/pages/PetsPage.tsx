@@ -7,6 +7,7 @@ import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-messa
 import { PetForm } from '../components/PetForm';
 import { MY_PETS_QUERY } from '../graphql';
 import * as petsService from '../pets.service';
+import type { PetFormSubmitPayload } from '../components/PetForm';
 import type { CreatePetInput, MyPetsQueryResult } from '../types';
 import { formatPetAge } from '../../../utils/format-pet-age';
 import './pets-page.css';
@@ -23,8 +24,14 @@ export function PetsPage() {
 
   const pets = data?.myPets ?? [];
 
-  const handleCreatePet = async (input: CreatePetInput) => {
-    await petsService.createPet(client, input);
+  const handleCreatePet = async ({
+    input,
+    photoIntent,
+  }: PetFormSubmitPayload<CreatePetInput>) => {
+    const created = await petsService.createPet(client, input);
+    if (photoIntent.kind !== 'unchanged') {
+      await petsService.applyPetPhotoIntent(created.id, photoIntent);
+    }
     await refetch();
     setIsFormOpen(false);
   };
@@ -94,7 +101,12 @@ export function PetsPage() {
             return (
               <li key={pet.id}>
                 <Link className="pets-page__card ph-card" to={`/pets/${pet.id}`}>
-                  <PetAvatar species={pet.species} name={pet.name} size="lg" />
+                  <PetAvatar
+                    species={pet.species}
+                    name={pet.name}
+                    photoUrl={pet.photoUrl}
+                    size="lg"
+                  />
                   <div className="pets-page__card-body">
                     <h2 className="pets-page__name">{pet.name}</h2>
                     <p className="pets-page__breed">{pet.breed || pet.species}</p>

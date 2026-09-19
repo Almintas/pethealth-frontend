@@ -71,7 +71,7 @@
 .authenticated-layout__link.active {
   color: var(--ph-color-primary);
   background: var(--ph-color-primary-soft);
-  border-color: rgba(91, 159, 212, 0.28);
+  border-color: #bfdbfe;
 }
 
 .authenticated-layout__user {

@@ -1,23 +1,23 @@
 /* Medications — dark-first scoped tokens */
 .medications-section {
-  --med-bg: #121820;
-  --med-surface: #1a222d;
-  --med-surface-elevated: #222b38;
-  --med-border: #2a3544;
-  --med-text: #e8edf5;
-  --med-muted: #9aa8bc;
-  --med-accent: #5b9fd4;
-  --med-accent-soft: rgba(91, 159, 212, 0.15);
-  --med-success-soft: rgba(74, 222, 128, 0.12);
-  --med-success-text: #86efac;
+  --med-bg: var(--ph-color-surface);
+  --med-surface: var(--ph-color-surface);
+  --med-surface-elevated: var(--ph-color-surface-elevated);
+  --med-border: var(--ph-color-border);
+  --med-text: var(--ph-color-text);
+  --med-muted: var(--ph-color-text-secondary);
+  --med-accent: var(--ph-color-primary);
+  --med-accent-soft: var(--ph-color-primary-soft);
+  --med-success-soft: var(--ph-color-success-soft);
+  --med-success-text: var(--ph-color-success-text);
   --med-warning-soft: rgba(250, 204, 21, 0.1);
   --med-warning-text: #fde68a;
-  --med-danger-soft: rgba(248, 113, 113, 0.12);
-  --med-danger-text: #fca5a5;
-  --med-neutral-soft: rgba(148, 163, 184, 0.12);
-  --med-neutral-text: #cbd5e1;
-  --med-timeline: #3d4d63;
-  --med-input-bg: #0f141c;
+  --med-danger-soft: var(--ph-color-danger-soft);
+  --med-danger-text: var(--ph-color-danger-text);
+  --med-neutral-soft: var(--ph-color-neutral-soft);
+  --med-neutral-text: var(--ph-color-text-secondary);
+  --med-timeline: var(--ph-color-border-strong);
+  --med-input-bg: var(--ph-color-input-bg);
 
   margin-top: 2rem;
   padding: 1.35rem 1.25rem;
@@ -63,6 +63,11 @@
   color: var(--med-muted);
 }
 
+.medications-section__hint {
+  font-weight: 400;
+  color: var(--med-muted);
+}
+
 .medications-section__count-active {
   color: var(--med-success-text);
 }
@@ -74,7 +79,7 @@
   padding: 0.5rem 0.95rem;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--med-accent);
   border: none;
   border-radius: 999px;
@@ -99,14 +104,14 @@
 }
 
 .medications-section__error {
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
 }
 
 .medications-section__action-error {
   margin: 0 0 1rem;
   padding: 0.65rem 0.85rem;
   font-size: 0.875rem;
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   background: var(--med-danger-soft);
   border: 1px solid rgba(248, 113, 113, 0.35);
   border-radius: 8px;
@@ -141,7 +146,7 @@
   padding: 0.55rem 1.15rem;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0a0e14;
+  color: var(--ph-color-on-primary);
   background: var(--med-accent);
   border: none;
   border-radius: 8px;
@@ -484,7 +489,7 @@
 }
 
 .medications-section__delete-confirm-yes {
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   border-color: rgba(248, 113, 113, 0.45);
   background: var(--med-danger-soft);
 }

@@ -8,14 +8,14 @@
   margin: 0;
   font-size: 1.05rem;
   font-weight: 600;
-  color: var(--med-text, #e8edf5);
+  color: var(--med-text, var(--ph-color-text));
 }
 
 .medication-form__alert {
   margin: 0;
   padding: 0.65rem 0.85rem;
   font-size: 0.875rem;
-  color: #fecaca;
+  color: var(--ph-color-danger-text);
   background: rgba(239, 68, 68, 0.12);
   border: 1px solid rgba(239, 68, 68, 0.35);
   border-radius: 8px;
@@ -61,7 +61,7 @@
 .medication-form__label {
   font-size: 0.8125rem;
   font-weight: 500;
-  color: var(--med-muted, #9aa8bc);
+  color: var(--med-muted, var(--ph-color-text-secondary));
 }
 
 .medication-form__required {
@@ -74,9 +74,9 @@
   padding: 0.55rem 0.75rem;
   font-size: 0.9375rem;
   font-family: inherit;
-  color: var(--med-text, #e8edf5);
-  background: var(--med-input-bg, #0f141c);
-  border: 1px solid var(--med-border, #2a3544);
+  color: var(--med-text, var(--ph-color-text));
+  background: var(--med-input-bg, var(--ph-color-input-bg));
+  border: 1px solid var(--med-border, var(--ph-color-border));
   border-radius: 8px;
   box-sizing: border-box;
 }
@@ -87,9 +87,9 @@
 
 .medication-form__input:focus-visible,
 .medication-form__textarea:focus-visible {
-  outline: 2px solid var(--med-accent, #5b9fd4);
+  outline: 2px solid var(--med-accent, var(--ph-color-primary));
   outline-offset: 1px;
-  border-color: var(--med-accent, #5b9fd4);
+  border-color: var(--med-accent, var(--ph-color-primary));
 }
 
 .medication-form__textarea {
@@ -100,7 +100,7 @@
 .medication-form__error {
   margin: 0;
   font-size: 0.8125rem;
-  color: #fca5a5;
+  color: var(--ph-color-danger-text);
 }
 
 .medication-form__checkbox-row {
@@ -112,7 +112,7 @@
 .medication-form__checkbox-row input {
   width: 1rem;
   height: 1rem;
-  accent-color: var(--med-accent, #5b9fd4);
+  accent-color: var(--med-accent, var(--ph-color-primary));
 }
 
 .medication-form__actions {
@@ -126,15 +126,15 @@
 .medication-form--dialog .medication-form__actions {
   margin-top: 0.25rem;
   padding-top: 1rem;
-  border-top: 1px solid var(--med-border, #2a3544);
+  border-top: 1px solid var(--med-border, var(--ph-color-border));
 }
 
 .medication-form__submit {
   padding: 0.55rem 1.25rem;
   font-size: 0.9375rem;
   font-weight: 600;
-  color: #0a0e14;
-  background: var(--med-accent, #5b9fd4);
+  color: var(--ph-color-on-primary);
+  background: var(--med-accent, var(--ph-color-primary));
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -158,20 +158,20 @@
   padding: 0.55rem 1rem;
   font-size: 0.9375rem;
   font-weight: 500;
-  color: var(--med-muted, #9aa8bc);
+  color: var(--med-muted, var(--ph-color-text-secondary));
   background: transparent;
-  border: 1px solid var(--med-border, #2a3544);
+  border: 1px solid var(--med-border, var(--ph-color-border));
   border-radius: 8px;
   cursor: pointer;
 }
 
 .medication-form__cancel:hover:not(:disabled) {
-  color: var(--med-text, #e8edf5);
-  border-color: #3d4d63;
+  color: var(--med-text, var(--ph-color-text));
+  border-color: var(--ph-color-border-strong);
 }
 
 .medication-form__cancel:focus-visible {
-  outline: 2px solid var(--med-accent, #5b9fd4);
+  outline: 2px solid var(--med-accent, var(--ph-color-primary));
   outline-offset: 2px;
 }
 

@@ -1,5 +1,9 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
+import {
+  isVeterinaryHealthDataReadOnly,
+  vetManagedSectionCopy,
+} from '../../../config/owner-portal';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { VACCINATIONS_QUERY } from '../graphql';
@@ -30,6 +34,8 @@ function sortVaccinationsByAdministered(
 }
 
 export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
+  const readOnly = isVeterinaryHealthDataReadOnly;
+  const sectionCopy = vetManagedSectionCopy.vaccinations;
   const client = useApolloClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deletingVaccinationId, setDeletingVaccinationId] = useState<
@@ -90,11 +96,17 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
           {!loading && !error ? (
             <p className="vaccinations-section__count" aria-live="polite">
               {countLabel}
+              {readOnly ? (
+                <span className="vaccinations-section__hint">
+                  {' '}
+                  · {sectionCopy.sectionHint}
+                </span>
+              ) : null}
             </p>
           ) : null}
         </div>
 
-        {!loading && !error ? (
+        {!loading && !error && !readOnly ? (
           <button
             type="button"
             className="vaccinations-section__add-button"
@@ -124,19 +136,20 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
       {!loading && !error && vaccinations.length === 0 ? (
         <div className="vaccinations-section__empty">
           <h3 className="vaccinations-section__empty-title">
-            No vaccinations yet
+            {sectionCopy.emptyTitle}
           </h3>
           <p className="vaccinations-section__empty-text">
-            Keep shot history and upcoming due dates in one place so boosters
-            stay on schedule and you have records handy for travel or boarding.
+            {sectionCopy.emptyText}
           </p>
-          <button
-            type="button"
-            className="vaccinations-section__empty-action"
-            onClick={openDialog}
-          >
-            Add vaccination
-          </button>
+          {!readOnly ? (
+            <button
+              type="button"
+              className="vaccinations-section__empty-action"
+              onClick={openDialog}
+            >
+              Add vaccination
+            </button>
+          ) : null}
         </div>
       ) : null}
 
@@ -148,24 +161,30 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
               vaccination={vaccination}
               isLast={index === vaccinations.length - 1}
               isDeleting={deletingVaccinationId === vaccination.id}
-              onDelete={() => void handleDeleteVaccination(vaccination.id)}
+              onDelete={
+                readOnly
+                  ? undefined
+                  : () => void handleDeleteVaccination(vaccination.id)
+              }
             />
           ))}
         </ol>
       ) : null}
 
-      <VaccinationDialog
-        isOpen={isDialogOpen}
-        title="Add vaccination"
-        onClose={() => setIsDialogOpen(false)}
-      >
-        <VaccinationForm
-          petId={petId}
-          onSubmit={handleCreateVaccination}
-          onCancel={() => setIsDialogOpen(false)}
-          variant="dialog"
-        />
-      </VaccinationDialog>
+      {!readOnly ? (
+        <VaccinationDialog
+          isOpen={isDialogOpen}
+          title="Add vaccination"
+          onClose={() => setIsDialogOpen(false)}
+        >
+          <VaccinationForm
+            petId={petId}
+            onSubmit={handleCreateVaccination}
+            onCancel={() => setIsDialogOpen(false)}
+            variant="dialog"
+          />
+        </VaccinationDialog>
+      ) : null}
     </section>
   );
 }

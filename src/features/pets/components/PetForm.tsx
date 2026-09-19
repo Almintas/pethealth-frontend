@@ -1,7 +1,26 @@
-import { useState, type ChangeEvent, type FormEvent } from 'react';
+import {
+  useMemo,
+  useRef,
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+} from 'react';
+import { SearchableCombobox } from '../../../components/SearchableCombobox';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import {
+  getBreedSuggestionsForSpecies,
+  PET_GENDER_SUGGESTIONS,
+  PET_SPECIES_SUGGESTIONS,
+} from '../constants/pet-field-suggestions';
+import type { PetPhotoIntent } from '../constants/pet-photo';
+import { PetPhotoField } from './PetPhotoField';
 import type { CreatePetInput, Pet, UpdatePetInput } from '../types';
 import './pet-form.css';
+
+export type PetFormSubmitPayload<TInput> = {
+  input: TInput;
+  photoIntent: PetPhotoIntent;
+};
 
 export type PetFormValues = {
   name: string;
@@ -101,13 +120,13 @@ type PetFormBaseProps = {
 type PetFormProps =
   | (PetFormBaseProps & {
       mode: 'create';
-      onSubmit: (input: CreatePetInput) => Promise<void>;
+      onSubmit: (payload: PetFormSubmitPayload<CreatePetInput>) => Promise<void>;
       initialPet?: never;
     })
   | (PetFormBaseProps & {
       mode: 'edit';
       initialPet: Pet;
-      onSubmit: (input: UpdatePetInput) => Promise<void>;
+      onSubmit: (payload: PetFormSubmitPayload<UpdatePetInput>) => Promise<void>;
     });
 
 export function PetForm({
@@ -124,6 +143,16 @@ export function PetForm({
   const [fieldErrors, setFieldErrors] = useState<PetFormFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [photoIntent, setPhotoIntent] = useState<PetPhotoIntent>({
+    kind: 'unchanged',
+  });
+  const photoIntentRef = useRef(photoIntent);
+  photoIntentRef.current = photoIntent;
+
+  const handlePhotoIntentChange = (intent: PetPhotoIntent) => {
+    photoIntentRef.current = intent;
+    setPhotoIntent(intent);
+  };
 
   const updateField =
     (field: keyof PetFormValues) =>
@@ -142,15 +171,24 @@ export function PetForm({
     }
 
     setIsSubmitting(true);
+    const intentForSubmit = photoIntentRef.current;
     try {
       if (mode === 'edit') {
-        await onSubmit(buildUpdatePetInput(values));
+        await onSubmit({
+          input: buildUpdatePetInput(values),
+          photoIntent: intentForSubmit,
+        });
       } else {
-        await onSubmit(buildCreatePetInput(values));
+        await onSubmit({
+          input: buildCreatePetInput(values),
+          photoIntent: intentForSubmit,
+        });
       }
       if (mode === 'create') {
         setValues(emptyPetFormValues);
       }
+      setPhotoIntent({ kind: 'unchanged' });
+      photoIntentRef.current = { kind: 'unchanged' };
       setFieldErrors({});
     } catch (error) {
       setFormError(getAuthErrorMessage(error, 'save-pet'));
@@ -160,6 +198,15 @@ export function PetForm({
   };
 
   const fieldId = (name: string) => `pet-${mode}-${name}`;
+
+  const breedSuggestions = useMemo(
+    () => getBreedSuggestionsForSpecies(values.species),
+    [values.species],
+  );
+
+  const setFieldValue = (field: keyof PetFormValues, next: string) => {
+    setValues((current) => ({ ...current, [field]: next }));
+  };
 
   return (
     <form
@@ -176,6 +223,14 @@ export function PetForm({
       ) : null}
 
       <div className="pet-form__fields">
+        <PetPhotoField
+          species={values.species || initialPet?.species || 'Pet'}
+          name={values.name || initialPet?.name || 'Pet'}
+          existingPhotoUrl={mode === 'edit' ? initialPet.photoUrl : null}
+          disabled={isSubmitting}
+          onIntentChange={handlePhotoIntentChange}
+        />
+
         <div className="pet-form__row pet-form__row--split">
           <div className="pet-form__field">
             <label className="pet-form__label" htmlFor={fieldId('name')}>
@@ -202,58 +257,47 @@ export function PetForm({
             ) : null}
           </div>
 
-          <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor={fieldId('species')}>
-              Species <span className="pet-form__required" aria-hidden="true">*</span>
-            </label>
-            <input
-              id={fieldId('species')}
-              name="species"
-              className={[
-                'pet-form__input',
-                fieldErrors.species ? 'pet-form__input--error' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              value={values.species}
-              onChange={updateField('species')}
-              disabled={isSubmitting}
-              required
-              aria-invalid={Boolean(fieldErrors.species)}
-              autoComplete="off"
-            />
-            {fieldErrors.species ? (
-              <p className="pet-form__error" role="alert">{fieldErrors.species}</p>
-            ) : null}
-          </div>
+          <SearchableCombobox
+            id={fieldId('species')}
+            label="Species"
+            value={values.species}
+            onChange={(next) => setFieldValue('species', next)}
+            options={PET_SPECIES_SUGGESTIONS}
+            placeholder="Select or type species"
+            disabled={isSubmitting}
+            required
+            error={fieldErrors.species}
+            allowCustom
+          />
         </div>
 
         <div className="pet-form__row pet-form__row--split">
-          <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor={fieldId('breed')}>Breed</label>
-            <input
-              id={fieldId('breed')}
-              name="breed"
-              className="pet-form__input"
-              value={values.breed}
-              onChange={updateField('breed')}
-              disabled={isSubmitting}
-              autoComplete="off"
-            />
-          </div>
+          <SearchableCombobox
+            id={fieldId('breed')}
+            label="Breed"
+            value={values.breed}
+            onChange={(next) => setFieldValue('breed', next)}
+            options={breedSuggestions}
+            placeholder="Search or type breed"
+            disabled={isSubmitting}
+            allowCustom
+            hint={
+              values.species.trim()
+                ? `Suggestions for ${values.species.trim()}`
+                : 'Choose a species for tailored breed suggestions'
+            }
+          />
 
-          <div className="pet-form__field">
-            <label className="pet-form__label" htmlFor={fieldId('gender')}>Gender</label>
-            <input
-              id={fieldId('gender')}
-              name="gender"
-              className="pet-form__input"
-              value={values.gender}
-              onChange={updateField('gender')}
-              disabled={isSubmitting}
-              autoComplete="off"
-            />
-          </div>
+          <SearchableCombobox
+            id={fieldId('gender')}
+            label="Gender"
+            value={values.gender}
+            onChange={(next) => setFieldValue('gender', next)}
+            options={PET_GENDER_SUGGESTIONS}
+            placeholder="Select gender"
+            disabled={isSubmitting}
+            allowCustom
+          />
         </div>
 
         <div className="pet-form__row pet-form__row--split">
@@ -295,7 +339,11 @@ export function PetForm({
           className="pet-form__submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving…' : submitLabel}
+          {isSubmitting
+            ? photoIntent.kind !== 'unchanged'
+              ? 'Saving pet & photo…'
+              : 'Saving…'
+            : submitLabel}
         </button>
         <button
           type="button"

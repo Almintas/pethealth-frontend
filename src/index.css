@@ -44,5 +44,5 @@ textarea::placeholder {
 input[type='date'],
 input[type='datetime-local'],
 select {
-  color-scheme: dark;
+  color-scheme: light;
 }

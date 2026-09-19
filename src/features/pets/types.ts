@@ -7,6 +7,7 @@ export type Pet = {
   gender?: string | null;
   birthDate?: string | null;
   microchipNumber?: string | null;
+  photoUrl?: string | null;
   createdAt: string;
   updatedAt: string;
 };

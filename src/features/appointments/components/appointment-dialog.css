@@ -31,9 +31,9 @@
   max-height: min(92vh, 48rem);
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--apt-border, #2a3544);
+  border: 1px solid var(--apt-border, var(--ph-color-border));
   border-radius: 1rem 1rem 0 0;
-  background: var(--apt-surface-elevated, #222b38);
+  background: var(--apt-surface-elevated, var(--ph-color-surface-elevated));
   box-shadow: 0 24px 64px rgba(2, 6, 23, 0.45);
   outline: none;
 }
@@ -51,14 +51,14 @@
   justify-content: space-between;
   gap: 0.75rem;
   padding: 1rem 1.25rem;
-  border-bottom: 1px solid var(--apt-border, #2a3544);
+  border-bottom: 1px solid var(--apt-border, var(--ph-color-border));
 }
 
 .appointment-dialog__title {
   margin: 0;
   font-size: 1.0625rem;
   font-weight: 600;
-  color: var(--apt-text, #e8edf5);
+  color: var(--apt-text, var(--ph-color-text));
 }
 
 .appointment-dialog__close {
@@ -67,22 +67,22 @@
   justify-content: center;
   width: 2rem;
   height: 2rem;
-  border: 1px solid var(--apt-border, #2a3544);
+  border: 1px solid var(--apt-border, var(--ph-color-border));
   border-radius: 0.5rem;
   font-size: 1.25rem;
   line-height: 1;
-  color: var(--apt-muted, #9aa8bc);
+  color: var(--apt-muted, var(--ph-color-text-secondary));
   background: transparent;
   cursor: pointer;
 }
 
 .appointment-dialog__close:hover {
-  color: var(--apt-text, #e8edf5);
-  border-color: #3d4d63;
+  color: var(--apt-text, var(--ph-color-text));
+  border-color: var(--ph-color-border-strong);
 }
 
 .appointment-dialog__close:focus-visible {
-  outline: 2px solid var(--apt-accent, #5b9fd4);
+  outline: 2px solid var(--apt-accent, var(--ph-color-primary));
   outline-offset: 2px;
 }
 
