@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../../i18n';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import type { CreateVaccinationInput } from '../types';
 import './vaccination-form.css';
@@ -40,10 +42,10 @@ function validateVaccinationForm(
   const errors: VaccinationFieldErrors = {};
 
   if (!values.vaccineName.trim()) {
-    errors.vaccineName = 'Vaccine name is required.';
+    errors.vaccineName = i18n.t('health.vaccineNameRequired');
   }
   if (!values.administeredAt) {
-    errors.administeredAt = 'Administered date is required.';
+    errors.administeredAt = i18n.t('health.administeredRequired');
   }
 
   return errors;
@@ -107,6 +109,7 @@ export function VaccinationForm({
   onCancel,
   variant = 'inline',
 }: VaccinationFormProps) {
+  const { t } = useTranslation();
   const isDialog = variant === 'dialog';
   const [values, setValues] = useState<VaccinationFormValues>(
     emptyVaccinationFormValues,
@@ -157,7 +160,7 @@ export function VaccinationForm({
     >
       {!isDialog ? (
         <h3 id="vaccination-form-title" className="vaccination-form__title">
-          Add vaccination
+          {t('health.addVaccination')}
         </h3>
       ) : null}
 
@@ -168,7 +171,7 @@ export function VaccinationForm({
       <div className="vaccination-form__fields">
         <div className="vaccination-form__field">
           <label className="vaccination-form__label" htmlFor="vaccination-name">
-            Vaccine name{' '}
+            {t('health.vaccineName')}{' '}
             <span className="vaccination-form__required" aria-hidden="true">*</span>
           </label>
           <input
@@ -199,7 +202,7 @@ export function VaccinationForm({
               className="vaccination-form__label"
               htmlFor="vaccination-administered-at"
             >
-              Administered date{' '}
+              {t('health.administeredDate')}{' '}
               <span className="vaccination-form__required" aria-hidden="true">*</span>
             </label>
             <input
@@ -227,7 +230,7 @@ export function VaccinationForm({
 
           <div className="vaccination-form__field">
             <label className="vaccination-form__label" htmlFor="vaccination-next-due">
-              Next due date
+              {t('health.nextDueDate')}
             </label>
             <input
               id="vaccination-next-due"
@@ -247,7 +250,7 @@ export function VaccinationForm({
               className="vaccination-form__label"
               htmlFor="vaccination-veterinarian"
             >
-              Veterinarian
+              {t('appointments.veterinarian')}
             </label>
             <input
               id="vaccination-veterinarian"
@@ -261,7 +264,7 @@ export function VaccinationForm({
 
           <div className="vaccination-form__field">
             <label className="vaccination-form__label" htmlFor="vaccination-clinic">
-              Clinic
+              {t('appointments.clinic')}
             </label>
             <input
               id="vaccination-clinic"
@@ -276,7 +279,7 @@ export function VaccinationForm({
 
         <div className="vaccination-form__field">
           <label className="vaccination-form__label" htmlFor="vaccination-batch">
-            Batch number
+            {t('health.batchNumber')}
           </label>
           <input
             id="vaccination-batch"
@@ -290,7 +293,7 @@ export function VaccinationForm({
 
         <div className="vaccination-form__field">
           <label className="vaccination-form__label" htmlFor="vaccination-notes">
-            Notes
+            {t('pets.notes')}
           </label>
           <textarea
             id="vaccination-notes"
@@ -309,7 +312,7 @@ export function VaccinationForm({
           className="vaccination-form__submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving…' : 'Create vaccination'}
+          {isSubmitting ? t('common.saving') : t('health.addVaccination')}
         </button>
         <button
           type="button"
@@ -317,7 +320,7 @@ export function VaccinationForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
       </div>
     </form>

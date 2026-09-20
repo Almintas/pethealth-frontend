@@ -294,6 +294,22 @@ const DEFAULT_BREED_SUGGESTIONS = orderBreedSuggestions(
   ['Mixed', 'Unknown'],
 );
 
+function collectAllBreedSuggestionValues(): string[] {
+  const values = new Set<string>();
+  for (const breeds of Object.values(BREEDS_BY_SPECIES)) {
+    for (const breed of breeds) {
+      values.add(breed);
+    }
+  }
+  for (const breed of DEFAULT_BREED_SUGGESTIONS) {
+    values.add(breed);
+  }
+  return [...values];
+}
+
+/** All canonical breed strings used in suggestion lists (for i18n coverage checks). */
+export const ALL_BREED_SUGGESTION_VALUES = collectAllBreedSuggestionValues();
+
 export function getBreedSuggestionsForSpecies(species: string): string[] {
   const normalized = species.trim().toLowerCase();
   if (!normalized) {

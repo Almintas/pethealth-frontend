@@ -1,3 +1,5 @@
+import { i18n } from '../../../i18n';
+
 export const PET_PHOTO_MAX_BYTES = 5 * 1024 * 1024;
 
 export const PET_PHOTO_ACCEPT = 'image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp';
@@ -10,11 +12,11 @@ const ALLOWED_MIME_TYPES = new Set([
 
 export function validatePetPhotoFile(file: File): string | null {
   if (!ALLOWED_MIME_TYPES.has(file.type)) {
-    return 'Please choose a JPG, PNG, or WebP image.';
+    return i18n.t('health.photoInvalidType');
   }
 
   if (file.size > PET_PHOTO_MAX_BYTES) {
-    return 'The image must be smaller than 5 MB.';
+    return i18n.t('health.photoTooLarge');
   }
 
   return null;

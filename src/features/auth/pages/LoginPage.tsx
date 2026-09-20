@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { AuthFormField } from '../components/AuthFormField';
 import { AuthShell } from '../components/AuthShell';
@@ -12,6 +13,7 @@ import {
 } from '../utils/validation';
 
 export function LoginPage() {
+  const { t } = useTranslation();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -44,8 +46,8 @@ export function LoginPage() {
 
   return (
     <AuthShell
-      title="Welcome back"
-      subtitle="Sign in to your PetHealth account."
+      title={t('auth.welcomeBack')}
+      subtitle={t('auth.signInSubtitle')}
     >
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
         {formError ? (
@@ -58,7 +60,7 @@ export function LoginPage() {
           id="login-email"
           name="email"
           type="email"
-          label="Email"
+          label={t('auth.email')}
           autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
@@ -70,7 +72,7 @@ export function LoginPage() {
           id="login-password"
           name="password"
           type="password"
-          label="Password"
+          label={t('auth.password')}
           autoComplete="current-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
@@ -79,14 +81,14 @@ export function LoginPage() {
         />
 
         <button className="auth-submit" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Signing in…' : 'Sign in'}
+          {isSubmitting ? t('auth.signingIn') : t('auth.signIn')}
         </button>
       </form>
 
       <p className="auth-switch">
-        Don&apos;t have an account?{' '}
+        {t('auth.noAccount')}{' '}
         <Link className="auth-switch__button" to="/register">
-          Create one
+          {t('auth.createOne')}
         </Link>
       </p>
     </AuthShell>

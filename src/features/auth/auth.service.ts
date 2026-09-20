@@ -4,6 +4,7 @@ import {
   LOGIN_MUTATION,
   ME_QUERY,
   REGISTER_MUTATION,
+  UPDATE_NOTIFICATION_PREFERENCES_MUTATION,
   UPDATE_PROFILE_MUTATION,
 } from './graphql';
 import {
@@ -17,6 +18,7 @@ import type {
   ChangePasswordInput,
   LoginInput,
   RegisterInput,
+  UpdateNotificationPreferencesInput,
   UpdateProfileInput,
 } from './types';
 
@@ -111,6 +113,10 @@ type ChangePasswordMutationResult = {
   changePassword: boolean;
 };
 
+type UpdateNotificationPreferencesMutationResult = {
+  updateNotificationPreferences: AuthUser;
+};
+
 export function syncAuthUserCache(
   client: ApolloClient,
   user: AuthUser,
@@ -153,4 +159,22 @@ export async function changePassword(
   }
 
   return true;
+}
+
+export async function updateNotificationPreferences(
+  client: ApolloClient,
+  input: UpdateNotificationPreferencesInput,
+): Promise<AuthUser> {
+  const { data } = await client.mutate<UpdateNotificationPreferencesMutationResult>({
+    mutation: UPDATE_NOTIFICATION_PREFERENCES_MUTATION,
+    variables: { input },
+  });
+
+  const user = data?.updateNotificationPreferences;
+  if (!user) {
+    throw new Error('Failed to update notification preferences.');
+  }
+
+  syncAuthUserCache(client, user);
+  return user;
 }

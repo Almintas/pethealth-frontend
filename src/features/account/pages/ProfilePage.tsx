@@ -1,6 +1,7 @@
 import { useApolloClient } from '@apollo/client/react';
 import { useQuery } from '@apollo/client/react';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { UserInitialsAvatar } from '../../../components/UserInitialsAvatar';
 import { useAuth } from '../../auth';
@@ -38,6 +39,7 @@ function isValidEmail(value: string): boolean {
 }
 
 export function ProfilePage() {
+  const { t } = useTranslation();
   const client = useApolloClient();
   const { user: authUser, isInitializing, updateSessionUser } = useAuth();
   const { data, loading, error, refetch } = useQuery<MeQueryResult>(ME_QUERY, {
@@ -106,9 +108,9 @@ export function ProfilePage() {
         <div className="ph-page">
           <header className="ph-page-header">
             <div>
-              <h1 className="ph-page-header__title">Profile</h1>
+              <h1 className="ph-page-header__title">{t('profile.title')}</h1>
               <p className="ph-page-header__subtitle">
-                Manage your personal information and account details.
+                {t('profile.subtitle')}
               </p>
             </div>
           </header>
@@ -122,7 +124,7 @@ export function ProfilePage() {
 
     return (
       <div className="ph-page">
-        <LoadingState message="Loading your profile…" skeleton />
+        <LoadingState message={t('profile.loading')} skeleton />
       </div>
     );
   }
@@ -149,7 +151,7 @@ export function ProfilePage() {
     const trimmedEmail = form.email.trim().toLowerCase();
 
     if (!isValidEmail(trimmedEmail)) {
-      setFieldError('Enter a valid email address.');
+      setFieldError(t('validation.emailInvalid'));
       return;
     }
 
@@ -158,7 +160,7 @@ export function ProfilePage() {
       parsedName = parseFullName(form.fullName);
     } catch (nameError) {
       setFieldError(
-        nameError instanceof Error ? nameError.message : 'Enter a valid full name.',
+        nameError instanceof Error ? nameError.message : t('validation.fullNameRequired'),
       );
       return;
     }
@@ -175,7 +177,7 @@ export function ProfilePage() {
       setBaseline(nextForm);
       setForm(nextForm);
       updateSessionUser(updatedUser);
-      setSuccessMessage('Profile updated.');
+      setSuccessMessage(t('profile.updatedSuccess'));
     } catch (saveFailure) {
       setSaveError(getAuthErrorMessage(saveFailure, 'generic-save'));
     } finally {
@@ -198,22 +200,22 @@ export function ProfilePage() {
         newPassword,
       });
       setIsPasswordDialogOpen(false);
-      setPasswordSuccessMessage('Password updated.');
+      setPasswordSuccessMessage(t('profile.passwordUpdatedSuccess'));
     } finally {
       setIsChangingPassword(false);
     }
   };
 
-  const heroName = form.fullName.trim() || formatFullName(user) || 'Account';
+  const heroName = form.fullName.trim() || formatFullName(user) || t('common.account');
   const heroEmail = form.email.trim() || user.email;
 
   return (
     <div className="ph-page">
       <header className="ph-page-header">
         <div>
-          <h1 className="ph-page-header__title">Profile</h1>
+          <h1 className="ph-page-header__title">{t('profile.title')}</h1>
           <p className="ph-page-header__subtitle">
-            Manage your personal information and account details.
+            {t('profile.subtitle')}
           </p>
         </div>
       </header>
@@ -238,7 +240,7 @@ export function ProfilePage() {
         <section className="ph-card ph-card--pad account-card" aria-labelledby="profile-info-heading">
           <div className="account-card__header">
             <h2 id="profile-info-heading" className="account-card__title">
-              User information
+              {t('profile.userInfo')}
             </h2>
           </div>
 
@@ -253,7 +255,7 @@ export function ProfilePage() {
           <div className="ph-form__fields">
             <div className="ph-form__field">
               <label className="ph-form__label" htmlFor="profile-full-name">
-                Full name
+                {t('profile.fullName')}
               </label>
               <input
                 id="profile-full-name"
@@ -278,7 +280,7 @@ export function ProfilePage() {
 
             <div className="ph-form__field">
               <label className="ph-form__label" htmlFor="profile-email">
-                Email
+                {t('profile.email')}
               </label>
               <input
                 id="profile-email"
@@ -308,10 +310,10 @@ export function ProfilePage() {
 
             <div className="ph-form__field account-profile__password-block">
               <span className="ph-form__label" id="profile-password-label">
-                Password
+                {t('profile.password')}
               </span>
               <p className="account-card__hint account-profile__password-copy">
-                Your password is securely stored.
+                {t('profile.passwordSecure')}
               </p>
               <button
                 type="button"
@@ -319,7 +321,7 @@ export function ProfilePage() {
                 onClick={() => setIsPasswordDialogOpen(true)}
                 disabled={isSaving}
               >
-                Change password
+                {t('profile.changePassword')}
               </button>
             </div>
           </div>
@@ -331,7 +333,7 @@ export function ProfilePage() {
               onClick={handleCancel}
               disabled={!isDirty || isSaving}
             >
-              Cancel
+              {t('common.cancel')}
             </button>
             <button
               type="button"
@@ -339,7 +341,7 @@ export function ProfilePage() {
               onClick={() => void handleSave()}
               disabled={!isDirty || isSaving}
             >
-              {isSaving ? 'Saving…' : 'Save changes'}
+              {isSaving ? t('common.saving') : t('profile.saveChanges')}
             </button>
           </div>
         </section>
@@ -347,16 +349,16 @@ export function ProfilePage() {
         <section className="ph-card ph-card--pad account-card" aria-labelledby="profile-account-heading">
           <div className="account-card__header">
             <h2 id="profile-account-heading" className="account-card__title">
-              Account
+              {t('profile.account')}
             </h2>
           </div>
           <dl className="account-profile__meta">
             <div>
-              <dt>Created</dt>
+              <dt>{t('profile.created')}</dt>
               <dd>{formatPetDate(user.createdAt)}</dd>
             </div>
             <div>
-              <dt>Last updated</dt>
+              <dt>{t('profile.lastUpdated')}</dt>
               <dd>{formatPetDate(user.updatedAt)}</dd>
             </div>
           </dl>

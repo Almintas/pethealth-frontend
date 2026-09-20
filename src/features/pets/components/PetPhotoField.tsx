@@ -5,6 +5,7 @@ import {
   useState,
   type ChangeEvent,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PetAvatar } from '../../../components/PetAvatar';
 import {
   PET_PHOTO_ACCEPT,
@@ -28,6 +29,7 @@ export function PetPhotoField({
   disabled = false,
   onIntentChange,
 }: PetPhotoFieldProps) {
+  const { t } = useTranslation();
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -90,9 +92,7 @@ export function PetPhotoField({
 
     if (
       hasExistingOnly &&
-      !window.confirm(
-        'Remove this pet’s profile photo? You can add a new one anytime.',
-      )
+      !window.confirm(t('pets.removePhotoConfirm'))
     ) {
       return;
     }
@@ -134,10 +134,10 @@ export function PetPhotoField({
   return (
     <div className="pet-photo-field">
       <span className="pet-photo-field__label" id={`${inputId}-label`}>
-        Profile photo
+        {t('pets.profilePhotoLabel')}
       </span>
       <p className="pet-photo-field__hint">
-        Optional. JPEG, PNG, or WebP up to 5&nbsp;MB.
+        {t('pets.photoHint')}
       </p>
 
       <div className="pet-photo-field__row">
@@ -157,7 +157,7 @@ export function PetPhotoField({
             onClick={handlePickClick}
             disabled={disabled}
           >
-            {displayPhotoUrl ? 'Change photo' : 'Add photo'}
+            {displayPhotoUrl ? t('pets.changePhoto') : t('pets.addPhoto')}
           </button>
 
           {hasNewSelection ? (
@@ -167,7 +167,7 @@ export function PetPhotoField({
               onClick={handleClearNewSelection}
               disabled={disabled}
             >
-              Clear selection
+              {t('pets.clearSelection')}
             </button>
           ) : null}
 
@@ -178,7 +178,7 @@ export function PetPhotoField({
               onClick={handleRemove}
               disabled={disabled}
             >
-              {hasExistingOnly ? 'Remove photo' : 'Remove'}
+              {hasExistingOnly ? t('pets.removePhoto') : t('pets.remove')}
             </button>
           ) : null}
         </div>

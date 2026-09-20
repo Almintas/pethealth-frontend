@@ -1,4 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useApolloClient } from '@apollo/client/react';
+import { useQuery } from '@apollo/client/react';
+import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSelector } from '../../../components/LanguageSelector';
+import { ErrorAlert } from '../../../components/feedback';
+import { useAuth } from '../../auth';
+import * as authService from '../../auth/auth.service';
+import { ME_QUERY } from '../../auth/graphql';
+import type { AuthUser, NotificationPreferences } from '../../auth/types';
+import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { useTheme, type ThemePreference } from '../../../theme';
 import {
   formatSampleDate,
@@ -9,26 +19,67 @@ import {
   type TimeFormatPreference,
   type UserPreferences,
 } from '../utils/user-preferences';
+import '../../../components/language-selector.css';
 import './account-page.css';
 
-const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-  { value: 'system', label: 'System' },
-];
+type NotificationToggleKey = keyof NotificationPreferences;
 
-const NOTIFICATION_ITEMS = [
-  { id: 'appointments', label: 'Appointment reminders' },
-  { id: 'medications', label: 'Medication reminders' },
-  { id: 'vaccinations', label: 'Vaccination reminders' },
-] as const;
+const DEFAULT_NOTIFICATION_PREFERENCES: NotificationPreferences = {
+  emailAppointmentReminders: true,
+  emailMedicationReminders: true,
+  emailVaccinationReminders: true,
+};
+
+type MeQueryResult = {
+  me: AuthUser;
+};
 
 export function SettingsPage() {
+  const { t } = useTranslation();
+  const client = useApolloClient();
   const { theme, setTheme } = useTheme();
+  const { user: authUser, isInitializing, updateSessionUser } = useAuth();
+  const { data, loading } = useQuery<MeQueryResult>(ME_QUERY, {
+    skip: isInitializing,
+    fetchPolicy: 'cache-and-network',
+  });
+
+  const themeOptions = useMemo(
+    (): { value: ThemePreference; label: string }[] => [
+      { value: 'light', label: t('settings.themeLight') },
+      { value: 'dark', label: t('settings.themeDark') },
+      { value: 'system', label: t('settings.themeSystem') },
+    ],
+    [t],
+  );
+
+  const notificationItems = useMemo(
+    (): { key: NotificationToggleKey; label: string }[] => [
+      { key: 'emailAppointmentReminders', label: t('settings.appointmentReminders') },
+      { key: 'emailMedicationReminders', label: t('settings.medicationReminders') },
+      { key: 'emailVaccinationReminders', label: t('settings.vaccinationReminders') },
+    ],
+    [t],
+  );
+
+  const user = data?.me ?? authUser;
+
   const [preferences, setPreferences] = useState<UserPreferences>(() =>
     loadUserPreferences(),
   );
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
+  const [notificationPrefs, setNotificationPrefs] =
+    useState<NotificationPreferences>(DEFAULT_NOTIFICATION_PREFERENCES);
+  const [savingNotificationKey, setSavingNotificationKey] =
+    useState<NotificationToggleKey | null>(null);
+  const [notificationError, setNotificationError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!user?.notificationPreferences) {
+      return;
+    }
+    setNotificationPrefs(user.notificationPreferences);
+  }, [user]);
 
   useEffect(() => {
     if (!savedMessage) {
@@ -44,20 +95,43 @@ export function SettingsPage() {
       saveUserPreferences(next);
       return next;
     });
-    setSavedMessage('Preferences saved on this device.');
+    setSavedMessage(t('common.preferencesSavedDevice'));
+  };
+
+  const handleNotificationToggle = async (
+    key: NotificationToggleKey,
+    nextValue: boolean,
+  ) => {
+    const previous = notificationPrefs;
+    setNotificationError(null);
+    setNotificationPrefs((current) => ({ ...current, [key]: nextValue }));
+    setSavingNotificationKey(key);
+
+    try {
+      const updatedUser = await authService.updateNotificationPreferences(client, {
+        [key]: nextValue,
+      });
+      setNotificationPrefs(updatedUser.notificationPreferences);
+      updateSessionUser(updatedUser);
+      setSavedMessage(t('settings.notificationsSaved'));
+    } catch (error) {
+      setNotificationPrefs(previous);
+      setNotificationError(getAuthErrorMessage(error, 'generic-save'));
+    } finally {
+      setSavingNotificationKey(null);
+    }
   };
 
   const sampleDate = formatSampleDate(preferences);
   const sampleTime = formatSampleTime(preferences);
+  const notificationsLoading = isInitializing || loading || !user;
 
   return (
     <div className="ph-page">
       <header className="ph-page-header">
         <div>
-          <h1 className="ph-page-header__title">Settings</h1>
-          <p className="ph-page-header__subtitle">
-            Manage your PetHealth preferences.
-          </p>
+          <h1 className="ph-page-header__title">{t('settings.title')}</h1>
+          <p className="ph-page-header__subtitle">{t('settings.subtitle')}</p>
         </div>
       </header>
 
@@ -65,28 +139,30 @@ export function SettingsPage() {
         <p className="ph-alert ph-alert--success" role="status">{savedMessage}</p>
       ) : null}
 
+      {notificationError ? (
+        <ErrorAlert message={notificationError} compact />
+      ) : null}
+
       <div className="account-page__stack">
         <section className="ph-card ph-card--pad account-card" aria-labelledby="settings-appearance-heading">
           <div className="account-card__header">
             <h2 id="settings-appearance-heading" className="account-card__title">
-              Appearance
+              {t('settings.appearance')}
             </h2>
-            <p className="account-card__hint">
-              Choose how PetHealth looks on your device.
-            </p>
+            <p className="account-card__hint">{t('settings.appearanceHint')}</p>
           </div>
 
           <div className="account-settings__section">
             <div className="account-settings__row">
               <div className="account-settings__row-text">
-                <p className="account-settings__row-label">Theme</p>
+                <p className="account-settings__row-label">{t('settings.theme')}</p>
               </div>
               <div
                 className="account-settings__theme-segment"
                 role="group"
-                aria-label="Theme"
+                aria-label={t('settings.theme')}
               >
-                {THEME_OPTIONS.map((option) => (
+                {themeOptions.map((option) => (
                   <button
                     key={option.value}
                     type="button"
@@ -105,47 +181,65 @@ export function SettingsPage() {
         <section className="ph-card ph-card--pad account-card" aria-labelledby="settings-notifications-heading">
           <div className="account-card__header">
             <h2 id="settings-notifications-heading" className="account-card__title">
-              Notifications
+              {t('settings.notifications')}
             </h2>
-            <p className="account-card__hint">
-              Notification delivery preferences are coming soon. These controls
-              are not connected to alerts yet.
-            </p>
+            <p className="account-card__hint">{t('settings.notificationsHint')}</p>
           </div>
 
+          <p className="account-settings__subsection-label">{t('common.emailNotifications')}</p>
+
           <div className="account-settings__section">
-            {NOTIFICATION_ITEMS.map((item) => (
-              <div key={item.id} className="account-settings__row">
-                <div className="account-settings__row-text">
-                  <p className="account-settings__row-label">{item.label}</p>
+            {notificationItems.map((item) => {
+              const isSaving = savingNotificationKey === item.key;
+              const isDisabled =
+                notificationsLoading ||
+                isSaving ||
+                savingNotificationKey !== null;
+
+              return (
+                <div key={item.key} className="account-settings__row">
+                  <div className="account-settings__row-text">
+                    <p className="account-settings__row-label">{item.label}</p>
+                  </div>
+                  <label className="account-toggle">
+                    <input
+                      type="checkbox"
+                      checked={notificationPrefs[item.key]}
+                      disabled={isDisabled}
+                      aria-label={`${t('common.emailNotifications')} ${item.label}`}
+                      onChange={(event) =>
+                        void handleNotificationToggle(
+                          item.key,
+                          event.target.checked,
+                        )
+                      }
+                    />
+                    <span className="account-toggle__track">
+                      <span className="account-toggle__thumb" />
+                    </span>
+                  </label>
+                  {isSaving ? (
+                    <span className="account-settings__row-saving">{t('common.savingLabel')}</span>
+                  ) : null}
                 </div>
-                <label className="account-toggle">
-                  <input type="checkbox" disabled aria-label={item.label} />
-                  <span className="account-toggle__track">
-                    <span className="account-toggle__thumb" />
-                  </span>
-                </label>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 
         <section className="ph-card ph-card--pad account-card" aria-labelledby="settings-datetime-heading">
           <div className="account-card__header">
             <h2 id="settings-datetime-heading" className="account-card__title">
-              Date &amp; Time
+              {t('settings.dateTime')}
             </h2>
-            <p className="account-card__hint">
-              Saved on this device. Broader app formatting will adopt these
-              preferences in a future update.
-            </p>
+            <p className="account-card__hint">{t('settings.dateTimeHint')}</p>
           </div>
 
           <div className="account-settings__section">
             <div className="ph-form__row ph-form__row--split">
               <div className="ph-form__field">
                 <label className="ph-form__label" htmlFor="settings-date-format">
-                  Date format
+                  {t('settings.dateFormat')}
                 </label>
                 <select
                   id="settings-date-format"
@@ -165,7 +259,7 @@ export function SettingsPage() {
 
               <div className="ph-form__field">
                 <label className="ph-form__label" htmlFor="settings-time-format">
-                  Time format
+                  {t('settings.timeFormat')}
                 </label>
                 <select
                   id="settings-time-format"
@@ -177,14 +271,14 @@ export function SettingsPage() {
                     })
                   }
                 >
-                  <option value="24">24-hour</option>
-                  <option value="12">12-hour</option>
+                  <option value="24">{t('settings.time24')}</option>
+                  <option value="12">{t('settings.time12')}</option>
                 </select>
               </div>
             </div>
 
             <p className="account-settings__preview">
-              Preview: {sampleDate} · {sampleTime}
+              {t('settings.preview', { date: sampleDate, time: sampleTime })}
             </p>
           </div>
         </section>
@@ -192,24 +286,16 @@ export function SettingsPage() {
         <section className="ph-card ph-card--pad account-card" aria-labelledby="settings-language-heading">
           <div className="account-card__header">
             <h2 id="settings-language-heading" className="account-card__title">
-              Language
+              {t('settings.language')}
             </h2>
-            <p className="account-card__hint">More languages coming soon.</p>
+            <p className="account-card__hint">{t('common.chooseLanguage')}</p>
           </div>
 
           <div className="ph-form__field">
             <label className="ph-form__label" htmlFor="settings-language">
-              Language
+              {t('settings.language')}
             </label>
-            <select
-              id="settings-language"
-              className="ph-form__select account-field--readonly"
-              value="en"
-              disabled
-              aria-disabled="true"
-            >
-              <option value="en">English</option>
-            </select>
+            <LanguageSelector variant="settings" />
           </div>
         </section>
 
@@ -218,18 +304,16 @@ export function SettingsPage() {
           aria-labelledby="settings-danger-heading"
         >
           <h2 id="settings-danger-heading" className="account-danger__title">
-            Danger zone
+            {t('settings.dangerZone')}
           </h2>
-          <p className="account-danger__text">
-            Permanently delete your PetHealth account and associated data.
-          </p>
+          <p className="account-danger__text">{t('settings.deleteAccountHint')}</p>
           <button
             type="button"
             className="ph-btn ph-btn--danger-ghost"
             disabled
-            title="Coming soon"
+            title={t('settings.comingSoon')}
           >
-            Delete account
+            {t('settings.deleteAccount')}
           </button>
         </section>
       </div>

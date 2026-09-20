@@ -1,9 +1,7 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
-import {
-  isVeterinaryHealthDataReadOnly,
-  vetManagedSectionCopy,
-} from '../../../config/owner-portal';
+import { useTranslation } from 'react-i18next';
+import { isVeterinaryHealthDataReadOnly } from '../../../config/owner-portal';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { VACCINATIONS_QUERY } from '../graphql';
@@ -34,8 +32,14 @@ function sortVaccinationsByAdministered(
 }
 
 export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
+  const { t } = useTranslation();
   const readOnly = isVeterinaryHealthDataReadOnly;
-  const sectionCopy = vetManagedSectionCopy.vaccinations;
+  const emptyTitle = readOnly
+    ? t('health.clinicVaccinationsEmptyTitle')
+    : t('health.emptyVaccinations');
+  const emptyText = readOnly
+    ? t('health.clinicVaccinationsEmptyText')
+    : t('health.vaccinationsDesc');
   const client = useApolloClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deletingVaccinationId, setDeletingVaccinationId] = useState<
@@ -82,8 +86,8 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
 
   const countLabel =
     vaccinations.length === 1
-      ? '1 vaccination'
-      : `${vaccinations.length} vaccinations`;
+      ? t('health.vaccinationCountOne')
+      : t('health.vaccinationCountMany', { count: vaccinations.length });
 
   return (
     <section
@@ -92,14 +96,14 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
     >
       <header className="vaccinations-section__header">
         <div className="vaccinations-section__heading">
-          <h2 id="vaccinations-title">Vaccinations</h2>
+          <h2 id="vaccinations-title">{t('health.vaccinations')}</h2>
           {!loading && !error ? (
             <p className="vaccinations-section__count" aria-live="polite">
               {countLabel}
               {readOnly ? (
                 <span className="vaccinations-section__hint">
                   {' '}
-                  · {sectionCopy.sectionHint}
+                  · {t('health.clinicVaccinationsHint')}
                 </span>
               ) : null}
             </p>
@@ -112,13 +116,13 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
             className="vaccinations-section__add-button"
             onClick={openDialog}
           >
-            + Add vaccination
+            + {t('health.addVaccination')}
           </button>
         ) : null}
       </header>
 
       {loading ? (
-        <LoadingState message="Loading vaccinations…" skeleton />
+        <LoadingState message={t('common.loading')} skeleton />
       ) : null}
 
       {error ? (
@@ -143,13 +147,13 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
             .join(' ')}
         >
           {readOnly ? (
-            <span className="ph-clinic-badge">Managed by your veterinary clinic</span>
+            <span className="ph-clinic-badge">{t('health.managedByClinic')}</span>
           ) : null}
           <h3 className="vaccinations-section__empty-title">
-            {sectionCopy.emptyTitle}
+            {emptyTitle}
           </h3>
           <p className="vaccinations-section__empty-text">
-            {sectionCopy.emptyText}
+            {emptyText}
           </p>
           {!readOnly ? (
             <button
@@ -157,7 +161,7 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
               className="vaccinations-section__empty-action"
               onClick={openDialog}
             >
-              Add vaccination
+              {t('health.addVaccination')}
             </button>
           ) : null}
         </div>
@@ -184,7 +188,7 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
       {!readOnly ? (
         <VaccinationDialog
           isOpen={isDialogOpen}
-          title="Add vaccination"
+          title={t('health.addVaccination')}
           onClose={() => setIsDialogOpen(false)}
         >
           <VaccinationForm

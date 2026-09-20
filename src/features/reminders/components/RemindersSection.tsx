@@ -4,6 +4,7 @@
  */
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { REMINDERS_QUERY } from '../graphql';
@@ -35,6 +36,7 @@ type ReminderDialogState =
   | { mode: 'edit'; reminder: Reminder };
 
 export function RemindersSection({ petId }: RemindersSectionProps) {
+  const { t } = useTranslation();
   const client = useApolloClient();
   const [dialogState, setDialogState] = useState<ReminderDialogState | null>(
     null,
@@ -115,14 +117,16 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
   };
 
   const countLabel =
-    reminders.length === 1 ? '1 reminder' : `${reminders.length} reminders`;
+    reminders.length === 1
+      ? t('reminders.countOne')
+      : t('reminders.countMany', { count: reminders.length });
 
   const pendingCountLabel =
     pendingCount === 0
-      ? '0 pending'
+      ? `0 ${t('enums.reminderStatus.PENDING').toLowerCase()}`
       : pendingCount === 1
-        ? '1 pending'
-        : `${pendingCount} pending`;
+        ? `1 ${t('enums.reminderStatus.PENDING').toLowerCase()}`
+        : `${pendingCount} ${t('enums.reminderStatus.PENDING').toLowerCase()}`;
 
   const getCardActionState = (reminderId: string) => {
     const isRunning = runningAction?.id === reminderId;
@@ -136,7 +140,7 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
     <section className="reminders-section" aria-labelledby="reminders-title">
       <header className="reminders-section__header">
         <div className="reminders-section__heading">
-          <h2 id="reminders-title">Reminders</h2>
+          <h2 id="reminders-title">{t('reminders.title')}</h2>
           {!loading && !error ? (
             <p className="reminders-section__count" aria-live="polite">
               {countLabel}
@@ -154,13 +158,13 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
             className="reminders-section__add-button"
             onClick={openCreateDialog}
           >
-            + Add reminder
+            + {t('reminders.add')}
           </button>
         ) : null}
       </header>
 
       {loading ? (
-        <LoadingState message="Loading reminders…" skeleton />
+        <LoadingState message={t('common.loading')} skeleton />
       ) : null}
 
       {error ? (
@@ -177,11 +181,8 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
 
       {!loading && !error && reminders.length === 0 ? (
         <div className="reminders-section__empty">
-          <h3 className="reminders-section__empty-title">No reminders yet</h3>
-          <p className="reminders-section__empty-text">
-            Set due dates for vaccines, medications and visits so nothing
-            important slips through the cracks.
-          </p>
+          <h3 className="reminders-section__empty-title">{t('reminders.empty')}</h3>
+          <p className="reminders-section__empty-text">{t('reminders.emptyCta')}</p>
         </div>
       ) : null}
 
@@ -195,13 +196,12 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
               id="reminders-pending-heading"
               className="reminders-section__group-title"
             >
-              Pending
+              {t('enums.reminderStatus.PENDING')}
             </h3>
 
             {pending.length === 0 ? (
               <p className="reminders-section__pending-empty">
-                No pending reminders. Completed and dismissed items are in
-                history below.
+                {t('reminders.empty')}
               </p>
             ) : (
               <ol className="reminders-section__timeline">
@@ -238,7 +238,7 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
               open={historyDefaultOpen}
             >
               <summary className="reminders-section__history-summary">
-                History
+                {t('appointments.history')}
                 <span className="reminders-section__history-count">
                   {history.length}
                 </span>
@@ -275,7 +275,11 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
 
       <ReminderDialog
         isOpen={dialogState !== null}
-        title={dialogState?.mode === 'edit' ? 'Edit reminder' : 'Add reminder'}
+        title={
+          dialogState?.mode === 'edit'
+            ? t('reminders.editTitle')
+            : t('reminders.createTitle')
+        }
         onClose={closeDialog}
       >
         {dialogState ? (

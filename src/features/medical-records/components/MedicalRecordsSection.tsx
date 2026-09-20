@@ -1,9 +1,7 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
-import {
-  isVeterinaryHealthDataReadOnly,
-  vetManagedSectionCopy,
-} from '../../../config/owner-portal';
+import { useTranslation } from 'react-i18next';
+import { isVeterinaryHealthDataReadOnly } from '../../../config/owner-portal';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { MEDICAL_RECORDS_QUERY } from '../graphql';
@@ -30,8 +28,14 @@ function sortRecordsByDate(records: MedicalRecord[]): MedicalRecord[] {
 }
 
 export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
+  const { t } = useTranslation();
   const readOnly = isVeterinaryHealthDataReadOnly;
-  const sectionCopy = vetManagedSectionCopy.medicalRecords;
+  const emptyTitle = readOnly
+    ? t('health.clinicMedicalEmptyTitle')
+    : t('health.emptyMedical');
+  const emptyText = readOnly
+    ? t('health.clinicMedicalEmptyText')
+    : t('health.medicalRecordsDesc');
   const client = useApolloClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deletingRecordId, setDeletingRecordId] = useState<string | null>(null);
@@ -75,7 +79,9 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
   };
 
   const recordCountLabel =
-    records.length === 1 ? '1 record' : `${records.length} records`;
+    records.length === 1
+      ? t('health.recordCountOne')
+      : t('health.recordCountMany', { count: records.length });
 
   return (
     <section
@@ -84,14 +90,14 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
     >
       <header className="medical-records-section__header">
         <div className="medical-records-section__heading">
-          <h2 id="medical-records-title">Medical Records</h2>
+          <h2 id="medical-records-title">{t('health.medicalRecords')}</h2>
           {!loading && !error ? (
             <p className="medical-records-section__count" aria-live="polite">
               {recordCountLabel}
               {readOnly ? (
                 <span className="medical-records-section__hint">
                   {' '}
-                  · {sectionCopy.sectionHint}
+                  · {t('health.clinicMedicalRecordsHint')}
                 </span>
               ) : null}
             </p>
@@ -104,13 +110,13 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
             className="medical-records-section__add-button"
             onClick={openDialog}
           >
-            + Add record
+            + {t('health.addMedicalRecord')}
           </button>
         ) : null}
       </header>
 
       {loading ? (
-        <LoadingState message="Loading medical records…" skeleton />
+        <LoadingState message={t('common.loading')} skeleton />
       ) : null}
 
       {error ? (
@@ -135,13 +141,13 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
             .join(' ')}
         >
           {readOnly ? (
-            <span className="ph-clinic-badge">Managed by your veterinary clinic</span>
+            <span className="ph-clinic-badge">{t('health.managedByClinic')}</span>
           ) : null}
           <h3 className="medical-records-section__empty-title">
-            {sectionCopy.emptyTitle}
+            {emptyTitle}
           </h3>
           <p className="medical-records-section__empty-text">
-            {sectionCopy.emptyText}
+            {emptyText}
           </p>
           {!readOnly ? (
             <button
@@ -149,7 +155,7 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
               className="medical-records-section__empty-action"
               onClick={openDialog}
             >
-              Add medical record
+              {t('health.addMedicalRecord')}
             </button>
           ) : null}
         </div>
@@ -176,7 +182,7 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
       {!readOnly ? (
         <MedicalRecordDialog
           isOpen={isDialogOpen}
-          title="Add medical record"
+          title={t('health.addMedicalRecord')}
           onClose={() => setIsDialogOpen(false)}
         >
           <MedicalRecordForm

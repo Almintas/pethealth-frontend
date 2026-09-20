@@ -5,13 +5,23 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import { SearchableCombobox } from '../../../components/SearchableCombobox';
+import { i18n } from '../../../i18n';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import {
   getBreedSuggestionsForSpecies,
   PET_GENDER_SUGGESTIONS,
   PET_SPECIES_SUGGESTIONS,
 } from '../constants/pet-field-suggestions';
+import {
+  resolveCanonicalBreedFromInput,
+  resolveCanonicalGenderFromInput,
+  resolveCanonicalSpeciesFromInput,
+  translatePetBreed,
+  translatePetGender,
+  translatePetSpecies,
+} from '../utils/pet-field-display';
 import type { PetPhotoIntent } from '../constants/pet-photo';
 import { PetPhotoField } from './PetPhotoField';
 import type { CreatePetInput, Pet, UpdatePetInput } from '../types';
@@ -97,11 +107,11 @@ function validatePetForm(values: PetFormValues): PetFormFieldErrors {
   const errors: PetFormFieldErrors = {};
 
   if (!values.name.trim()) {
-    errors.name = 'Name is required.';
+    errors.name = `${i18n.t('pets.name')}: ${i18n.t('common.required')}`;
   }
 
   if (!values.species.trim()) {
-    errors.species = 'Species is required.';
+    errors.species = `${i18n.t('pets.species')}: ${i18n.t('common.required')}`;
   }
 
   return errors;
@@ -137,6 +147,7 @@ export function PetForm({
   onSubmit,
   onCancel,
 }: PetFormProps) {
+  const { t } = useTranslation();
   const [values, setValues] = useState<PetFormValues>(() =>
     initialPet ? petToFormValues(initialPet) : emptyPetFormValues,
   );
@@ -200,8 +211,37 @@ export function PetForm({
   const fieldId = (name: string) => `pet-${mode}-${name}`;
 
   const breedSuggestions = useMemo(
-    () => getBreedSuggestionsForSpecies(values.species),
-    [values.species],
+    () =>
+      getBreedSuggestionsForSpecies(
+        resolveCanonicalSpeciesFromInput(values.species, t),
+      ),
+    [values.species, t],
+  );
+
+  const speciesLabel = useMemo(
+    () => (option: string) => translatePetSpecies(option, t),
+    [t],
+  );
+  const genderLabel = useMemo(
+    () => (option: string) => translatePetGender(option, t),
+    [t],
+  );
+  const breedLabel = useMemo(
+    () => (option: string) => translatePetBreed(option, t),
+    [t],
+  );
+  const resolveSpecies = useMemo(
+    () => (input: string) => resolveCanonicalSpeciesFromInput(input, t),
+    [t],
+  );
+  const resolveGender = useMemo(
+    () => (input: string) => resolveCanonicalGenderFromInput(input, t),
+    [t],
+  );
+  const resolveBreed = useMemo(
+    () => (input: string) =>
+      resolveCanonicalBreedFromInput(input, breedSuggestions, t),
+    [breedSuggestions, t],
   );
 
   const setFieldValue = (field: keyof PetFormValues, next: string) => {
@@ -234,7 +274,8 @@ export function PetForm({
         <div className="pet-form__row pet-form__row--split">
           <div className="pet-form__field">
             <label className="pet-form__label" htmlFor={fieldId('name')}>
-              Name <span className="pet-form__required" aria-hidden="true">*</span>
+              {t('pets.name')}{' '}
+              <span className="pet-form__required" aria-hidden="true">*</span>
             </label>
             <input
               id={fieldId('name')}
@@ -259,51 +300,59 @@ export function PetForm({
 
           <SearchableCombobox
             id={fieldId('species')}
-            label="Species"
+            label={t('pets.species')}
             value={values.species}
             onChange={(next) => setFieldValue('species', next)}
             options={PET_SPECIES_SUGGESTIONS}
-            placeholder="Select or type species"
+            placeholder={t('pets.placeholderSpecies')}
             disabled={isSubmitting}
             required
             error={fieldErrors.species}
             allowCustom
+            optionLabel={speciesLabel}
+            resolveCanonicalValue={resolveSpecies}
           />
         </div>
 
         <div className="pet-form__row pet-form__row--split">
           <SearchableCombobox
             id={fieldId('breed')}
-            label="Breed"
+            label={t('pets.breed')}
             value={values.breed}
             onChange={(next) => setFieldValue('breed', next)}
             options={breedSuggestions}
-            placeholder="Search or type breed"
+            placeholder={t('pets.placeholderBreed')}
             disabled={isSubmitting}
             allowCustom
+            optionLabel={breedLabel}
+            resolveCanonicalValue={resolveBreed}
             hint={
               values.species.trim()
-                ? `Suggestions for ${values.species.trim()}`
-                : 'Choose a species for tailored breed suggestions'
+                ? t('pets.breedSuggestionsFor', {
+                    species: translatePetSpecies(values.species.trim(), t),
+                  })
+                : t('pets.speciesHint')
             }
           />
 
           <SearchableCombobox
             id={fieldId('gender')}
-            label="Gender"
+            label={t('pets.gender')}
             value={values.gender}
             onChange={(next) => setFieldValue('gender', next)}
             options={PET_GENDER_SUGGESTIONS}
-            placeholder="Select gender"
+            placeholder={t('pets.placeholderGender')}
             disabled={isSubmitting}
             allowCustom
+            optionLabel={genderLabel}
+            resolveCanonicalValue={resolveGender}
           />
         </div>
 
         <div className="pet-form__row pet-form__row--split">
           <div className="pet-form__field">
             <label className="pet-form__label" htmlFor={fieldId('birth-date')}>
-              Birth date
+              {t('pets.dateOfBirth')}
             </label>
             <input
               id={fieldId('birth-date')}
@@ -318,7 +367,7 @@ export function PetForm({
 
           <div className="pet-form__field">
             <label className="pet-form__label" htmlFor={fieldId('microchip')}>
-              Microchip number
+              {t('pets.microchip')}
             </label>
             <input
               id={fieldId('microchip')}
@@ -340,9 +389,7 @@ export function PetForm({
           disabled={isSubmitting}
         >
           {isSubmitting
-            ? photoIntent.kind !== 'unchanged'
-              ? 'Saving pet & photo…'
-              : 'Saving…'
+            ? t('common.saving')
             : submitLabel}
         </button>
         <button
@@ -351,7 +398,7 @@ export function PetForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
       </div>
 

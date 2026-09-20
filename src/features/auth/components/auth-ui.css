@@ -1,4 +1,5 @@
 .auth-shell {
+  position: relative;
   flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);

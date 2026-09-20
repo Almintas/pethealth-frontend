@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatPetDate } from '../../pets/utils/format-pet-date';
 import type { MedicalRecord } from '../types';
 
@@ -17,6 +18,7 @@ export function MedicalRecordCard({
   isDeleting,
   onDelete,
 }: MedicalRecordCardProps) {
+  const { t } = useTranslation();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const description = record.description?.trim() ?? '';
@@ -59,19 +61,19 @@ export function MedicalRecordCard({
         <dl className="medical-records-section__record-facts">
           {record.diagnosis ? (
             <div>
-              <dt>Diagnosis</dt>
+              <dt>{t('health.diagnosis')}</dt>
               <dd>{record.diagnosis}</dd>
             </div>
           ) : null}
           {record.veterinarianName ? (
             <div>
-              <dt>Veterinarian</dt>
+              <dt>{t('appointments.veterinarian')}</dt>
               <dd>{record.veterinarianName}</dd>
             </div>
           ) : null}
           {record.clinicName ? (
             <div>
-              <dt>Clinic</dt>
+              <dt>{t('appointments.clinic')}</dt>
               <dd>{record.clinicName}</dd>
             </div>
           ) : null}
@@ -80,7 +82,7 @@ export function MedicalRecordCard({
         {description ? (
           descriptionIsLong ? (
             <details className="medical-records-section__record-details">
-              <summary>Description</summary>
+              <summary>{t('health.description')}</summary>
               <p>{description}</p>
             </details>
           ) : (
@@ -91,12 +93,14 @@ export function MedicalRecordCard({
         {notes ? (
           notesIsLong ? (
             <details className="medical-records-section__record-details">
-              <summary>Notes</summary>
+              <summary>{t('pets.notes')}</summary>
               <p>{notes}</p>
             </details>
           ) : (
             <p className="medical-records-section__record-snippet">
-              <span className="medical-records-section__record-snippet-label">Notes:</span>{' '}
+              <span className="medical-records-section__record-snippet-label">
+                {t('pets.notes')}:
+              </span>{' '}
               {notes}
             </p>
           )
@@ -106,14 +110,14 @@ export function MedicalRecordCard({
         <div className="medical-records-section__record-actions">
           {confirmDelete ? (
             <div className="medical-records-section__delete-confirm" role="status">
-              <span>Delete this record?</span>
+              <span>{t('common.delete')}?</span>
               <button
                 type="button"
                 className="medical-records-section__delete-confirm-yes"
                 onClick={handleDeleteClick}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Deleting…' : 'Yes, delete'}
+                {isDeleting ? t('common.saving') : `${t('common.yes')}, ${t('common.delete').toLowerCase()}`}
               </button>
               <button
                 type="button"
@@ -121,7 +125,7 @@ export function MedicalRecordCard({
                 onClick={() => setConfirmDelete(false)}
                 disabled={isDeleting}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
             </div>
           ) : (
@@ -131,7 +135,7 @@ export function MedicalRecordCard({
               onClick={handleDeleteClick}
               disabled={isDeleting}
             >
-              Delete record
+              {t('common.delete')}
             </button>
           )}
         </div>

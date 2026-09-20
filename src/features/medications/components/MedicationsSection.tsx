@@ -1,9 +1,7 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
-import {
-  isVeterinaryHealthDataReadOnly,
-  vetManagedSectionCopy,
-} from '../../../config/owner-portal';
+import { useTranslation } from 'react-i18next';
+import { isVeterinaryHealthDataReadOnly } from '../../../config/owner-portal';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { MEDICATIONS_QUERY } from '../graphql';
@@ -51,8 +49,14 @@ function sortMedications(medications: Medication[]): Medication[] {
 }
 
 export function MedicationsSection({ petId }: MedicationsSectionProps) {
+  const { t } = useTranslation();
   const readOnly = isVeterinaryHealthDataReadOnly;
-  const sectionCopy = vetManagedSectionCopy.medications;
+  const emptyTitle = readOnly
+    ? t('health.clinicMedicationsEmptyTitle')
+    : t('health.emptyMedications');
+  const emptyText = readOnly
+    ? t('health.clinicMedicationsEmptyText')
+    : t('health.medicationsDesc');
   const client = useApolloClient();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [deletingMedicationId, setDeletingMedicationId] = useState<string | null>(
@@ -109,15 +113,15 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
 
   const countLabel =
     medications.length === 1
-      ? '1 medication'
-      : `${medications.length} medications`;
+      ? t('health.medicationCountOne')
+      : t('health.medicationCountMany', { count: medications.length });
 
   const activeCountLabel =
     activeCount === 0
       ? null
       : activeCount === 1
-        ? '1 active'
-        : `${activeCount} active`;
+        ? t('health.activeMedicationCountOne')
+        : t('health.activeMedicationCountMany', { count: activeCount });
 
   return (
     <section
@@ -126,7 +130,7 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
     >
       <header className="medications-section__header">
         <div className="medications-section__heading">
-          <h2 id="medications-title">Medications</h2>
+          <h2 id="medications-title">{t('health.medications')}</h2>
           {!loading && !error ? (
             <p className="medications-section__count" aria-live="polite">
               {countLabel}
@@ -139,7 +143,7 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
               {readOnly ? (
                 <span className="medications-section__hint">
                   {' '}
-                  · {sectionCopy.sectionHint}
+                  · {t('health.clinicMedicationsHint')}
                 </span>
               ) : null}
             </p>
@@ -152,13 +156,13 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
             className="medications-section__add-button"
             onClick={openDialog}
           >
-            + Add medication
+            + {t('health.addMedication')}
           </button>
         ) : null}
       </header>
 
       {loading ? (
-        <LoadingState message="Loading medications…" skeleton />
+        <LoadingState message={t('common.loading')} skeleton />
       ) : null}
 
       {error ? (
@@ -183,13 +187,13 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
             .join(' ')}
         >
           {readOnly ? (
-            <span className="ph-clinic-badge">Managed by your veterinary clinic</span>
+            <span className="ph-clinic-badge">{t('health.managedByClinic')}</span>
           ) : null}
           <h3 className="medications-section__empty-title">
-            {sectionCopy.emptyTitle}
+            {emptyTitle}
           </h3>
           <p className="medications-section__empty-text">
-            {sectionCopy.emptyText}
+            {emptyText}
           </p>
           {!readOnly ? (
             <button
@@ -197,7 +201,7 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
               className="medications-section__empty-action"
               onClick={openDialog}
             >
-              Add medication
+              {t('health.addMedication')}
             </button>
           ) : null}
         </div>
@@ -224,7 +228,7 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
       {!readOnly ? (
         <MedicationDialog
           isOpen={isDialogOpen}
-          title="Add medication"
+          title={t('health.addMedication')}
           onClose={() => setIsDialogOpen(false)}
         >
           <MedicationForm

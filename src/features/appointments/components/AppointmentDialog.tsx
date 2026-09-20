@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 import './appointment-dialog.css';
 
@@ -15,6 +16,7 @@ export function AppointmentDialog({
   onClose,
   children,
 }: AppointmentDialogProps) {
+  const { t } = useTranslation();
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -51,7 +53,7 @@ export function AppointmentDialog({
       <button
         type="button"
         className="appointment-dialog__backdrop"
-        aria-label="Close dialog"
+        aria-label={t('common.close')}
         onClick={onClose}
       />
       <div
@@ -69,7 +71,7 @@ export function AppointmentDialog({
             type="button"
             className="appointment-dialog__close"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t('common.close')}
           >
             ×
           </button>

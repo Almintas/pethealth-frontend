@@ -1,10 +1,12 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   datetimeLocalInputToIso,
   isoToDatetimeLocalInput,
 } from '../../../utils/datetime-local-input';
+import { useEnumLabels } from '../../../i18n/useEnumLabels';
+import { i18n } from '../../../i18n';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
-import { REMINDER_TYPE_LABELS } from '../constants/reminder-type-labels';
 import {
   ReminderType,
   type CreateReminderInput,
@@ -38,11 +40,11 @@ function validateReminderForm(values: ReminderFormValues): ReminderFieldErrors {
   const errors: ReminderFieldErrors = {};
 
   if (!values.title.trim()) {
-    errors.title = 'Title is required.';
+    errors.title = `${i18n.t('reminders.titleField')}: ${i18n.t('common.required')}`;
   }
 
   if (!values.dueAt) {
-    errors.dueAt = 'Due date and time is required.';
+    errors.dueAt = `${i18n.t('reminders.dueDate')}: ${i18n.t('common.required')}`;
   }
 
   return errors;
@@ -131,6 +133,8 @@ export function ReminderForm({
   onCancel,
   variant = 'inline',
 }: ReminderFormProps) {
+  const { t } = useTranslation();
+  const { reminderType } = useEnumLabels();
   const isDialog = variant === 'dialog';
   const isEdit = mode === 'edit';
   const [values, setValues] = useState<ReminderFormValues>(() =>
@@ -193,7 +197,7 @@ export function ReminderForm({
     >
       {!isDialog ? (
         <h3 id="reminder-form-title" className="reminder-form__title">
-          {isEdit ? 'Edit reminder' : 'Add reminder'}
+          {isEdit ? t('reminders.editTitle') : t('reminders.createTitle')}
         </h3>
       ) : null}
 
@@ -205,7 +209,7 @@ export function ReminderForm({
         <div className="reminder-form__row reminder-form__row--split">
           <div className="reminder-form__field">
             <label className="reminder-form__label" htmlFor="reminder-type">
-              Reminder type{' '}
+              {t('reminders.type')}{' '}
               <span className="reminder-form__required" aria-hidden="true">*</span>
             </label>
             <select
@@ -219,7 +223,7 @@ export function ReminderForm({
             >
               {REMINDER_TYPE_OPTIONS.map((type) => (
                 <option key={type} value={type}>
-                  {REMINDER_TYPE_LABELS[type]}
+                  {reminderType(type)}
                 </option>
               ))}
             </select>
@@ -227,7 +231,7 @@ export function ReminderForm({
 
           <div className="reminder-form__field">
             <label className="reminder-form__label" htmlFor="reminder-due-at">
-              Due date &amp; time{' '}
+              {t('reminders.dueDate')}{' '}
               <span className="reminder-form__required" aria-hidden="true">*</span>
             </label>
             <input
@@ -254,7 +258,8 @@ export function ReminderForm({
 
         <div className="reminder-form__field">
           <label className="reminder-form__label" htmlFor="reminder-title">
-            Title <span className="reminder-form__required" aria-hidden="true">*</span>
+            {t('reminders.titleField')}{' '}
+            <span className="reminder-form__required" aria-hidden="true">*</span>
           </label>
           <input
             id="reminder-title"
@@ -278,7 +283,7 @@ export function ReminderForm({
 
         <div className="reminder-form__field">
           <label className="reminder-form__label" htmlFor="reminder-message">
-            Message
+            {t('reminders.message')}
           </label>
           <textarea
             id="reminder-message"
@@ -298,10 +303,10 @@ export function ReminderForm({
           disabled={isSubmitting}
         >
           {isSubmitting
-            ? 'Saving…'
+            ? t('common.saving')
             : isEdit
-              ? 'Save changes'
-              : 'Create reminder'}
+              ? t('profile.saveChanges')
+              : t('reminders.add')}
         </button>
         <button
           type="button"
@@ -309,7 +314,7 @@ export function ReminderForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
       </div>
     </form>

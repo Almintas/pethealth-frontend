@@ -1,4 +1,5 @@
 import { CombinedGraphQLErrors } from '@apollo/client/errors';
+import { i18n } from '../../../i18n';
 
 export type UserErrorContext =
   | 'auth'
@@ -17,25 +18,6 @@ export type UserErrorContext =
   | 'save-reminder'
   | 'generic-load'
   | 'generic-save';
-
-const CONTEXT_MESSAGES: Record<UserErrorContext, string> = {
-  auth: 'We could not sign you in. Check your email and password, then try again.',
-  'load-pets': "We couldn't load your pets. Please try again.",
-  'load-pet': "We couldn't load this pet. Please try again.",
-  'save-pet': "We couldn't save this pet. Please try again.",
-  'load-medical-records': "We couldn't load medical records. Please try again.",
-  'save-medical-record': "We couldn't save this medical record. Please try again.",
-  'load-vaccinations': "We couldn't load vaccinations. Please try again.",
-  'save-vaccination': "We couldn't save this vaccination. Please try again.",
-  'load-medications': "We couldn't load medications. Please try again.",
-  'save-medication': "We couldn't save this medication. Please try again.",
-  'load-appointments': "We couldn't load appointments. Please try again.",
-  'save-appointment': "We couldn't save this appointment. Please try again.",
-  'load-reminders': "We couldn't load reminders. Please try again.",
-  'save-reminder': "We couldn't save this reminder. Please try again.",
-  'generic-load': "We couldn't load this information. Please try again.",
-  'generic-save': "We couldn't save your changes. Please try again.",
-};
 
 function isUnauthorizedError(error: unknown): boolean {
   if (CombinedGraphQLErrors.is(error)) {
@@ -91,6 +73,20 @@ function isTechnicalMessage(message: string): boolean {
   );
 }
 
+function mapKnownBackendMessage(message: string): string | null {
+  const normalized = message.toLowerCase();
+  if (
+    normalized.includes('invalid credentials') ||
+    normalized === 'unauthorized'
+  ) {
+    return i18n.t('errors.invalidCredentials');
+  }
+  if (normalized.includes('not found')) {
+    return i18n.t('errors.notFound');
+  }
+  return null;
+}
+
 function readGraphQLErrorMessage(error: unknown): string | null {
   if (!CombinedGraphQLErrors.is(error)) {
     return null;
@@ -105,7 +101,8 @@ function readGraphQLErrorMessage(error: unknown): string | null {
     return null;
   }
 
-  return messages.join(' ');
+  const combined = messages.join(' ');
+  return mapKnownBackendMessage(combined) ?? combined;
 }
 
 export function getUserFacingErrorMessage(
@@ -113,32 +110,30 @@ export function getUserFacingErrorMessage(
   context: UserErrorContext = 'generic-load',
 ): string {
   if (isUnauthorizedError(error)) {
-    return 'Your session may have expired. Please sign in again.';
+    return i18n.t('errors.sessionExpired');
   }
 
   if (isNetworkError(error)) {
     if (context === 'auth') {
-      return "We couldn't reach the server. Make sure the API is running, then try again.";
+      return i18n.t('errors.serverUnreachable');
     }
-    return CONTEXT_MESSAGES[context];
+    return i18n.t(`errors.context.${context}`);
   }
 
   const graphQLErrorMessage = readGraphQLErrorMessage(error);
   if (graphQLErrorMessage) {
-    if (graphQLErrorMessage.toLowerCase().includes('not found')) {
-      return 'The requested item could not be found.';
-    }
     return graphQLErrorMessage;
   }
 
   if (error instanceof Error && error.message && !isTechnicalMessage(error.message)) {
-    if (error.message.toLowerCase().includes('not found')) {
-      return 'The requested item could not be found.';
+    const mapped = mapKnownBackendMessage(error.message);
+    if (mapped) {
+      return mapped;
     }
     return error.message;
   }
 
-  return CONTEXT_MESSAGES[context];
+  return i18n.t(`errors.context.${context}`);
 }
 
 export function getAuthErrorMessage(

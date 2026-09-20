@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import '../../appointments/components/appointment-dialog.css';
 
@@ -19,6 +20,7 @@ export function ChangePasswordDialog({
   onClose,
   onSubmit,
 }: ChangePasswordDialogProps) {
+  const { t } = useTranslation();
   const titleId = useId();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -58,22 +60,22 @@ export function ChangePasswordDialog({
     setFormError(null);
 
     if (!currentPassword) {
-      setFormError('Current password is required.');
+      setFormError(t('validation.currentPasswordRequired'));
       return;
     }
 
     if (newPassword.length < 8) {
-      setFormError('New password must be at least 8 characters.');
+      setFormError(t('validation.passwordMin'));
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setFormError('New password and confirmation do not match.');
+      setFormError(t('validation.confirmPasswordMismatch'));
       return;
     }
 
     if (newPassword === currentPassword) {
-      setFormError('New password must be different from your current password.');
+      setFormError(t('validation.newPasswordDifferent'));
       return;
     }
 
@@ -93,7 +95,7 @@ export function ChangePasswordDialog({
       <button
         type="button"
         className="appointment-dialog__backdrop"
-        aria-label="Close dialog"
+        aria-label={t('common.close')}
         onClick={onClose}
         disabled={isSubmitting}
       />
@@ -106,14 +108,14 @@ export function ChangePasswordDialog({
       >
         <header className="appointment-dialog__header">
           <h3 id={titleId} className="appointment-dialog__title">
-            Change password
+            {t('profile.changePasswordTitle')}
           </h3>
           <button
             ref={closeButtonRef}
             type="button"
             className="appointment-dialog__close"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t('common.close')}
             disabled={isSubmitting}
           >
             ×
@@ -128,7 +130,7 @@ export function ChangePasswordDialog({
             <div className="ph-form__fields">
               <div className="ph-form__field">
                 <label className="ph-form__label" htmlFor="change-password-current">
-                  Current password
+                  {t('profile.currentPassword')}
                 </label>
                 <input
                   id="change-password-current"
@@ -144,7 +146,7 @@ export function ChangePasswordDialog({
 
               <div className="ph-form__field">
                 <label className="ph-form__label" htmlFor="change-password-new">
-                  New password
+                  {t('profile.newPassword')}
                 </label>
                 <input
                   id="change-password-new"
@@ -160,7 +162,7 @@ export function ChangePasswordDialog({
 
               <div className="ph-form__field">
                 <label className="ph-form__label" htmlFor="change-password-confirm">
-                  Confirm new password
+                  {t('profile.confirmNewPassword')}
                 </label>
                 <input
                   id="change-password-confirm"
@@ -181,7 +183,7 @@ export function ChangePasswordDialog({
                 className="ph-form__submit"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Changing…' : 'Change password'}
+                {isSubmitting ? t('profile.changingPassword') : t('profile.changePassword')}
               </button>
               <button
                 type="button"
@@ -189,7 +191,7 @@ export function ChangePasswordDialog({
                 onClick={onClose}
                 disabled={isSubmitting}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
             </div>
           </form>

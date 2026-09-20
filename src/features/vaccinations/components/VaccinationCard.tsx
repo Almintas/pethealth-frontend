@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatPetDate } from '../../pets/utils/format-pet-date';
 import type { Vaccination } from '../types';
 import {
@@ -21,6 +22,7 @@ export function VaccinationCard({
   isDeleting,
   onDelete,
 }: VaccinationCardProps) {
+  const { t } = useTranslation();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const dueStatus = getVaccinationDueStatus(vaccination.nextDueAt);
@@ -63,7 +65,7 @@ export function VaccinationCard({
         </div>
 
         <div className="vaccinations-section__due-row">
-          <span className="vaccinations-section__due-label">Next due</span>
+          <span className="vaccinations-section__due-label">{t('health.nextDue')}</span>
           {vaccination.nextDueAt ? (
             <time
               className={[
@@ -82,13 +84,13 @@ export function VaccinationCard({
               {formatPetDate(vaccination.nextDueAt)}
             </time>
           ) : (
-            <span className="vaccinations-section__due-none">Not set</span>
+            <span className="vaccinations-section__due-none">{t('health.notSet')}</span>
           )}
         </div>
 
         <p className="vaccinations-section__administered">
           <span className="vaccinations-section__administered-label">
-            Administered
+            {t('health.administered')}
           </span>
           <time dateTime={vaccination.administeredAt}>
             {formatPetDate(vaccination.administeredAt)}
@@ -98,19 +100,19 @@ export function VaccinationCard({
         <dl className="vaccinations-section__record-facts">
           {vaccination.veterinarianName ? (
             <div>
-              <dt>Veterinarian</dt>
+              <dt>{t('appointments.veterinarian')}</dt>
               <dd>{vaccination.veterinarianName}</dd>
             </div>
           ) : null}
           {vaccination.clinicName ? (
             <div>
-              <dt>Clinic</dt>
+              <dt>{t('appointments.clinic')}</dt>
               <dd>{vaccination.clinicName}</dd>
             </div>
           ) : null}
           {vaccination.batchNumber ? (
             <div>
-              <dt>Batch number</dt>
+              <dt>{t('health.batchNumber')}</dt>
               <dd>{vaccination.batchNumber}</dd>
             </div>
           ) : null}
@@ -119,13 +121,13 @@ export function VaccinationCard({
         {notes ? (
           notesAreLong ? (
             <details className="vaccinations-section__record-details">
-              <summary>Notes</summary>
+              <summary>{t('pets.notes')}</summary>
               <p>{notes}</p>
             </details>
           ) : (
             <p className="vaccinations-section__record-snippet">
               <span className="vaccinations-section__record-snippet-label">
-                Notes:
+                {t('pets.notes')}:
               </span>{' '}
               {notes}
             </p>
@@ -136,14 +138,14 @@ export function VaccinationCard({
         <div className="vaccinations-section__record-actions">
           {confirmDelete ? (
             <div className="vaccinations-section__delete-confirm" role="status">
-              <span>Delete this vaccination?</span>
+              <span>{t('health.deleteVaccinationConfirm')}</span>
               <button
                 type="button"
                 className="vaccinations-section__delete-confirm-yes"
                 onClick={handleDeleteClick}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Deleting…' : 'Yes, delete'}
+                {isDeleting ? t('common.saving') : `${t('common.yes')}, ${t('common.delete').toLowerCase()}`}
               </button>
               <button
                 type="button"
@@ -151,7 +153,7 @@ export function VaccinationCard({
                 onClick={() => setConfirmDelete(false)}
                 disabled={isDeleting}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
             </div>
           ) : (
@@ -161,7 +163,7 @@ export function VaccinationCard({
               onClick={handleDeleteClick}
               disabled={isDeleting}
             >
-              Delete vaccination
+              {t('health.deleteVaccination')}
             </button>
           )}
         </div>

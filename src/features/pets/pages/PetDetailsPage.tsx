@@ -1,5 +1,6 @@
 import { useApolloClient } from '@apollo/client/react';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
 import { EmptyState, ErrorAlert, LoadingState } from '../../../components/feedback';
 import { PetAvatar } from '../../../components/PetAvatar';
@@ -15,18 +16,37 @@ import * as petsService from '../pets.service';
 import type { PetFormSubmitPayload } from '../components/PetForm';
 import type { Pet, UpdatePetInput } from '../types';
 import { formatPetAge } from '../../../utils/format-pet-age';
+import {
+  translatePetBreed,
+  translatePetGender,
+  translatePetSpecies,
+} from '../utils/pet-field-display';
 import { formatPetDate } from '../utils/format-pet-date';
 import './pet-details-page.css';
 
-const sectionLinks = [
-  { id: 'medical-records', label: 'Medical Records' },
-  { id: 'vaccinations', label: 'Vaccinations' },
-  { id: 'medications', label: 'Medications' },
-  { id: 'appointments', label: 'Appointments' },
-  { id: 'reminders', label: 'Reminders' },
+const sectionLinkIds = [
+  'medical-records',
+  'vaccinations',
+  'medications',
+  'appointments',
+  'reminders',
 ] as const;
 
 export function PetDetailsPage() {
+  const { t } = useTranslation();
+  const sectionLinks = sectionLinkIds.map((id) => ({
+    id,
+    label:
+      id === 'medical-records'
+        ? t('health.medicalRecords')
+        : id === 'vaccinations'
+          ? t('health.vaccinations')
+          : id === 'medications'
+            ? t('health.medications')
+            : id === 'appointments'
+              ? t('appointments.title')
+              : t('reminders.title'),
+  }));
   const { id } = useParams<{ id: string }>();
   const client = useApolloClient();
   const navigate = useNavigate();
@@ -122,8 +142,8 @@ export function PetDetailsPage() {
     setIsEditing(false);
     setSuccessMessage(
       photoIntent.kind === 'unchanged'
-        ? 'Pet details updated.'
-        : 'Pet details and photo updated.',
+        ? t('pets.detailsUpdated')
+        : t('pets.detailsAndPhotoUpdated'),
     );
   };
 
@@ -133,7 +153,7 @@ export function PetDetailsPage() {
     }
 
     const confirmed = window.confirm(
-      `Delete ${pet.name}? This cannot be undone.`,
+      t('pets.deleteConfirm', { name: pet.name }),
     );
 
     if (!confirmed) {
@@ -155,22 +175,28 @@ export function PetDetailsPage() {
 
   const age = pet ? formatPetAge(pet.birthDate) : null;
   const subtitleParts = pet
-    ? [pet.breed || pet.species, pet.gender, age].filter(Boolean)
+    ? [
+        pet.breed
+          ? translatePetBreed(pet.breed, t)
+          : translatePetSpecies(pet.species, t),
+        pet.gender ? translatePetGender(pet.gender, t) : null,
+        age,
+      ].filter(Boolean)
     : [];
 
   return (
     <section className="pet-details ph-page" aria-labelledby="pet-details-title">
       <div className="pet-details__toolbar">
-        <Link className="ph-link ph-link--muted" to="/pets">← Back to Pets</Link>
+        <Link className="ph-link ph-link--muted" to="/pets">{t('pets.backToPets')}</Link>
       </div>
 
       {loading ? (
-        <LoadingState message="Loading pet profile…" skeleton skeletonLines={5} />
+        <LoadingState message={t('common.loading')} skeleton skeletonLines={5} />
       ) : null}
 
       {errorMessage ? (
         <ErrorAlert
-          title="Could not load pet"
+          title={t('pets.loadErrorTitle')}
           message={errorMessage}
           onRetry={() => setRetryNonce((current) => current + 1)}
         />
@@ -182,9 +208,9 @@ export function PetDetailsPage() {
 
       {!loading && !errorMessage && notFound ? (
         <EmptyState
-          title="Pet not found"
-          description="This pet may have been removed or you may not have access to it."
-          actionLabel="Back to pets"
+          title={t('pets.notFoundTitle')}
+          description={t('pets.notFoundDesc')}
+          actionLabel={t('pets.backToPets')}
           actionHref="/pets"
         />
       ) : null}
@@ -198,7 +224,7 @@ export function PetDetailsPage() {
                   pet={pet}
                   onPetUpdated={(updated) => {
                     setPet(updated);
-                    setSuccessMessage('Profile photo updated.');
+                    setSuccessMessage(t('pets.photoUpdated'));
                   }}
                   disabled={isDeleting}
                 />
@@ -230,7 +256,7 @@ export function PetDetailsPage() {
                   aria-expanded={isEditing}
                   aria-controls="pet-edit-panel"
                 >
-                  Edit
+                  {t('common.edit')}
                 </button>
               ) : null}
               <button
@@ -239,7 +265,7 @@ export function PetDetailsPage() {
                 onClick={() => void handleDelete()}
                 disabled={isDeleting || isEditing}
               >
-                {isDeleting ? 'Deleting…' : 'Delete'}
+                {isDeleting ? t('common.saving') : t('pets.deletePet')}
               </button>
             </div>
           </header>
@@ -252,8 +278,8 @@ export function PetDetailsPage() {
               <PetForm
                 key={`edit-${pet.id}`}
                 mode="edit"
-                title="Edit pet"
-                submitLabel="Save changes"
+                title={t('pets.editPet')}
+                submitLabel={t('profile.saveChanges')}
                 initialPet={pet}
                 onSubmit={handleUpdatePet}
                 onCancel={() => setIsEditing(false)}
@@ -262,34 +288,45 @@ export function PetDetailsPage() {
           ) : null}
 
           <section className="pet-details__overview ph-card ph-card--pad" aria-labelledby="health-overview-title">
-            <h2 id="health-overview-title">Health overview</h2>
+            <h2 id="health-overview-title">{t('health.healthOverview')}</h2>
             <p className="pet-details__overview-copy">
-              Key details and quick links to this pet&apos;s health records.
+              {t('health.healthOverviewCopy')}
             </p>
             <dl className="pet-details__facts">
               <div>
-                <dt>Species</dt>
-                <dd>{pet.species}</dd>
+                <dt>{t('pets.species')}</dt>
+                <dd>{translatePetSpecies(pet.species, t)}</dd>
               </div>
               <div>
-                <dt>Breed</dt>
-                <dd>{pet.breed ?? 'Not provided'}</dd>
+                <dt>{t('pets.breed')}</dt>
+                <dd>
+                  {pet.breed
+                    ? translatePetBreed(pet.breed, t)
+                    : t('common.notProvided')}
+                </dd>
               </div>
               <div>
-                <dt>Gender</dt>
-                <dd>{pet.gender ?? 'Not provided'}</dd>
+                <dt>{t('pets.gender')}</dt>
+                <dd>
+                  {pet.gender
+                    ? translatePetGender(pet.gender, t)
+                    : t('common.notProvided')}
+                </dd>
               </div>
               <div>
-                <dt>Birth date</dt>
+                <dt>{t('pets.dateOfBirth')}</dt>
                 <dd>{formatPetDate(pet.birthDate)}</dd>
               </div>
               <div>
-                <dt>Microchip</dt>
-                <dd>{pet.microchipNumber ?? 'Not provided'}</dd>
+                <dt>{t('pets.microchip')}</dt>
+                <dd>{pet.microchipNumber ?? t('common.notProvided')}</dd>
               </div>
             </dl>
 
-            <nav className="pet-details__section-nav" aria-label="Pet health sections">
+            <nav
+              className="pet-details__section-nav"
+              aria-label={t('health.petHealthSectionsNav')}
+            >
               {sectionLinks.map((link) => (
                 <a key={link.id} className="pet-details__section-link" href={`#${link.id}`}>
                   {link.label}

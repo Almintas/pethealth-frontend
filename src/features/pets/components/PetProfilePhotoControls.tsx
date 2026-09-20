@@ -1,5 +1,6 @@
 import { useApolloClient } from '@apollo/client/react';
 import { useId, useRef, useState, type ChangeEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { PetAvatar } from '../../../components/PetAvatar';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import {
@@ -21,6 +22,7 @@ export function PetProfilePhotoControls({
   onPetUpdated,
   disabled = false,
 }: PetProfilePhotoControlsProps) {
+  const { t } = useTranslation();
   const client = useApolloClient();
   const inputId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -68,9 +70,7 @@ export function PetProfilePhotoControls({
       return;
     }
 
-    const confirmed = window.confirm(
-      `Remove ${pet.name}'s profile photo? You can add a new one anytime.`,
-    );
+    const confirmed = window.confirm(t('pets.removePhotoConfirm'));
     if (!confirmed) {
       return;
     }
@@ -93,7 +93,7 @@ export function PetProfilePhotoControls({
   return (
     <div className="pet-photo-field pet-photo-field--hero">
       <span className="pet-photo-field__label" id={`${inputId}-label`}>
-        Profile photo
+        {t('pets.profilePhotoLabel')}
       </span>
 
       <div className="pet-photo-field__row">
@@ -118,7 +118,11 @@ export function PetProfilePhotoControls({
             disabled={isDisabled}
             aria-describedby={busy ? `${inputId}-busy` : undefined}
           >
-            {busy ? 'Saving photo…' : hasPhoto ? 'Change photo' : 'Add photo'}
+            {busy
+              ? t('pets.savingPhoto')
+              : hasPhoto
+                ? t('pets.changePhoto')
+                : t('pets.addPhoto')}
           </button>
 
           {hasPhoto ? (
@@ -128,7 +132,7 @@ export function PetProfilePhotoControls({
               onClick={() => void handleRemove()}
               disabled={isDisabled}
             >
-              Remove photo
+              {t('pets.removePhoto')}
             </button>
           ) : null}
         </div>
@@ -136,11 +140,11 @@ export function PetProfilePhotoControls({
 
       {busy ? (
         <p className="pet-photo-field__hint" id={`${inputId}-busy`} role="status">
-          Uploading…
+          {t('pets.uploadingPhoto')}
         </p>
       ) : (
         <p className="pet-photo-field__hint">
-          JPEG, PNG, or WebP up to 5&nbsp;MB.
+          {t('pets.photoHint')}
         </p>
       )}
 
