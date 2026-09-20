@@ -121,7 +121,7 @@
 }
 
 .vaccination-form__submit:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--ph-color-surface);
   outline-offset: 2px;
 }
 

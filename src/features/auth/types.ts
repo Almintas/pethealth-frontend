@@ -32,3 +32,14 @@ export type AuthPayload = {
   accessToken: string;
   user: AuthUser;
 };
+
+export type UpdateProfileInput = {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+};
+
+export type ChangePasswordInput = {
+  currentPassword: string;
+  newPassword: string;
+};

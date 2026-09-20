@@ -1,5 +1,11 @@
 import type { ApolloClient } from '@apollo/client';
-import { LOGIN_MUTATION, ME_QUERY, REGISTER_MUTATION } from './graphql';
+import {
+  CHANGE_PASSWORD_MUTATION,
+  LOGIN_MUTATION,
+  ME_QUERY,
+  REGISTER_MUTATION,
+  UPDATE_PROFILE_MUTATION,
+} from './graphql';
 import {
   clearAccessToken,
   getAccessToken,
@@ -8,8 +14,10 @@ import {
 import type {
   AuthPayload,
   AuthUser,
+  ChangePasswordInput,
   LoginInput,
   RegisterInput,
+  UpdateProfileInput,
 } from './types';
 
 type LoginMutationResult = {
@@ -93,4 +101,56 @@ export async function fetchCurrentUser(
 export async function logout(client: ApolloClient): Promise<void> {
   clearAccessToken();
   await client.clearStore();
+}
+
+type UpdateProfileMutationResult = {
+  updateProfile: AuthUser;
+};
+
+type ChangePasswordMutationResult = {
+  changePassword: boolean;
+};
+
+export function syncAuthUserCache(
+  client: ApolloClient,
+  user: AuthUser,
+): void {
+  client.writeQuery<MeQueryResult>({
+    query: ME_QUERY,
+    data: { me: user },
+  });
+}
+
+export async function updateProfile(
+  client: ApolloClient,
+  input: UpdateProfileInput,
+): Promise<AuthUser> {
+  const { data } = await client.mutate<UpdateProfileMutationResult>({
+    mutation: UPDATE_PROFILE_MUTATION,
+    variables: { input },
+  });
+
+  const user = data?.updateProfile;
+  if (!user) {
+    throw new Error('Failed to update profile.');
+  }
+
+  syncAuthUserCache(client, user);
+  return user;
+}
+
+export async function changePassword(
+  client: ApolloClient,
+  input: ChangePasswordInput,
+): Promise<boolean> {
+  const { data } = await client.mutate<ChangePasswordMutationResult>({
+    mutation: CHANGE_PASSWORD_MUTATION,
+    variables: { input },
+  });
+
+  if (!data?.changePassword) {
+    throw new Error('Failed to change password.');
+  }
+
+  return true;
 }

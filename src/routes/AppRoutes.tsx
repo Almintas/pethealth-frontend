@@ -5,6 +5,7 @@ import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
 import { MainLayout } from '../layouts/MainLayout';
 import { PetsPage } from '../features/pets';
 import { PetDetailsPage } from '../features/pets/pages/PetDetailsPage';
+import { ProfilePage, SettingsPage } from '../features/account';
 import { HomePage } from '../pages/HomePage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicRoute } from './PublicRoute';
@@ -39,6 +40,8 @@ export function AppRoutes() {
           <Route path="/dashboard" element={<HomePage />} />
           <Route path="/pets" element={<PetsPage />} />
           <Route path="/pets/:id" element={<PetDetailsPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Route>
 
