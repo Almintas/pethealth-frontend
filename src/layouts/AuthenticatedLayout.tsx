@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { BrandMark } from '../components/BrandMark';
 import { useAuth } from '../features/auth';
+import { SidebarUserMenu } from './SidebarUserMenu';
 import './authenticated-layout.css';
 
 const navItems: Array<{
@@ -47,8 +48,6 @@ export function AuthenticatedLayout() {
       setIsLoggingOut(false);
     }
   };
-
-  const userInitials = `${user?.firstName?.charAt(0) ?? ''}${user?.lastName?.charAt(0) ?? ''}`.trim();
 
   return (
     <div className="authenticated-layout">
@@ -104,26 +103,12 @@ export function AuthenticatedLayout() {
         </nav>
 
         <div className="authenticated-layout__user">
-          <div className="authenticated-layout__user-avatar" aria-hidden="true">
-            {userInitials || 'U'}
-          </div>
-          <div className="authenticated-layout__user-meta">
-            <div className="authenticated-layout__user-name">
-              {user?.firstName} {user?.lastName}
-            </div>
-            {user?.role ? (
-              <div className="authenticated-layout__user-role">{user.role}</div>
-            ) : null}
-            <div className="authenticated-layout__user-email">{user?.email}</div>
-          </div>
-          <button
-            type="button"
-            className="authenticated-layout__logout"
-            onClick={() => void handleLogout()}
-            disabled={isLoggingOut}
-          >
-            {isLoggingOut ? 'Signing out…' : 'Sign out'}
-          </button>
+          <SidebarUserMenu
+            user={user}
+            isLoggingOut={isLoggingOut}
+            onLogout={handleLogout}
+            onAfterAction={() => setIsMobileNavOpen(false)}
+          />
         </div>
       </aside>
 

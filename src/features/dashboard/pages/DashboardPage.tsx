@@ -68,7 +68,7 @@ export function DashboardPage() {
             {petsLoading
               ? 'Loading your pets…'
               : pets.length === 0
-                ? 'Add a pet to start tracking vaccines, visits, and daily care.'
+                ? 'Add a pet to start tracking vaccines, visits and daily care.'
                 : `Here is what needs your attention and what is coming up for ${petCountLabel}.`}
           </p>
         </div>
@@ -97,7 +97,7 @@ export function DashboardPage() {
         <section className="dashboard-page__empty" aria-labelledby="dashboard-empty-title">
           <h2 id="dashboard-empty-title">Welcome to PetHealth</h2>
           <p>
-            Create a pet profile to view clinic health information, appointments,
+            Create a pet profile to view clinic health information, appointments
             and reminders in one place.
           </p>
           <Link className="dashboard-page__cta" to="/pets">

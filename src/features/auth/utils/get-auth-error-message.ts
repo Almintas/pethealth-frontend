@@ -117,6 +117,9 @@ export function getUserFacingErrorMessage(
   }
 
   if (isNetworkError(error)) {
+    if (context === 'auth') {
+      return "We couldn't reach the server. Make sure the API is running, then try again.";
+    }
     return CONTEXT_MESSAGES[context];
   }
 

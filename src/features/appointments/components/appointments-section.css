@@ -80,13 +80,19 @@
   white-space: nowrap;
 }
 
-.appointments-section__add-button:hover {
-  filter: brightness(1.08);
+.appointments-section__add-button:hover:not(:disabled) {
+  background: var(--ph-color-primary-hover);
+  color: var(--ph-color-on-primary);
+}
+
+.appointments-section__add-button:active:not(:disabled) {
+  background: var(--ph-color-primary-hover);
+  color: var(--ph-color-on-primary);
 }
 
 .appointments-section__add-button:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
+  outline: none;
+  box-shadow: var(--ph-focus-ring);
 }
 
 .appointments-section__status,
@@ -128,7 +134,7 @@
 }
 
 .appointments-section__empty-text {
-  margin: 0 0 1.25rem;
+  margin: 0;
   max-width: 28rem;
   font-size: 0.9rem;
   line-height: 1.55;
@@ -151,7 +157,7 @@
 }
 
 .appointments-section__empty-action:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--ph-color-surface);
   outline-offset: 2px;
 }
 
@@ -480,9 +486,19 @@
 }
 
 .appointments-section__record-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 0.85rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--apt-border);
+}
+
+.appointments-section__edit {
+  padding: 0.35rem 0.65rem;
+  font-size: 0.75rem;
+  min-height: unset;
 }
 
 .appointments-section__delete {

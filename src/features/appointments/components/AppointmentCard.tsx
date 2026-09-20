@@ -13,6 +13,7 @@ type AppointmentCardProps = {
   isLast: boolean;
   isHistory: boolean;
   isDeleting: boolean;
+  onEdit: () => void;
   onDelete: () => void;
 };
 
@@ -34,6 +35,7 @@ export function AppointmentCard({
   isLast,
   isHistory,
   isDeleting,
+  onEdit,
   onDelete,
 }: AppointmentCardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -157,6 +159,14 @@ export function AppointmentCard({
         ) : null}
 
         <div className="appointments-section__record-actions">
+          <button
+            type="button"
+            className="appointments-section__edit ph-btn ph-btn--secondary"
+            onClick={onEdit}
+            disabled={isDeleting}
+          >
+            Edit
+          </button>
           {confirmDelete ? (
             <div className="appointments-section__delete-confirm" role="status">
               <span>Delete this appointment?</span>

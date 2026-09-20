@@ -22,6 +22,7 @@ type ReminderCardProps = {
   isHistory: boolean;
   pendingAction: ReminderCardAction | null;
   isActionRunning: boolean;
+  onEdit: () => void;
   onComplete: () => void;
   onDismiss: () => void;
   onDelete: () => void;
@@ -46,6 +47,7 @@ export function ReminderCard({
   isHistory,
   pendingAction,
   isActionRunning,
+  onEdit,
   onComplete,
   onDismiss,
   onDelete,
@@ -177,6 +179,14 @@ export function ReminderCard({
           <div className="reminders-section__record-actions">
             <button
               type="button"
+              className="reminders-section__edit ph-btn ph-btn--secondary"
+              onClick={onEdit}
+              disabled={isActionRunning}
+            >
+              Edit
+            </button>
+            <button
+              type="button"
               className="reminders-section__action reminders-section__action--complete"
               onClick={onComplete}
               disabled={isActionRunning}
@@ -224,6 +234,14 @@ export function ReminderCard({
           </div>
         ) : (
           <div className="reminders-section__record-actions">
+            <button
+              type="button"
+              className="reminders-section__edit ph-btn ph-btn--secondary"
+              onClick={onEdit}
+              disabled={isActionRunning}
+            >
+              Edit
+            </button>
             {confirmDelete ? (
               <div className="reminders-section__delete-confirm" role="status">
                 <span>Delete this reminder?</span>

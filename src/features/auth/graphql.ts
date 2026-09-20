@@ -41,3 +41,18 @@ export const ME_QUERY = gql`
   }
   ${AUTH_USER_FIELDS}
 `;
+
+export const UPDATE_PROFILE_MUTATION = gql`
+  mutation UpdateProfile($input: UpdateProfileInput!) {
+    updateProfile(input: $input) {
+      ...AuthUserFields
+    }
+  }
+  ${AUTH_USER_FIELDS}
+`;
+
+export const CHANGE_PASSWORD_MUTATION = gql`
+  mutation ChangePassword($input: ChangePasswordInput!) {
+    changePassword(input: $input)
+  }
+`;

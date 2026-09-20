@@ -13,16 +13,16 @@
 }
 
 .status-badge--scheduled {
-  color: #1d4ed8;
+  color: var(--ph-color-info);
   background: var(--ph-color-info-soft);
-  border-color: #bfdbfe;
+  border-color: color-mix(in srgb, var(--ph-color-info) 32%, var(--ph-color-border));
 }
 
 .status-badge--completed,
 .status-badge--active {
   color: var(--ph-color-success-text);
   background: var(--ph-color-success-soft);
-  border-color: #a7f3d0;
+  border-color: color-mix(in srgb, var(--ph-color-success) 35%, var(--ph-color-border));
 }
 
 .status-badge--cancelled {
@@ -34,7 +34,7 @@
 .status-badge--pending {
   color: var(--ph-color-warning-text);
   background: var(--ph-color-warning-soft);
-  border-color: #fde68a;
+  border-color: color-mix(in srgb, var(--ph-color-warning) 40%, var(--ph-color-border));
 }
 
 .status-badge--dismissed,

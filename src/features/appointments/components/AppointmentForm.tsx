@@ -1,19 +1,30 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import {
+  datetimeLocalInputToIso,
+  isoToDatetimeLocalInput,
+} from '../../../utils/datetime-local-input';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import {
+  APPOINTMENT_TYPE_OPTIONS,
+  DEFAULT_APPOINTMENT_TYPE,
+  normalizeAppointmentTypeValue,
+  type AppointmentTypeValue,
+} from '../constants/appointment-types';
+import {
   AppointmentStatus,
+  type Appointment,
   type AppointmentStatus as AppointmentStatusType,
   type CreateAppointmentInput,
+  type UpdateAppointmentInput,
 } from '../types';
 import './appointment-form.css';
 
 export type AppointmentFormValues = {
   scheduledAt: string;
-  type: string;
+  type: AppointmentTypeValue;
   clinicName: string;
   veterinarianName: string;
   reason: string;
-  notes: string;
   status: AppointmentStatusType;
 };
 
@@ -23,18 +34,16 @@ type AppointmentFormField =
   | 'clinicName'
   | 'veterinarianName'
   | 'reason'
-  | 'notes'
   | 'status';
 
 type AppointmentFieldErrors = Partial<Record<AppointmentFormField, string>>;
 
 const emptyAppointmentFormValues: AppointmentFormValues = {
   scheduledAt: '',
-  type: '',
+  type: DEFAULT_APPOINTMENT_TYPE,
   clinicName: '',
   veterinarianName: '',
   reason: '',
-  notes: '',
   status: AppointmentStatus.Scheduled,
 };
 
@@ -49,8 +58,12 @@ function validateAppointmentForm(
     errors.scheduledAt = 'Scheduled date and time is required.';
   }
 
-  if (!values.type.trim()) {
+  if (!values.type) {
     errors.type = 'Appointment type is required.';
+  }
+
+  if (!values.reason.trim()) {
+    errors.reason = 'Reason is required.';
   }
 
   return errors;
@@ -60,15 +73,26 @@ function hasFieldErrors(errors: AppointmentFieldErrors): boolean {
   return Object.keys(errors).length > 0;
 }
 
+export function appointmentToFormValues(appointment: Appointment): AppointmentFormValues {
+  return {
+    scheduledAt: isoToDatetimeLocalInput(appointment.scheduledAt),
+    type: normalizeAppointmentTypeValue(appointment.type),
+    clinicName: appointment.clinicName ?? '',
+    veterinarianName: appointment.veterinarianName ?? '',
+    reason: appointment.reason ?? '',
+    status: appointment.status,
+  };
+}
+
 export function buildCreateAppointmentInput(
   petId: string,
   values: AppointmentFormValues,
 ): CreateAppointmentInput {
   const input: CreateAppointmentInput = {
     petId,
-    scheduledAt: new Date(values.scheduledAt).toISOString(),
-    type: values.type.trim(),
-    status: values.status,
+    scheduledAt: datetimeLocalInputToIso(values.scheduledAt),
+    type: values.type,
+    reason: values.reason.trim(),
   };
 
   const clinicName = values.clinicName.trim();
@@ -81,35 +105,58 @@ export function buildCreateAppointmentInput(
     input.veterinarianName = veterinarianName;
   }
 
-  const reason = values.reason.trim();
-  if (reason) {
-    input.reason = reason;
-  }
-
-  const notes = values.notes.trim();
-  if (notes) {
-    input.notes = notes;
-  }
-
   return input;
 }
 
+export function buildUpdateAppointmentInput(
+  values: AppointmentFormValues,
+): UpdateAppointmentInput {
+  return {
+    scheduledAt: datetimeLocalInputToIso(values.scheduledAt),
+    type: values.type,
+    status: values.status,
+    clinicName: values.clinicName.trim(),
+    veterinarianName: values.veterinarianName.trim(),
+    reason: values.reason.trim(),
+  };
+}
+
+export type AppointmentFormMode = 'create' | 'edit';
+
 type AppointmentFormProps = {
   petId: string;
-  onSubmit: (input: CreateAppointmentInput) => Promise<void>;
+  mode: AppointmentFormMode;
+  appointment?: Appointment;
+  onCreate: (input: CreateAppointmentInput) => Promise<void>;
+  onUpdate?: (id: string, input: UpdateAppointmentInput) => Promise<void>;
   onCancel: () => void;
   variant?: 'inline' | 'dialog';
 };
 
+function getInitialAppointmentFormValues(
+  mode: AppointmentFormMode,
+  appointment?: Appointment,
+): AppointmentFormValues {
+  if (mode === 'edit' && appointment) {
+    return appointmentToFormValues(appointment);
+  }
+
+  return emptyAppointmentFormValues;
+}
+
 export function AppointmentForm({
   petId,
-  onSubmit,
+  mode,
+  appointment,
+  onCreate,
+  onUpdate,
   onCancel,
   variant = 'inline',
 }: AppointmentFormProps) {
   const isDialog = variant === 'dialog';
-  const [values, setValues] = useState<AppointmentFormValues>(
-    emptyAppointmentFormValues,
+  const isEdit = mode === 'edit';
+  const [values, setValues] = useState<AppointmentFormValues>(() =>
+    getInitialAppointmentFormValues(mode, appointment),
   );
   const [fieldErrors, setFieldErrors] = useState<AppointmentFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
@@ -137,8 +184,15 @@ export function AppointmentForm({
 
     setIsSubmitting(true);
     try {
-      await onSubmit(buildCreateAppointmentInput(petId, values));
-      setValues(emptyAppointmentFormValues);
+      if (isEdit) {
+        if (!appointment?.id || !onUpdate) {
+          throw new Error('Appointment is missing.');
+        }
+        await onUpdate(appointment.id, buildUpdateAppointmentInput(values));
+      } else {
+        await onCreate(buildCreateAppointmentInput(petId, values));
+        setValues(emptyAppointmentFormValues);
+      }
       setFieldErrors({});
     } catch (error) {
       setFormError(getAuthErrorMessage(error, 'save-appointment'));
@@ -161,7 +215,7 @@ export function AppointmentForm({
     >
       {!isDialog ? (
         <h3 id="appointment-form-title" className="appointment-form__title">
-          Add appointment
+          {isEdit ? 'Edit appointment' : 'Add appointment'}
         </h3>
       ) : null}
 
@@ -207,11 +261,11 @@ export function AppointmentForm({
               Appointment type{' '}
               <span className="appointment-form__required" aria-hidden="true">*</span>
             </label>
-            <input
+            <select
               id="appointment-type"
               name="type"
               className={[
-                'appointment-form__input',
+                'appointment-form__select',
                 fieldErrors.type ? 'appointment-form__input--error' : '',
               ]
                 .filter(Boolean)
@@ -221,30 +275,38 @@ export function AppointmentForm({
               disabled={isSubmitting}
               required
               aria-invalid={Boolean(fieldErrors.type)}
-            />
+            >
+              {APPOINTMENT_TYPE_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
             {fieldErrors.type ? (
               <p className="appointment-form__error" role="alert">{fieldErrors.type}</p>
             ) : null}
           </div>
         </div>
 
-        <div className="appointment-form__field">
-          <label className="appointment-form__label" htmlFor="appointment-status">
-            Status
-          </label>
-          <select
-            id="appointment-status"
-            name="status"
-            className="appointment-form__select"
-            value={values.status}
-            onChange={updateField('status')}
-            disabled={isSubmitting}
-          >
-            {APPOINTMENT_STATUS_OPTIONS.map((status) => (
-              <option key={status} value={status}>{status}</option>
-            ))}
-          </select>
-        </div>
+        {isEdit ? (
+          <div className="appointment-form__field">
+            <label className="appointment-form__label" htmlFor="appointment-status">
+              Status
+            </label>
+            <select
+              id="appointment-status"
+              name="status"
+              className="appointment-form__select"
+              value={values.status}
+              onChange={updateField('status')}
+              disabled={isSubmitting}
+            >
+              {APPOINTMENT_STATUS_OPTIONS.map((status) => (
+                <option key={status} value={status}>{status}</option>
+              ))}
+            </select>
+          </div>
+        ) : null}
 
         <div className="appointment-form__row appointment-form__row--split">
           <div className="appointment-form__field">
@@ -281,30 +343,27 @@ export function AppointmentForm({
 
         <div className="appointment-form__field">
           <label className="appointment-form__label" htmlFor="appointment-reason">
-            Reason
+            Reason{' '}
+            <span className="appointment-form__required" aria-hidden="true">*</span>
           </label>
           <input
             id="appointment-reason"
             name="reason"
-            className="appointment-form__input"
+            className={[
+              'appointment-form__input',
+              fieldErrors.reason ? 'appointment-form__input--error' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
             value={values.reason}
             onChange={updateField('reason')}
             disabled={isSubmitting}
+            required
+            aria-invalid={Boolean(fieldErrors.reason)}
           />
-        </div>
-
-        <div className="appointment-form__field">
-          <label className="appointment-form__label" htmlFor="appointment-notes">
-            Notes
-          </label>
-          <textarea
-            id="appointment-notes"
-            name="notes"
-            className="appointment-form__textarea"
-            value={values.notes}
-            onChange={updateField('notes')}
-            disabled={isSubmitting}
-          />
+          {fieldErrors.reason ? (
+            <p className="appointment-form__error" role="alert">{fieldErrors.reason}</p>
+          ) : null}
         </div>
       </div>
 
@@ -314,7 +373,11 @@ export function AppointmentForm({
           className="appointment-form__submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving…' : 'Create appointment'}
+          {isSubmitting
+            ? 'Saving…'
+            : isEdit
+              ? 'Save changes'
+              : 'Create appointment'}
         </button>
         <button
           type="button"

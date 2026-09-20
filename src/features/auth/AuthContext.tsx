@@ -17,6 +17,7 @@ export type AuthContextValue = {
   login: (input: LoginInput) => Promise<void>;
   register: (input: RegisterInput) => Promise<AuthUser>;
   logout: () => Promise<void>;
+  updateSessionUser: (user: AuthUser) => void;
   getAccessToken: () => string | null;
 };
 
@@ -77,6 +78,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   }, [client]);
 
+  const updateSessionUser = useCallback(
+    (nextUser: AuthUser) => {
+      setUser(nextUser);
+      authService.syncAuthUserCache(client, nextUser);
+    },
+    [client],
+  );
+
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
@@ -85,9 +94,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
       login,
       register,
       logout,
+      updateSessionUser,
       getAccessToken: authService.getAccessToken,
     }),
-    [user, isInitializing, login, register, logout],
+    [user, isInitializing, login, register, logout, updateSessionUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

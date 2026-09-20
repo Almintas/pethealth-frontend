@@ -91,7 +91,7 @@ export function PetsPage() {
         <EmptyState
           section
           title="No pets yet"
-          description="Create a pet profile to track vaccinations, medications, visits, and reminders."
+          description="Create a pet profile to track vaccinations, medications, visits and reminders."
           actionLabel="Add your first pet"
           onAction={() => setIsFormOpen(true)}
         />

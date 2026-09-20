@@ -8,7 +8,9 @@
   --mr-muted: var(--ph-color-text-secondary);
   --mr-accent: var(--ph-color-primary);
   --mr-accent-soft: var(--ph-color-primary-soft);
-  --mr-danger: #f87171;
+  --mr-danger: var(--ph-color-danger);
+  --mr-border-strong: var(--ph-color-border-strong);
+  --mr-text-muted: var(--ph-color-text-muted);
   --mr-danger-soft: var(--ph-color-danger-soft);
   --mr-timeline: var(--ph-color-border-strong);
   --mr-input-bg: var(--ph-color-input-bg);
@@ -94,7 +96,7 @@
 }
 
 .medical-records-section__add-button:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--ph-color-surface);
   outline-offset: 2px;
 }
 
@@ -173,7 +175,7 @@
 }
 
 .medical-records-section__empty-action:focus-visible {
-  outline: 2px solid #fff;
+  outline: 2px solid var(--ph-color-surface);
   outline-offset: 2px;
 }
 
