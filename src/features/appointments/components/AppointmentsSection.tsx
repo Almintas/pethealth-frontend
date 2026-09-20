@@ -5,9 +5,11 @@ import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-messa
 import { APPOINTMENTS_QUERY } from '../graphql';
 import * as appointmentsService from '../appointments.service';
 import type {
+  Appointment,
   AppointmentsQueryResult,
   AppointmentsQueryVariables,
   CreateAppointmentInput,
+  UpdateAppointmentInput,
 } from '../types';
 import { partitionAppointments } from '../utils/appointment-list-utils';
 import { AppointmentCard } from './AppointmentCard';
@@ -19,9 +21,15 @@ type AppointmentsSectionProps = {
   petId: string;
 };
 
+type AppointmentDialogState =
+  | { mode: 'create' }
+  | { mode: 'edit'; appointment: Appointment };
+
 export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
   const client = useApolloClient();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogState, setDialogState] = useState<AppointmentDialogState | null>(
+    null,
+  );
   const [deletingAppointmentId, setDeletingAppointmentId] = useState<
     string | null
   >(null);
@@ -42,15 +50,33 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
     [appointments],
   );
 
-  const openDialog = () => {
+  const openCreateDialog = () => {
     setActionError(null);
-    setIsDialogOpen(true);
+    setDialogState({ mode: 'create' });
+  };
+
+  const openEditDialog = (appointment: Appointment) => {
+    setActionError(null);
+    setDialogState({ mode: 'edit', appointment });
+  };
+
+  const closeDialog = () => {
+    setDialogState(null);
   };
 
   const handleCreateAppointment = async (input: CreateAppointmentInput) => {
     await appointmentsService.createAppointment(client, input);
     await refetch();
-    setIsDialogOpen(false);
+    closeDialog();
+  };
+
+  const handleUpdateAppointment = async (
+    id: string,
+    input: UpdateAppointmentInput,
+  ) => {
+    await appointmentsService.updateAppointment(client, id, input);
+    await refetch();
+    closeDialog();
   };
 
   const handleDeleteAppointment = async (appointmentId: string) => {
@@ -105,7 +131,7 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
           <button
             type="button"
             className="appointments-section__add-button"
-            onClick={openDialog}
+            onClick={openCreateDialog}
           >
             + Add appointment
           </button>
@@ -137,13 +163,6 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
             Schedule vet visits and checkups here so you always know what is
             coming up for this pet.
           </p>
-          <button
-            type="button"
-            className="appointments-section__empty-action"
-            onClick={openDialog}
-          >
-            Add appointment
-          </button>
         </div>
       ) : null}
 
@@ -174,6 +193,7 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
                     isLast={index === upcoming.length - 1}
                     isHistory={false}
                     isDeleting={deletingAppointmentId === appointment.id}
+                    onEdit={() => openEditDialog(appointment)}
                     onDelete={() => void handleDeleteAppointment(appointment.id)}
                   />
                 ))}
@@ -200,6 +220,7 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
                     isLast={index === history.length - 1}
                     isHistory
                     isDeleting={deletingAppointmentId === appointment.id}
+                    onEdit={() => openEditDialog(appointment)}
                     onDelete={() => void handleDeleteAppointment(appointment.id)}
                   />
                 ))}
@@ -210,16 +231,30 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
       ) : null}
 
       <AppointmentDialog
-        isOpen={isDialogOpen}
-        title="Add appointment"
-        onClose={() => setIsDialogOpen(false)}
+        isOpen={dialogState !== null}
+        title={
+          dialogState?.mode === 'edit' ? 'Edit appointment' : 'Add appointment'
+        }
+        onClose={closeDialog}
       >
-        <AppointmentForm
-          petId={petId}
-          onSubmit={handleCreateAppointment}
-          onCancel={() => setIsDialogOpen(false)}
-          variant="dialog"
-        />
+        {dialogState ? (
+          <AppointmentForm
+            key={
+              dialogState.mode === 'edit'
+                ? dialogState.appointment.id
+                : 'create'
+            }
+            petId={petId}
+            mode={dialogState.mode}
+            appointment={
+              dialogState.mode === 'edit' ? dialogState.appointment : undefined
+            }
+            onCreate={handleCreateAppointment}
+            onUpdate={handleUpdateAppointment}
+            onCancel={closeDialog}
+            variant="dialog"
+          />
+        ) : null}
       </AppointmentDialog>
     </section>
   );

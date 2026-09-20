@@ -1,32 +1,27 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import {
+  datetimeLocalInputToIso,
+  isoToDatetimeLocalInput,
+} from '../../../utils/datetime-local-input';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
+import { REMINDER_TYPE_LABELS } from '../constants/reminder-type-labels';
 import {
   ReminderType,
-  SourceType,
   type CreateReminderInput,
+  type Reminder,
   type ReminderType as ReminderTypeValue,
-  type SourceType as SourceTypeValue,
+  type UpdateReminderInput,
 } from '../types';
 import './reminder-form.css';
-
-const NO_SOURCE_VALUE = '';
 
 export type ReminderFormValues = {
   type: ReminderTypeValue;
   title: string;
   message: string;
   dueAt: string;
-  sourceType: SourceTypeValue | typeof NO_SOURCE_VALUE;
-  sourceId: string;
 };
 
-type ReminderFormField =
-  | 'type'
-  | 'title'
-  | 'message'
-  | 'dueAt'
-  | 'sourceType'
-  | 'sourceId';
+type ReminderFormField = 'type' | 'title' | 'message' | 'dueAt';
 
 type ReminderFieldErrors = Partial<Record<ReminderFormField, string>>;
 
@@ -35,12 +30,9 @@ const emptyReminderFormValues: ReminderFormValues = {
   title: '',
   message: '',
   dueAt: '',
-  sourceType: NO_SOURCE_VALUE,
-  sourceId: '',
 };
 
 const REMINDER_TYPE_OPTIONS = Object.values(ReminderType);
-const SOURCE_TYPE_OPTIONS = Object.values(SourceType);
 
 function validateReminderForm(values: ReminderFormValues): ReminderFieldErrors {
   const errors: ReminderFieldErrors = {};
@@ -53,15 +45,20 @@ function validateReminderForm(values: ReminderFormValues): ReminderFieldErrors {
     errors.dueAt = 'Due date and time is required.';
   }
 
-  if (values.sourceType && !values.sourceId.trim()) {
-    errors.sourceId = 'Source id is required when source type is selected.';
-  }
-
   return errors;
 }
 
 function hasFieldErrors(errors: ReminderFieldErrors): boolean {
   return Object.keys(errors).length > 0;
+}
+
+export function reminderToFormValues(reminder: Reminder): ReminderFormValues {
+  return {
+    type: reminder.type,
+    title: reminder.title,
+    message: reminder.message ?? '',
+    dueAt: isoToDatetimeLocalInput(reminder.dueAt),
+  };
 }
 
 export function buildCreateReminderInput(
@@ -72,7 +69,7 @@ export function buildCreateReminderInput(
     petId,
     type: values.type,
     title: values.title.trim(),
-    dueAt: new Date(values.dueAt).toISOString(),
+    dueAt: datetimeLocalInputToIso(values.dueAt),
   };
 
   const message = values.message.trim();
@@ -80,29 +77,65 @@ export function buildCreateReminderInput(
     input.message = message;
   }
 
-  if (values.sourceType) {
-    input.sourceType = values.sourceType;
-    input.sourceId = values.sourceId.trim();
+  return input;
+}
+
+export function buildUpdateReminderInput(
+  values: ReminderFormValues,
+): UpdateReminderInput {
+  const input: UpdateReminderInput = {
+    type: values.type,
+    title: values.title.trim(),
+    dueAt: datetimeLocalInputToIso(values.dueAt),
+  };
+
+  const message = values.message.trim();
+  if (message) {
+    input.message = message;
+  } else {
+    input.message = '';
   }
 
   return input;
 }
 
+export type ReminderFormMode = 'create' | 'edit';
+
 type ReminderFormProps = {
   petId: string;
-  onSubmit: (input: CreateReminderInput) => Promise<void>;
+  mode: ReminderFormMode;
+  reminder?: Reminder;
+  onCreate: (input: CreateReminderInput) => Promise<void>;
+  onUpdate?: (id: string, input: UpdateReminderInput) => Promise<void>;
   onCancel: () => void;
   variant?: 'inline' | 'dialog';
 };
 
+function getInitialReminderFormValues(
+  mode: ReminderFormMode,
+  reminder?: Reminder,
+): ReminderFormValues {
+  if (mode === 'edit' && reminder) {
+    return reminderToFormValues(reminder);
+  }
+
+  return emptyReminderFormValues;
+}
+
 export function ReminderForm({
   petId,
-  onSubmit,
+  mode,
+  reminder,
+  onCreate,
+  onUpdate,
   onCancel,
   variant = 'inline',
 }: ReminderFormProps) {
   const isDialog = variant === 'dialog';
-  const [values, setValues] = useState<ReminderFormValues>(emptyReminderFormValues);
+  const isEdit = mode === 'edit';
+  const [values, setValues] = useState<ReminderFormValues>(() =>
+    getInitialReminderFormValues(mode, reminder),
+  );
   const [fieldErrors, setFieldErrors] = useState<ReminderFieldErrors>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -114,17 +147,7 @@ export function ReminderForm({
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
       >,
     ) => {
-      const nextValue = event.target.value;
-      setValues((current) => {
-        if (field === 'sourceType') {
-          return {
-            ...current,
-            sourceType: nextValue as ReminderFormValues['sourceType'],
-            sourceId: nextValue ? current.sourceId : '',
-          };
-        }
-        return { ...current, [field]: nextValue };
-      });
+      setValues((current) => ({ ...current, [field]: event.target.value }));
     };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -139,8 +162,15 @@ export function ReminderForm({
 
     setIsSubmitting(true);
     try {
-      await onSubmit(buildCreateReminderInput(petId, values));
-      setValues(emptyReminderFormValues);
+      if (isEdit) {
+        if (!reminder?.id || !onUpdate) {
+          throw new Error('Reminder is missing.');
+        }
+        await onUpdate(reminder.id, buildUpdateReminderInput(values));
+      } else {
+        await onCreate(buildCreateReminderInput(petId, values));
+        setValues(emptyReminderFormValues);
+      }
       setFieldErrors({});
     } catch (error) {
       setFormError(getAuthErrorMessage(error, 'save-reminder'));
@@ -163,7 +193,7 @@ export function ReminderForm({
     >
       {!isDialog ? (
         <h3 id="reminder-form-title" className="reminder-form__title">
-          Add reminder
+          {isEdit ? 'Edit reminder' : 'Add reminder'}
         </h3>
       ) : null}
 
@@ -188,7 +218,9 @@ export function ReminderForm({
               required
             >
               {REMINDER_TYPE_OPTIONS.map((type) => (
-                <option key={type} value={type}>{type}</option>
+                <option key={type} value={type}>
+                  {REMINDER_TYPE_LABELS[type]}
+                </option>
               ))}
             </select>
           </div>
@@ -257,50 +289,6 @@ export function ReminderForm({
             disabled={isSubmitting}
           />
         </div>
-
-        <div className="reminder-form__row reminder-form__row--split">
-          <div className="reminder-form__field">
-            <label className="reminder-form__label" htmlFor="reminder-source-type">
-              Source type
-            </label>
-            <select
-              id="reminder-source-type"
-              name="sourceType"
-              className="reminder-form__select"
-              value={values.sourceType}
-              onChange={updateField('sourceType')}
-              disabled={isSubmitting}
-            >
-              <option value={NO_SOURCE_VALUE}>None</option>
-              {SOURCE_TYPE_OPTIONS.map((sourceType) => (
-                <option key={sourceType} value={sourceType}>{sourceType}</option>
-              ))}
-            </select>
-          </div>
-
-          <div className="reminder-form__field">
-            <label className="reminder-form__label" htmlFor="reminder-source-id">
-              Source id
-            </label>
-            <input
-              id="reminder-source-id"
-              name="sourceId"
-              className={[
-                'reminder-form__input',
-                fieldErrors.sourceId ? 'reminder-form__input--error' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-              value={values.sourceId}
-              onChange={updateField('sourceId')}
-              disabled={isSubmitting || !values.sourceType}
-              aria-invalid={Boolean(fieldErrors.sourceId)}
-            />
-            {fieldErrors.sourceId ? (
-              <p className="reminder-form__error" role="alert">{fieldErrors.sourceId}</p>
-            ) : null}
-          </div>
-        </div>
       </div>
 
       <div className="reminder-form__actions">
@@ -309,7 +297,11 @@ export function ReminderForm({
           className="reminder-form__submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving…' : 'Create reminder'}
+          {isSubmitting
+            ? 'Saving…'
+            : isEdit
+              ? 'Save changes'
+              : 'Create reminder'}
         </button>
         <button
           type="button"

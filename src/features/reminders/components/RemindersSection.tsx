@@ -10,8 +10,10 @@ import { REMINDERS_QUERY } from '../graphql';
 import * as remindersService from '../reminders.service';
 import type {
   CreateReminderInput,
+  Reminder,
   RemindersQueryResult,
   RemindersQueryVariables,
+  UpdateReminderInput,
 } from '../types';
 import { partitionReminders } from '../utils/reminder-list-utils';
 import { ReminderCard, type ReminderCardAction } from './ReminderCard';
@@ -28,9 +30,15 @@ type RunningReminderAction = {
   action: ReminderCardAction;
 };
 
+type ReminderDialogState =
+  | { mode: 'create' }
+  | { mode: 'edit'; reminder: Reminder };
+
 export function RemindersSection({ petId }: RemindersSectionProps) {
   const client = useApolloClient();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogState, setDialogState] = useState<ReminderDialogState | null>(
+    null,
+  );
   const [actionError, setActionError] = useState<string | null>(null);
   const [runningAction, setRunningAction] = useState<RunningReminderAction | null>(
     null,
@@ -54,15 +62,33 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
   const pendingCount = pending.length;
   const historyDefaultOpen = history.length <= 4;
 
-  const openDialog = () => {
+  const openCreateDialog = () => {
     setActionError(null);
-    setIsDialogOpen(true);
+    setDialogState({ mode: 'create' });
+  };
+
+  const openEditDialog = (reminder: Reminder) => {
+    setActionError(null);
+    setDialogState({ mode: 'edit', reminder });
+  };
+
+  const closeDialog = () => {
+    setDialogState(null);
   };
 
   const handleCreateReminder = async (input: CreateReminderInput) => {
     await remindersService.createReminder(client, input);
     await refetch();
-    setIsDialogOpen(false);
+    closeDialog();
+  };
+
+  const handleUpdateReminder = async (
+    id: string,
+    input: UpdateReminderInput,
+  ) => {
+    await remindersService.updateReminder(client, id, input);
+    await refetch();
+    closeDialog();
   };
 
   const runReminderAction = async (
@@ -126,7 +152,7 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
           <button
             type="button"
             className="reminders-section__add-button"
-            onClick={openDialog}
+            onClick={openCreateDialog}
           >
             + Add reminder
           </button>
@@ -153,16 +179,9 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
         <div className="reminders-section__empty">
           <h3 className="reminders-section__empty-title">No reminders yet</h3>
           <p className="reminders-section__empty-text">
-            Set due dates for vaccines, medications, and visits so nothing
+            Set due dates for vaccines, medications and visits so nothing
             important slips through the cracks.
           </p>
-          <button
-            type="button"
-            className="reminders-section__empty-action"
-            onClick={openDialog}
-          >
-            Add reminder
-          </button>
         </div>
       ) : null}
 
@@ -202,6 +221,7 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
                       onDismiss={() =>
                         void runReminderAction(reminder.id, 'dismiss')
                       }
+                      onEdit={() => openEditDialog(reminder)}
                       onDelete={() =>
                         void runReminderAction(reminder.id, 'delete')
                       }
@@ -240,6 +260,7 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
                       onDismiss={() =>
                         void runReminderAction(reminder.id, 'dismiss')
                       }
+                      onEdit={() => openEditDialog(reminder)}
                       onDelete={() =>
                         void runReminderAction(reminder.id, 'delete')
                       }
@@ -253,16 +274,26 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
       ) : null}
 
       <ReminderDialog
-        isOpen={isDialogOpen}
-        title="Add reminder"
-        onClose={() => setIsDialogOpen(false)}
+        isOpen={dialogState !== null}
+        title={dialogState?.mode === 'edit' ? 'Edit reminder' : 'Add reminder'}
+        onClose={closeDialog}
       >
-        <ReminderForm
-          petId={petId}
-          onSubmit={handleCreateReminder}
-          onCancel={() => setIsDialogOpen(false)}
-          variant="dialog"
-        />
+        {dialogState ? (
+          <ReminderForm
+            key={
+              dialogState.mode === 'edit' ? dialogState.reminder.id : 'create'
+            }
+            petId={petId}
+            mode={dialogState.mode}
+            reminder={
+              dialogState.mode === 'edit' ? dialogState.reminder : undefined
+            }
+            onCreate={handleCreateReminder}
+            onUpdate={handleUpdateReminder}
+            onCancel={closeDialog}
+            variant="dialog"
+          />
+        ) : null}
       </ReminderDialog>
     </section>
   );
