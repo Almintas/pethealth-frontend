@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../../i18n';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import type { CreateMedicationInput } from '../types';
 import './medication-form.css';
@@ -52,28 +54,28 @@ function validateMedicationForm(
   const errors: MedicationFieldErrors = {};
 
   if (!values.name.trim()) {
-    errors.name = 'Medication name is required.';
+    errors.name = i18n.t('health.medicationNameRequired');
   }
 
   if (!values.dosage.trim()) {
-    errors.dosage = 'Dosage is required.';
+    errors.dosage = i18n.t('health.dosageRequired');
   } else {
     const dosage = Number(values.dosage);
     if (Number.isNaN(dosage) || dosage < 0) {
-      errors.dosage = 'Dosage must be a number greater than or equal to 0.';
+      errors.dosage = i18n.t('health.dosageInvalid');
     }
   }
 
   if (!values.dosageUnit.trim()) {
-    errors.dosageUnit = 'Dosage unit is required.';
+    errors.dosageUnit = i18n.t('health.dosageUnitRequired');
   }
 
   if (!values.frequency.trim()) {
-    errors.frequency = 'Frequency is required.';
+    errors.frequency = i18n.t('health.frequencyRequired');
   }
 
   if (!values.startDate) {
-    errors.startDate = 'Start date is required.';
+    errors.startDate = i18n.t('health.startDateRequired');
   }
 
   return errors;
@@ -132,6 +134,7 @@ export function MedicationForm({
   onCancel,
   variant = 'inline',
 }: MedicationFormProps) {
+  const { t } = useTranslation();
   const isDialog = variant === 'dialog';
   const [values, setValues] = useState<MedicationFormValues>(
     emptyMedicationFormValues,
@@ -186,7 +189,7 @@ export function MedicationForm({
     >
       {!isDialog ? (
         <h3 id="medication-form-title" className="medication-form__title">
-          Add medication
+          {t('health.addMedication')}
         </h3>
       ) : null}
 
@@ -197,7 +200,7 @@ export function MedicationForm({
       <div className="medication-form__fields">
         <div className="medication-form__field">
           <label className="medication-form__label" htmlFor="medication-name">
-            Medication name{' '}
+            {t('health.medicationName')}{' '}
             <span className="medication-form__required" aria-hidden="true">*</span>
           </label>
           <input
@@ -223,7 +226,7 @@ export function MedicationForm({
         <div className="medication-form__row medication-form__row--dosage">
           <div className="medication-form__field">
             <label className="medication-form__label" htmlFor="medication-dosage">
-              Dosage{' '}
+              {t('health.dosage')}{' '}
               <span className="medication-form__required" aria-hidden="true">*</span>
             </label>
             <input
@@ -251,7 +254,7 @@ export function MedicationForm({
 
           <div className="medication-form__field">
             <label className="medication-form__label" htmlFor="medication-dosage-unit">
-              Dosage unit{' '}
+              {t('health.dosageUnit')}{' '}
               <span className="medication-form__required" aria-hidden="true">*</span>
             </label>
             <input
@@ -278,7 +281,7 @@ export function MedicationForm({
 
           <div className="medication-form__field">
             <label className="medication-form__label" htmlFor="medication-frequency">
-              Frequency{' '}
+              {t('health.frequency')}{' '}
               <span className="medication-form__required" aria-hidden="true">*</span>
             </label>
             <input
@@ -307,7 +310,7 @@ export function MedicationForm({
         <div className="medication-form__row medication-form__row--split">
           <div className="medication-form__field">
             <label className="medication-form__label" htmlFor="medication-start-date">
-              Start date{' '}
+              {t('health.startDate')}{' '}
               <span className="medication-form__required" aria-hidden="true">*</span>
             </label>
             <input
@@ -335,7 +338,7 @@ export function MedicationForm({
 
           <div className="medication-form__field">
             <label className="medication-form__label" htmlFor="medication-end-date">
-              End date
+              {t('health.endDate')}
             </label>
             <input
               id="medication-end-date"
@@ -355,7 +358,7 @@ export function MedicationForm({
               className="medication-form__label"
               htmlFor="medication-veterinarian"
             >
-              Veterinarian name
+              {t('health.veterinarianName')}
             </label>
             <input
               id="medication-veterinarian"
@@ -369,7 +372,7 @@ export function MedicationForm({
 
           <div className="medication-form__field">
             <label className="medication-form__label" htmlFor="medication-clinic">
-              Clinic name
+              {t('health.clinicName')}
             </label>
             <input
               id="medication-clinic"
@@ -384,7 +387,7 @@ export function MedicationForm({
 
         <div className="medication-form__field">
           <label className="medication-form__label" htmlFor="medication-notes">
-            Notes
+            {t('pets.notes')}
           </label>
           <textarea
             id="medication-notes"
@@ -406,7 +409,7 @@ export function MedicationForm({
             disabled={isSubmitting}
           />
           <label className="medication-form__label" htmlFor="medication-is-active">
-            Active medication
+            {t('health.activeMedication')}
           </label>
         </div>
       </div>
@@ -417,7 +420,7 @@ export function MedicationForm({
           className="medication-form__submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving…' : 'Create medication'}
+          {isSubmitting ? t('common.saving') : t('health.addMedication')}
         </button>
         <button
           type="button"
@@ -425,7 +428,7 @@ export function MedicationForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
       </div>
     </form>

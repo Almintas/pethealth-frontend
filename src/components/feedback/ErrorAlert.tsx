@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import './feedback.css';
 
 type ErrorAlertProps = {
@@ -12,9 +13,12 @@ export function ErrorAlert({
   message,
   title,
   onRetry,
-  retryLabel = 'Try again',
+  retryLabel,
   compact = false,
 }: ErrorAlertProps) {
+  const { t } = useTranslation();
+  const resolvedRetryLabel = retryLabel ?? t('common.retry');
+
   return (
     <div
       className={[
@@ -31,7 +35,7 @@ export function ErrorAlert({
       {onRetry ? (
         <div className="ph-error-alert__actions">
           <button type="button" className="ph-error-alert__retry" onClick={onRetry}>
-            {retryLabel}
+            {resolvedRetryLabel}
           </button>
         </div>
       ) : null}

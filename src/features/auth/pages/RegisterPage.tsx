@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { AuthFormField } from '../components/AuthFormField';
 import { AuthShell } from '../components/AuthShell';
@@ -12,6 +13,7 @@ import {
 } from '../utils/validation';
 
 export function RegisterPage() {
+  const { t } = useTranslation();
   const { register } = useAuth();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -55,8 +57,8 @@ export function RegisterPage() {
 
   return (
     <AuthShell
-      title="Create your account"
-      subtitle="Join PetHealth to manage preventive care for your pets."
+      title={t('auth.createAccount')}
+      subtitle={t('auth.registerSubtitle')}
     >
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
         {formError ? (
@@ -70,7 +72,7 @@ export function RegisterPage() {
             id="register-first-name"
             name="firstName"
             type="text"
-            label="First name"
+            label={t('auth.firstName')}
             autoComplete="given-name"
             value={firstName}
             onChange={(event) => setFirstName(event.target.value)}
@@ -82,7 +84,7 @@ export function RegisterPage() {
             id="register-last-name"
             name="lastName"
             type="text"
-            label="Last name"
+            label={t('auth.lastName')}
             autoComplete="family-name"
             value={lastName}
             onChange={(event) => setLastName(event.target.value)}
@@ -95,7 +97,7 @@ export function RegisterPage() {
           id="register-email"
           name="email"
           type="email"
-          label="Email"
+          label={t('auth.email')}
           autoComplete="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
@@ -107,7 +109,7 @@ export function RegisterPage() {
           id="register-password"
           name="password"
           type="password"
-          label="Password"
+          label={t('auth.password')}
           autoComplete="new-password"
           value={password}
           onChange={(event) => setPassword(event.target.value)}
@@ -116,14 +118,14 @@ export function RegisterPage() {
         />
 
         <button className="auth-submit" type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Creating account…' : 'Create account'}
+          {isSubmitting ? t('auth.signingUp') : t('auth.signUp')}
         </button>
       </form>
 
       <p className="auth-switch">
-        Already have an account?{' '}
+        {t('auth.haveAccount')}{' '}
         <Link className="auth-switch__button" to="/login">
-          Sign in
+          {t('auth.signInLink')}
         </Link>
       </p>
     </AuthShell>

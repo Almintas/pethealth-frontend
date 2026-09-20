@@ -1,4 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
+import { i18n } from '../../../i18n';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import type { CreateMedicalRecordInput } from '../types';
 import './medical-record-form.css';
@@ -43,13 +45,13 @@ function validateMedicalRecordForm(
   const errors: MedicalRecordFieldErrors = {};
 
   if (!values.date) {
-    errors.date = 'Date is required.';
+    errors.date = `${i18n.t('health.recordDate')}: ${i18n.t('common.required')}`;
   }
   if (!values.type.trim()) {
-    errors.type = 'Type is required.';
+    errors.type = `${i18n.t('appointments.type')}: ${i18n.t('common.required')}`;
   }
   if (!values.title.trim()) {
-    errors.title = 'Title is required.';
+    errors.title = `${i18n.t('reminders.titleField')}: ${i18n.t('common.required')}`;
   }
 
   return errors;
@@ -111,6 +113,7 @@ export function MedicalRecordForm({
   onCancel,
   variant = 'inline',
 }: MedicalRecordFormProps) {
+  const { t } = useTranslation();
   const isDialog = variant === 'dialog';
   const [values, setValues] = useState<MedicalRecordFormValues>(
     emptyMedicalRecordFormValues,
@@ -161,7 +164,7 @@ export function MedicalRecordForm({
     >
       {!isDialog ? (
         <h3 id="medical-record-form-title" className="medical-record-form__title">
-          Add medical record
+          {t('health.addMedicalRecord')}
         </h3>
       ) : null}
 
@@ -173,7 +176,8 @@ export function MedicalRecordForm({
         <div className="medical-record-form__row medical-record-form__row--split">
           <div className="medical-record-form__field">
             <label className="medical-record-form__label" htmlFor="medical-record-date">
-              Date <span className="medical-record-form__required" aria-hidden="true">*</span>
+              {t('health.recordDate')}{' '}
+              <span className="medical-record-form__required" aria-hidden="true">*</span>
             </label>
             <input
               id="medical-record-date"
@@ -198,7 +202,8 @@ export function MedicalRecordForm({
 
           <div className="medical-record-form__field">
             <label className="medical-record-form__label" htmlFor="medical-record-type">
-              Type <span className="medical-record-form__required" aria-hidden="true">*</span>
+              {t('appointments.type')}{' '}
+              <span className="medical-record-form__required" aria-hidden="true">*</span>
             </label>
             <input
               id="medical-record-type"
@@ -223,7 +228,8 @@ export function MedicalRecordForm({
 
         <div className="medical-record-form__field">
           <label className="medical-record-form__label" htmlFor="medical-record-title">
-            Title <span className="medical-record-form__required" aria-hidden="true">*</span>
+            {t('reminders.titleField')}{' '}
+            <span className="medical-record-form__required" aria-hidden="true">*</span>
           </label>
           <input
             id="medical-record-title"
@@ -247,7 +253,7 @@ export function MedicalRecordForm({
 
         <div className="medical-record-form__field">
           <label className="medical-record-form__label" htmlFor="medical-record-description">
-            Description
+            {t('health.description')}
           </label>
           <textarea
             id="medical-record-description"
@@ -262,7 +268,7 @@ export function MedicalRecordForm({
         <div className="medical-record-form__row medical-record-form__row--split">
           <div className="medical-record-form__field">
             <label className="medical-record-form__label" htmlFor="medical-record-diagnosis">
-              Diagnosis
+              {t('health.diagnosis')}
             </label>
             <input
               id="medical-record-diagnosis"
@@ -276,7 +282,7 @@ export function MedicalRecordForm({
 
           <div className="medical-record-form__field">
             <label className="medical-record-form__label" htmlFor="medical-record-veterinarian">
-              Veterinarian name
+              {t('appointments.veterinarian')}
             </label>
             <input
               id="medical-record-veterinarian"
@@ -291,7 +297,7 @@ export function MedicalRecordForm({
 
         <div className="medical-record-form__field">
           <label className="medical-record-form__label" htmlFor="medical-record-clinic">
-            Clinic name
+            {t('appointments.clinic')}
           </label>
           <input
             id="medical-record-clinic"
@@ -305,7 +311,7 @@ export function MedicalRecordForm({
 
         <div className="medical-record-form__field">
           <label className="medical-record-form__label" htmlFor="medical-record-notes">
-            Notes
+            {t('appointments.notes')}
           </label>
           <textarea
             id="medical-record-notes"
@@ -324,7 +330,7 @@ export function MedicalRecordForm({
           className="medical-record-form__submit"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving…' : 'Create record'}
+          {isSubmitting ? t('common.saving') : t('health.addMedicalRecord')}
         </button>
         <button
           type="button"
@@ -332,7 +338,7 @@ export function MedicalRecordForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
       </div>
     </form>

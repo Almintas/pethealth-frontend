@@ -1,5 +1,7 @@
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { BrandMark } from '../../../components/BrandMark';
+import { LanguageSelector } from '../../../components/LanguageSelector';
 import './auth-ui.css';
 
 type AuthShellProps = {
@@ -9,17 +11,18 @@ type AuthShellProps = {
 };
 
 export function AuthShell({ title, subtitle, children }: AuthShellProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="auth-shell">
+      <LanguageSelector className="auth-shell__language" />
       <aside className="auth-shell__brand" aria-label="PetHealth">
         <div className="auth-shell__brand-inner">
           <div className="auth-shell__logo">
             <BrandMark size="md" />
           </div>
           <h1 className="auth-shell__brand-title">PetHealth</h1>
-          <p className="auth-shell__brand-copy">
-            Keep your pet&apos;s health history in one place.
-          </p>
+          <p className="auth-shell__brand-copy">{t('common.brandTaglineAuth')}</p>
         </div>
       </aside>
       <div className="auth-shell__panel">

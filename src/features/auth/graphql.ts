@@ -9,6 +9,11 @@ export const AUTH_USER_FIELDS = gql`
     role
     createdAt
     updatedAt
+    notificationPreferences {
+      emailAppointmentReminders
+      emailMedicationReminders
+      emailVaccinationReminders
+    }
   }
 `;
 
@@ -55,4 +60,13 @@ export const CHANGE_PASSWORD_MUTATION = gql`
   mutation ChangePassword($input: ChangePasswordInput!) {
     changePassword(input: $input)
   }
+`;
+
+export const UPDATE_NOTIFICATION_PREFERENCES_MUTATION = gql`
+  mutation UpdateNotificationPreferences($input: UpdateNotificationPreferencesInput!) {
+    updateNotificationPreferences(input: $input) {
+      ...AuthUserFields
+    }
+  }
+  ${AUTH_USER_FIELDS}
 `;

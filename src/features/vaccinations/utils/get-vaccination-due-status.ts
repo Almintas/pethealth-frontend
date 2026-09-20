@@ -1,3 +1,5 @@
+import { i18n } from '../../../i18n';
+
 export type VaccinationDueStatus = 'none' | 'valid' | 'overdue';
 
 function startOfLocalDay(date: Date): number {
@@ -24,12 +26,5 @@ export function getVaccinationDueStatus(
 }
 
 export function getVaccinationDueStatusLabel(status: VaccinationDueStatus): string {
-  switch (status) {
-    case 'overdue':
-      return 'Overdue';
-    case 'valid':
-      return 'Up to date';
-    case 'none':
-      return 'No schedule';
-  }
+  return i18n.t(`enums.vaccinationDue.${status}`);
 }

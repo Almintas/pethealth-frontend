@@ -1,3 +1,5 @@
+import { i18n } from '../../../i18n';
+
 export function formatPetAge(birthDate?: string | null): string | null {
   if (!birthDate) {
     return null;
@@ -27,16 +29,26 @@ export function formatPetAge(birthDate?: string | null): string | null {
 
   if (years === 0) {
     if (months <= 0) {
-      return 'Less than 1 month';
+      return i18n.t('pets.ageLessThanMonth');
     }
-    return months === 1 ? '1 month' : `${months} months`;
+    return months === 1
+      ? i18n.t('pets.ageOneMonth')
+      : i18n.t('pets.ageMonths', { count: months });
   }
 
   if (months === 0) {
-    return years === 1 ? '1 year' : `${years} years`;
+    return years === 1
+      ? i18n.t('pets.ageOneYear')
+      : i18n.t('pets.ageYears', { count: years });
   }
 
-  const yearLabel = years === 1 ? '1 year' : `${years} years`;
-  const monthLabel = months === 1 ? '1 month' : `${months} months`;
+  const yearLabel =
+    years === 1
+      ? i18n.t('pets.ageOneYear')
+      : i18n.t('pets.ageYears', { count: years });
+  const monthLabel =
+    months === 1
+      ? i18n.t('pets.ageOneMonth')
+      : i18n.t('pets.ageMonths', { count: months });
   return `${yearLabel}, ${monthLabel}`;
 }

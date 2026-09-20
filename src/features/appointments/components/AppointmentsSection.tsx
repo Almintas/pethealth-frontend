@@ -1,5 +1,6 @@
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { APPOINTMENTS_QUERY } from '../graphql';
@@ -26,6 +27,7 @@ type AppointmentDialogState =
   | { mode: 'edit'; appointment: Appointment };
 
 export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
+  const { t } = useTranslation();
   const client = useApolloClient();
   const [dialogState, setDialogState] = useState<AppointmentDialogState | null>(
     null,
@@ -94,15 +96,15 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
 
   const countLabel =
     appointments.length === 1
-      ? '1 appointment'
-      : `${appointments.length} appointments`;
+      ? t('appointments.countOne')
+      : t('appointments.countMany', { count: appointments.length });
 
   const upcomingCountLabel =
     upcoming.length === 0
       ? null
       : upcoming.length === 1
-        ? '1 upcoming'
-        : `${upcoming.length} upcoming`;
+        ? t('appointments.upcomingCountOne')
+        : t('appointments.upcomingCountMany', { count: upcoming.length });
 
   const historyDefaultOpen = history.length <= 4;
 
@@ -113,7 +115,7 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
     >
       <header className="appointments-section__header">
         <div className="appointments-section__heading">
-          <h2 id="appointments-title">Appointments</h2>
+          <h2 id="appointments-title">{t('appointments.title')}</h2>
           {!loading && !error ? (
             <p className="appointments-section__count" aria-live="polite">
               {countLabel}
@@ -133,13 +135,13 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
             className="appointments-section__add-button"
             onClick={openCreateDialog}
           >
-            + Add appointment
+            + {t('appointments.add')}
           </button>
         ) : null}
       </header>
 
       {loading ? (
-        <LoadingState message="Loading appointments…" skeleton />
+        <LoadingState message={t('common.loading')} skeleton />
       ) : null}
 
       {error ? (
@@ -157,11 +159,10 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
       {!loading && !error && appointments.length === 0 ? (
         <div className="appointments-section__empty">
           <h3 className="appointments-section__empty-title">
-            No appointments yet
+            {t('appointments.empty')}
           </h3>
           <p className="appointments-section__empty-text">
-            Schedule vet visits and checkups here so you always know what is
-            coming up for this pet.
+            {t('appointments.emptyCta')}
           </p>
         </div>
       ) : null}
@@ -176,13 +177,12 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
               id="appointments-upcoming-heading"
               className="appointments-section__group-title"
             >
-              Upcoming
+              {t('appointments.upcoming')}
             </h3>
 
             {upcoming.length === 0 ? (
               <p className="appointments-section__upcoming-empty">
-                No upcoming appointments scheduled. Past visits are listed in
-                history below.
+                {t('appointments.empty')}
               </p>
             ) : (
               <ol className="appointments-section__timeline">
@@ -207,7 +207,7 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
               open={historyDefaultOpen}
             >
               <summary className="appointments-section__history-summary">
-                History
+                {t('appointments.history')}
                 <span className="appointments-section__history-count">
                   {history.length}
                 </span>
@@ -233,7 +233,9 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
       <AppointmentDialog
         isOpen={dialogState !== null}
         title={
-          dialogState?.mode === 'edit' ? 'Edit appointment' : 'Add appointment'
+          dialogState?.mode === 'edit'
+            ? t('appointments.editTitle')
+            : t('appointments.createTitle')
         }
         onClose={closeDialog}
       >

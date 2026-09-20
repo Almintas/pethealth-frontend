@@ -1,11 +1,13 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   datetimeLocalInputToIso,
   isoToDatetimeLocalInput,
 } from '../../../utils/datetime-local-input';
+import { useEnumLabels } from '../../../i18n/useEnumLabels';
+import { i18n } from '../../../i18n';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import {
-  APPOINTMENT_TYPE_OPTIONS,
   DEFAULT_APPOINTMENT_TYPE,
   normalizeAppointmentTypeValue,
   type AppointmentTypeValue,
@@ -55,15 +57,15 @@ function validateAppointmentForm(
   const errors: AppointmentFieldErrors = {};
 
   if (!values.scheduledAt) {
-    errors.scheduledAt = 'Scheduled date and time is required.';
+    errors.scheduledAt = `${i18n.t('appointments.dateTime')}: ${i18n.t('common.required')}`;
   }
 
   if (!values.type) {
-    errors.type = 'Appointment type is required.';
+    errors.type = `${i18n.t('appointments.type')}: ${i18n.t('common.required')}`;
   }
 
   if (!values.reason.trim()) {
-    errors.reason = 'Reason is required.';
+    errors.reason = `${i18n.t('appointments.reason')}: ${i18n.t('common.required')}`;
   }
 
   return errors;
@@ -153,6 +155,8 @@ export function AppointmentForm({
   onCancel,
   variant = 'inline',
 }: AppointmentFormProps) {
+  const { t } = useTranslation();
+  const { appointmentStatus, appointmentTypeOptions } = useEnumLabels();
   const isDialog = variant === 'dialog';
   const isEdit = mode === 'edit';
   const [values, setValues] = useState<AppointmentFormValues>(() =>
@@ -215,7 +219,7 @@ export function AppointmentForm({
     >
       {!isDialog ? (
         <h3 id="appointment-form-title" className="appointment-form__title">
-          {isEdit ? 'Edit appointment' : 'Add appointment'}
+          {isEdit ? t('appointments.editTitle') : t('appointments.createTitle')}
         </h3>
       ) : null}
 
@@ -230,7 +234,7 @@ export function AppointmentForm({
               className="appointment-form__label"
               htmlFor="appointment-scheduled-at"
             >
-              Scheduled date &amp; time{' '}
+              {t('appointments.dateTime')}{' '}
               <span className="appointment-form__required" aria-hidden="true">*</span>
             </label>
             <input
@@ -258,7 +262,7 @@ export function AppointmentForm({
 
           <div className="appointment-form__field">
             <label className="appointment-form__label" htmlFor="appointment-type">
-              Appointment type{' '}
+              {t('appointments.type')}{' '}
               <span className="appointment-form__required" aria-hidden="true">*</span>
             </label>
             <select
@@ -276,7 +280,7 @@ export function AppointmentForm({
               required
               aria-invalid={Boolean(fieldErrors.type)}
             >
-              {APPOINTMENT_TYPE_OPTIONS.map((option) => (
+              {appointmentTypeOptions().map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -291,7 +295,7 @@ export function AppointmentForm({
         {isEdit ? (
           <div className="appointment-form__field">
             <label className="appointment-form__label" htmlFor="appointment-status">
-              Status
+              {t('appointments.status')}
             </label>
             <select
               id="appointment-status"
@@ -302,7 +306,9 @@ export function AppointmentForm({
               disabled={isSubmitting}
             >
               {APPOINTMENT_STATUS_OPTIONS.map((status) => (
-                <option key={status} value={status}>{status}</option>
+                <option key={status} value={status}>
+                  {appointmentStatus(status)}
+                </option>
               ))}
             </select>
           </div>
@@ -311,7 +317,7 @@ export function AppointmentForm({
         <div className="appointment-form__row appointment-form__row--split">
           <div className="appointment-form__field">
             <label className="appointment-form__label" htmlFor="appointment-clinic">
-              Clinic
+              {t('appointments.clinic')}
             </label>
             <input
               id="appointment-clinic"
@@ -328,7 +334,7 @@ export function AppointmentForm({
               className="appointment-form__label"
               htmlFor="appointment-veterinarian"
             >
-              Veterinarian
+              {t('appointments.veterinarian')}
             </label>
             <input
               id="appointment-veterinarian"
@@ -343,7 +349,7 @@ export function AppointmentForm({
 
         <div className="appointment-form__field">
           <label className="appointment-form__label" htmlFor="appointment-reason">
-            Reason{' '}
+            {t('appointments.reason')}{' '}
             <span className="appointment-form__required" aria-hidden="true">*</span>
           </label>
           <input
@@ -374,10 +380,10 @@ export function AppointmentForm({
           disabled={isSubmitting}
         >
           {isSubmitting
-            ? 'Saving…'
+            ? t('common.saving')
             : isEdit
-              ? 'Save changes'
-              : 'Create appointment'}
+              ? t('profile.saveChanges')
+              : t('appointments.add')}
         </button>
         <button
           type="button"
@@ -385,7 +391,7 @@ export function AppointmentForm({
           onClick={onCancel}
           disabled={isSubmitting}
         >
-          Cancel
+          {t('common.cancel')}
         </button>
       </div>
     </form>

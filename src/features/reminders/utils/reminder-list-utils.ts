@@ -1,3 +1,4 @@
+import { i18n } from '../../../i18n';
 import { ReminderStatus, type Reminder } from '../types';
 
 export type ReminderDueUrgency = 'overdue' | 'today' | 'future' | 'none';
@@ -42,16 +43,7 @@ export function getReminderDueUrgency(dueAt?: string | null): ReminderDueUrgency
 }
 
 export function getReminderDueUrgencyLabel(urgency: ReminderDueUrgency): string {
-  switch (urgency) {
-    case 'overdue':
-      return 'Overdue';
-    case 'today':
-      return 'Due today';
-    case 'future':
-      return 'Upcoming';
-    case 'none':
-      return 'No due date';
-  }
+  return i18n.t(`enums.reminderDueUrgency.${urgency}`);
 }
 
 const URGENCY_SORT_ORDER: Record<ReminderDueUrgency, number> = {
@@ -157,12 +149,12 @@ export function formatReminderSource(reminder: Reminder): string | null {
 
   switch (reminder.sourceType) {
     case 'VACCINATION':
-      return 'Linked to vaccination';
+      return i18n.t('reminders.linkedVaccination');
     case 'MEDICATION':
-      return 'Linked to medication';
+      return i18n.t('reminders.linkedMedication');
     case 'APPOINTMENT':
-      return 'Linked to appointment';
+      return i18n.t('reminders.linkedAppointment');
     default:
-      return `Linked to ${reminder.sourceType}`;
+      return i18n.t('reminders.linkedSource', { source: reminder.sourceType });
   }
 }

@@ -1,19 +1,22 @@
 import { useState, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { NavLink, Outlet, useNavigate } from 'react-router';
 import { BrandMark } from '../components/BrandMark';
+import { LanguageSelector } from '../components/LanguageSelector';
 import { useAuth } from '../features/auth';
 import { SidebarUserMenu } from './SidebarUserMenu';
+import '../components/language-selector.css';
 import './authenticated-layout.css';
 
 const navItems: Array<{
   to: string;
-  label: string;
+  labelKey: 'navigation.dashboard' | 'navigation.myPets';
   end?: boolean;
   icon: ReactNode;
 }> = [
   {
     to: '/dashboard',
-    label: 'Dashboard',
+    labelKey: 'navigation.dashboard',
     end: true,
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -23,7 +26,7 @@ const navItems: Array<{
   },
   {
     to: '/pets',
-    label: 'My Pets',
+    labelKey: 'navigation.myPets',
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
         <path d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm8 0a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
@@ -34,6 +37,7 @@ const navItems: Array<{
 ];
 
 export function AuthenticatedLayout() {
+  const { t } = useTranslation();
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -62,7 +66,7 @@ export function AuthenticatedLayout() {
         <span className="authenticated-layout__mobile-toggle-bar" />
         <span className="authenticated-layout__mobile-toggle-bar" />
         <span className="authenticated-layout__mobile-toggle-label">
-          Menu
+          {t('common.menu')}
         </span>
       </button>
 
@@ -80,12 +84,12 @@ export function AuthenticatedLayout() {
           <div>
             <div className="authenticated-layout__brand-name">PetHealth</div>
             <div className="authenticated-layout__brand-tagline">
-              Owner portal
+              {t('common.brandTagline')}
             </div>
           </div>
         </div>
 
-        <nav className="authenticated-layout__nav" aria-label="Main">
+        <nav className="authenticated-layout__nav" aria-label={t('common.mainNav')}>
           {navItems.map((item) => (
             <NavLink
               key={item.to}
@@ -97,12 +101,13 @@ export function AuthenticatedLayout() {
               <span className="authenticated-layout__link-icon" aria-hidden="true">
                 {item.icon}
               </span>
-              {item.label}
+              {t(item.labelKey)}
             </NavLink>
           ))}
         </nav>
 
         <div className="authenticated-layout__user">
+          <LanguageSelector />
           <SidebarUserMenu
             user={user}
             isLoggingOut={isLoggingOut}
@@ -116,7 +121,7 @@ export function AuthenticatedLayout() {
         <button
           type="button"
           className="authenticated-layout__backdrop"
-          aria-label="Close navigation"
+          aria-label={t('common.closeNavigation')}
           onClick={() => setIsMobileNavOpen(false)}
         />
       ) : null}

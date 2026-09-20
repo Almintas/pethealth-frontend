@@ -1,3 +1,6 @@
+import { i18n } from '../../../i18n';
+import { toIntlLocale } from '../../../i18n/app-locale';
+
 function parseReminderInstant(value?: string | null): Date | null {
   if (!value) {
     return null;
@@ -11,13 +14,17 @@ function parseReminderInstant(value?: string | null): Date | null {
   return date;
 }
 
+function getLocale(): string {
+  return toIntlLocale(i18n.language);
+}
+
 export function formatReminderDateTime(value?: string | null): string {
   const date = parseReminderInstant(value);
   if (!date) {
-    return 'Not provided';
+    return i18n.t('common.notProvided');
   }
 
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(getLocale(), {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(date);
@@ -29,7 +36,7 @@ export function formatReminderDate(value?: string | null): string {
     return '—';
   }
 
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(getLocale(), {
     weekday: 'short',
     month: 'short',
     day: 'numeric',
@@ -43,7 +50,7 @@ export function formatReminderTime(value?: string | null): string {
     return '—';
   }
 
-  return new Intl.DateTimeFormat(undefined, {
+  return new Intl.DateTimeFormat(getLocale(), {
     hour: 'numeric',
     minute: '2-digit',
   }).format(date);

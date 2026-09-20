@@ -1,10 +1,12 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useEnumLabels } from '../../../i18n/useEnumLabels';
 import { AppointmentStatus, type Appointment } from '../types';
 import {
   formatAppointmentDate,
   formatAppointmentTime,
 } from '../utils/format-appointment-datetime';
-import { getAppointmentStatusLabel } from '../utils/appointment-list-utils';
+import { normalizeAppointmentTypeValue } from '../constants/appointment-types';
 
 const LONG_TEXT_THRESHOLD = 140;
 
@@ -38,6 +40,8 @@ export function AppointmentCard({
   onEdit,
   onDelete,
 }: AppointmentCardProps) {
+  const { t } = useTranslation();
+  const { appointmentStatus, appointmentType } = useEnumLabels();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const reason = appointment.reason?.trim() ?? '';
@@ -45,6 +49,7 @@ export function AppointmentCard({
   const reasonIsLong = reason.length > LONG_TEXT_THRESHOLD;
   const notesAreLong = notes.length > LONG_TEXT_THRESHOLD;
   const statusKey = statusModifier(appointment.status);
+  const typeLabel = appointmentType(normalizeAppointmentTypeValue(appointment.type));
 
   const handleDeleteClick = () => {
     if (!confirmDelete) {
@@ -100,27 +105,27 @@ export function AppointmentCard({
         </div>
 
         <div className="appointments-section__record-top">
-          <h3 className="appointments-section__record-title">{appointment.type}</h3>
+          <h3 className="appointments-section__record-title">{typeLabel}</h3>
           <span
             className={[
               'appointments-section__status-badge',
               `appointments-section__status-badge--${statusKey}`,
             ].join(' ')}
           >
-            {getAppointmentStatusLabel(appointment.status)}
+            {appointmentStatus(appointment.status)}
           </span>
         </div>
 
         <dl className="appointments-section__record-facts">
           {appointment.clinicName ? (
             <div>
-              <dt>Clinic</dt>
+              <dt>{t('appointments.clinic')}</dt>
               <dd>{appointment.clinicName}</dd>
             </div>
           ) : null}
           {appointment.veterinarianName ? (
             <div>
-              <dt>Veterinarian</dt>
+              <dt>{t('appointments.veterinarian')}</dt>
               <dd>{appointment.veterinarianName}</dd>
             </div>
           ) : null}
@@ -129,13 +134,13 @@ export function AppointmentCard({
         {reason ? (
           reasonIsLong ? (
             <details className="appointments-section__record-details">
-              <summary>Reason</summary>
+              <summary>{t('appointments.reason')}</summary>
               <p>{reason}</p>
             </details>
           ) : (
             <p className="appointments-section__record-snippet">
               <span className="appointments-section__record-snippet-label">
-                Reason:
+                {t('appointments.reason')}:
               </span>{' '}
               {reason}
             </p>
@@ -145,13 +150,13 @@ export function AppointmentCard({
         {notes ? (
           notesAreLong ? (
             <details className="appointments-section__record-details">
-              <summary>Notes</summary>
+              <summary>{t('appointments.notes')}</summary>
               <p>{notes}</p>
             </details>
           ) : (
             <p className="appointments-section__record-snippet">
               <span className="appointments-section__record-snippet-label">
-                Notes:
+                {t('appointments.notes')}:
               </span>{' '}
               {notes}
             </p>
@@ -165,18 +170,18 @@ export function AppointmentCard({
             onClick={onEdit}
             disabled={isDeleting}
           >
-            Edit
+            {t('common.edit')}
           </button>
           {confirmDelete ? (
             <div className="appointments-section__delete-confirm" role="status">
-              <span>Delete this appointment?</span>
+              <span>{t('appointments.deleteConfirm')}</span>
               <button
                 type="button"
                 className="appointments-section__delete-confirm-yes"
                 onClick={handleDeleteClick}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Deleting…' : 'Yes, delete'}
+                {isDeleting ? t('common.saving') : `${t('common.yes')}, ${t('common.delete').toLowerCase()}`}
               </button>
               <button
                 type="button"
@@ -184,7 +189,7 @@ export function AppointmentCard({
                 onClick={() => setConfirmDelete(false)}
                 disabled={isDeleting}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
             </div>
           ) : (
@@ -194,7 +199,7 @@ export function AppointmentCard({
               onClick={handleDeleteClick}
               disabled={isDeleting}
             >
-              Delete appointment
+              {t('common.delete')}
             </button>
           )}
         </div>

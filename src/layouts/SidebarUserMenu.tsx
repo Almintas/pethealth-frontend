@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router';
 import type { AuthUser } from '../features/auth/types';
 
@@ -71,6 +72,7 @@ export function SidebarUserMenu({
   onLogout,
   onAfterAction,
 }: SidebarUserMenuProps) {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const menuId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
@@ -125,7 +127,7 @@ export function SidebarUserMenu({
     void onLogout();
   };
 
-  const displayName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || 'Account';
+  const displayName = [user?.firstName, user?.lastName].filter(Boolean).join(' ') || t('common.account');
   const email = user?.email ?? '';
 
   return (
@@ -135,7 +137,7 @@ export function SidebarUserMenu({
           id={menuId}
           className="sidebar-user-menu__panel"
           role="menu"
-          aria-label="Account menu"
+          aria-label={t('common.accountMenu')}
         >
           <button
             type="button"
@@ -146,7 +148,7 @@ export function SidebarUserMenu({
             <span className="sidebar-user-menu__item-icon">
               <ProfileIcon />
             </span>
-            Profile
+            {t('navigation.profile')}
           </button>
           <button
             type="button"
@@ -157,7 +159,7 @@ export function SidebarUserMenu({
             <span className="sidebar-user-menu__item-icon">
               <SettingsIcon />
             </span>
-            Settings
+            {t('navigation.settings')}
           </button>
           <div className="sidebar-user-menu__separator" role="separator" />
           <button
@@ -170,7 +172,7 @@ export function SidebarUserMenu({
             <span className="sidebar-user-menu__item-icon">
               <SignOutIcon />
             </span>
-            {isLoggingOut ? 'Signing out…' : 'Sign out'}
+            {isLoggingOut ? t('navigation.signingOut') : t('navigation.signOut')}
           </button>
         </div>
       ) : null}

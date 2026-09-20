@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import './loading-skeleton.css';
 
 type LoadingSkeletonProps = {
@@ -7,10 +8,13 @@ type LoadingSkeletonProps = {
 
 export function LoadingSkeleton({
   lines = 3,
-  label = 'Loading content',
+  label,
 }: LoadingSkeletonProps) {
+  const { t } = useTranslation();
+  const resolvedLabel = label ?? t('common.loadingContent');
+
   return (
-    <div className="loading-skeleton" role="status" aria-label={label}>
+    <div className="loading-skeleton" role="status" aria-label={resolvedLabel}>
       {Array.from({ length: lines }, (_, index) => (
         <div
           key={index}

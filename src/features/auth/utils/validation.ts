@@ -1,3 +1,5 @@
+import { i18n } from '../../../i18n';
+
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export type LoginField = 'email' | 'password';
@@ -12,20 +14,20 @@ export type FieldErrors<T extends string> = Partial<Record<T, string>>;
 function validateEmail(email: string): string | undefined {
   const trimmed = email.trim();
   if (!trimmed) {
-    return 'Email is required.';
+    return i18n.t('validation.emailRequired');
   }
   if (!EMAIL_PATTERN.test(trimmed)) {
-    return 'Enter a valid email address.';
+    return i18n.t('validation.emailInvalid');
   }
   return undefined;
 }
 
 function validatePassword(password: string): string | undefined {
   if (!password) {
-    return 'Password is required.';
+    return i18n.t('validation.passwordRequired');
   }
   if (password.length < 8) {
-    return 'Password must be at least 8 characters.';
+    return i18n.t('validation.passwordMin');
   }
   return undefined;
 }
@@ -57,10 +59,10 @@ export function validateRegisterForm(values: {
   const errors: FieldErrors<RegisterField> = {};
 
   if (!values.firstName.trim()) {
-    errors.firstName = 'First name is required.';
+    errors.firstName = i18n.t('validation.firstNameRequired');
   }
   if (!values.lastName.trim()) {
-    errors.lastName = 'Last name is required.';
+    errors.lastName = i18n.t('validation.lastNameRequired');
   }
 
   const emailError = validateEmail(values.email);

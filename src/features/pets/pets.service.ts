@@ -1,4 +1,5 @@
 import type { ApolloClient } from '@apollo/client';
+import { i18n } from '../../i18n';
 import { getApiBaseUrl } from '../../config/api-base-url';
 import { getAccessToken } from '../auth/token-storage';
 import type { PetPhotoIntent } from './constants/pet-photo';
@@ -118,14 +119,14 @@ async function parsePetPhotoError(response: Response): Promise<string> {
   }
 
   if (response.status === 503) {
-    return 'Pet photo uploads are not available right now. Check that Cloudinary is configured on the server, then try again.';
+    return i18n.t('errors.petPhotoUploadUnavailable');
   }
 
   if (response.status === 413 || response.status === 400) {
-    return 'That photo could not be uploaded. Use a JPEG, PNG, or WebP image up to 5 MB.';
+    return i18n.t('errors.petPhotoInvalid');
   }
 
-  return 'Failed to update pet photo. Please try again.';
+  return i18n.t('errors.petPhotoUpdateFailed');
 }
 
 function mapRestPet(payload: Pet): Pet {

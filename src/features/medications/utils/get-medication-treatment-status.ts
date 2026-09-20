@@ -1,3 +1,4 @@
+import { i18n } from '../../../i18n';
 import type { Medication } from '../types';
 
 export type MedicationTreatmentStatus =
@@ -38,16 +39,7 @@ export function getMedicationTreatmentStatus(
 export function getMedicationTreatmentStatusLabel(
   status: MedicationTreatmentStatus,
 ): string {
-  switch (status) {
-    case 'active':
-      return 'Active';
-    case 'ongoing':
-      return 'Ongoing';
-    case 'completed':
-      return 'Completed';
-    case 'inactive':
-      return 'Inactive';
-  }
+  return i18n.t(`enums.medicationStatus.${status}`);
 }
 
 export function isMedicationHistoryStatus(

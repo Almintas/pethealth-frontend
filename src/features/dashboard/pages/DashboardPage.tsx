@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 import { PetAvatar } from '../../../components/PetAvatar';
 import { useAuth } from '../../auth';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
@@ -6,7 +7,13 @@ import { formatAppointmentDateTime } from '../../appointments/utils/format-appoi
 import { formatPetDate } from '../../pets/utils/format-pet-date';
 import { formatReminderDateTime } from '../../reminders/utils/format-reminder-datetime';
 import { useDashboardHealthData } from '../hooks/useDashboardHealthData';
-import type { DashboardUpcomingItem } from '../types';
+import { normalizeAppointmentTypeValue } from '../../appointments/constants/appointment-types';
+import { translatePetSpecies } from '../../pets/utils/pet-field-display';
+import { useEnumLabels } from '../../../i18n/useEnumLabels';
+import type {
+  DashboardAttentionItem,
+  DashboardUpcomingItem,
+} from '../types';
 import { formatPetAge } from '../utils/format-pet-age';
 import './dashboard-page.css';
 
@@ -20,20 +27,54 @@ function formatUpcomingWhen(item: DashboardUpcomingItem): string {
   return formatPetDate(item.at);
 }
 
-function upcomingKindLabel(kind: DashboardUpcomingItem['kind']): string {
-  switch (kind) {
+function upcomingItemTitle(
+  item: DashboardUpcomingItem,
+  t: ReturnType<typeof useTranslation>['t'],
+  appointmentTypeLabel: (type: string) => string,
+): string {
+  switch (item.kind) {
     case 'appointment':
-      return 'Appointment';
+      return appointmentTypeLabel(
+        normalizeAppointmentTypeValue(item.appointmentType ?? item.title),
+      );
     case 'reminder':
-      return 'Reminder';
+      return item.title;
     case 'vaccination':
-      return 'Vaccination';
+      return t('dashboard.upcomingVaccinationDue', {
+        name: item.vaccineName ?? item.title,
+      });
     case 'medication':
-      return 'Medication';
+      return t('dashboard.upcomingMedicationEnds', {
+        name: item.medicationName ?? item.title,
+      });
+  }
+}
+
+function attentionItemLabel(
+  item: DashboardAttentionItem,
+  t: ReturnType<typeof useTranslation>['t'],
+): string {
+  switch (item.attentionKind) {
+    case 'reminder-overdue':
+      return t('dashboard.attentionReminderOverdue', {
+        title: item.reminderTitle ?? item.label,
+      });
+    case 'vaccination-overdue':
+      return t('dashboard.attentionVaccinationOverdue', {
+        name: item.vaccineName ?? item.label,
+      });
+    case 'medication-ended-active':
+      return t('dashboard.attentionMedicationEndedActive', {
+        name: item.medicationName ?? item.label,
+      });
+    default:
+      return item.label;
   }
 }
 
 export function DashboardPage() {
+  const { t } = useTranslation();
+  const { appointmentType } = useEnumLabels();
   const { user } = useAuth();
   const {
     pets,
@@ -48,28 +89,43 @@ export function DashboardPage() {
     petSummaries,
   } = useDashboardHealthData();
 
+  const upcomingKindLabel = (kind: DashboardUpcomingItem['kind']): string => {
+    switch (kind) {
+      case 'appointment':
+        return t('dashboard.kindAppointment');
+      case 'reminder':
+        return t('dashboard.kindReminder');
+      case 'vaccination':
+        return t('dashboard.kindVaccination');
+      case 'medication':
+        return t('dashboard.kindMedication');
+    }
+  };
+
   if (!user) {
     return null;
   }
 
   const isLoadingOverview = petsLoading || (pets.length > 0 && healthLoading);
   const petCountLabel =
-    stats.petCount === 1 ? '1 pet in your care' : `${stats.petCount} pets in your care`;
+    stats.petCount === 1
+      ? t('dashboard.petCountOne')
+      : t('dashboard.petCountMany', { count: stats.petCount });
 
   return (
     <div className="dashboard-page ph-page">
       <header className="dashboard-page__header">
         <div>
-          <p className="dashboard-page__eyebrow">Pet health overview</p>
+          <p className="dashboard-page__eyebrow">{t('dashboard.eyebrow')}</p>
           <h1 id="dashboard-title" className="dashboard-page__title">
-            Hello, {user.firstName}
+            {t('dashboard.hello', { name: user.firstName })}
           </h1>
           <p className="dashboard-page__subtitle">
             {petsLoading
-              ? 'Loading your pets…'
+              ? t('dashboard.loadingPets')
               : pets.length === 0
-                ? 'Add a pet to start tracking vaccines, visits and daily care.'
-                : `Here is what needs your attention and what is coming up for ${petCountLabel}.`}
+                ? t('dashboard.emptySubtitle')
+                : t('dashboard.overviewSubtitle', { petCountLabel })}
           </p>
         </div>
       </header>
@@ -82,8 +138,7 @@ export function DashboardPage() {
 
       {partialHealthErrors > 0 && !healthError ? (
         <p className="dashboard-page__banner dashboard-page__banner--warn" role="status">
-          Some health details could not be loaded for every pet. Summaries may be
-          incomplete.
+          {t('dashboard.partialHealthWarning')}
         </p>
       ) : null}
 
@@ -95,13 +150,10 @@ export function DashboardPage() {
 
       {!petsLoading && !petsError && pets.length === 0 ? (
         <section className="dashboard-page__empty" aria-labelledby="dashboard-empty-title">
-          <h2 id="dashboard-empty-title">Welcome to PetHealth</h2>
-          <p>
-            Create a pet profile to view clinic health information, appointments
-            and reminders in one place.
-          </p>
+          <h2 id="dashboard-empty-title">{t('dashboard.noPets')}</h2>
+          <p>{t('dashboard.noPetsCta')}</p>
           <Link className="dashboard-page__cta" to="/pets">
-            Add your first pet
+            {t('dashboard.addPet')}
           </Link>
         </section>
       ) : null}
@@ -113,7 +165,7 @@ export function DashboardPage() {
             aria-labelledby="dashboard-stats-title"
           >
             <h2 id="dashboard-stats-title" className="dashboard-page__section-title">
-              At a glance
+              {t('dashboard.eyebrow')}
             </h2>
             {isLoadingOverview ? (
               <div className="dashboard-page__stats-grid dashboard-page__skeleton-grid">
@@ -128,23 +180,23 @@ export function DashboardPage() {
             ) : (
               <div className="dashboard-page__stats-grid">
                 <Link className="dashboard-page__stat-card" to="/pets">
-                  <span className="dashboard-page__stat-label">My pets</span>
+                  <span className="dashboard-page__stat-label">{t('dashboard.statsPets')}</span>
                   <span className="dashboard-page__stat-value">{stats.petCount}</span>
                 </Link>
                 <Link className="dashboard-page__stat-card" to="/pets">
-                  <span className="dashboard-page__stat-label">Upcoming appointments</span>
+                  <span className="dashboard-page__stat-label">{t('dashboard.statsUpcoming')}</span>
                   <span className="dashboard-page__stat-value">
                     {stats.upcomingAppointments}
                   </span>
                 </Link>
                 <Link className="dashboard-page__stat-card" to="/pets">
-                  <span className="dashboard-page__stat-label">Pending reminders</span>
+                  <span className="dashboard-page__stat-label">{t('reminders.title')}</span>
                   <span className="dashboard-page__stat-value">
                     {stats.pendingReminders}
                   </span>
                 </Link>
                 <Link className="dashboard-page__stat-card" to="/pets">
-                  <span className="dashboard-page__stat-label">Active medications</span>
+                  <span className="dashboard-page__stat-label">{t('health.medications')}</span>
                   <span className="dashboard-page__stat-value">
                     {stats.activeMedications}
                   </span>
@@ -158,13 +210,13 @@ export function DashboardPage() {
             aria-labelledby="dashboard-attention-title"
           >
             <h2 id="dashboard-attention-title" className="dashboard-page__section-title">
-              Needs attention
+              {t('dashboard.sectionAttention')}
             </h2>
             {isLoadingOverview ? (
               <div className="dashboard-page__skeleton dashboard-page__skeleton--block" />
             ) : attentionItems.length === 0 ? (
               <p className="dashboard-page__calm-empty" role="status">
-                Nothing urgent right now — you are up to date on tracked items.
+                {t('dashboard.noAttention')}
               </p>
             ) : (
               <ul className="dashboard-page__attention-list">
@@ -172,7 +224,9 @@ export function DashboardPage() {
                   <li key={item.id}>
                     <Link className="dashboard-page__attention-item" to={item.href}>
                       <span className="dashboard-page__attention-pet">{item.petName}</span>
-                      <span className="dashboard-page__attention-label">{item.label}</span>
+                      <span className="dashboard-page__attention-label">
+                        {attentionItemLabel(item, t)}
+                      </span>
                     </Link>
                   </li>
                 ))}
@@ -185,14 +239,13 @@ export function DashboardPage() {
             aria-labelledby="dashboard-upcoming-title"
           >
             <h2 id="dashboard-upcoming-title" className="dashboard-page__section-title">
-              Upcoming
+              {t('dashboard.sectionUpcoming')}
             </h2>
             {isLoadingOverview ? (
               <div className="dashboard-page__skeleton dashboard-page__skeleton--block" />
             ) : upcomingItems.length === 0 ? (
               <p className="dashboard-page__calm-empty" role="status">
-                No scheduled items in the next stretch. Add appointments or reminders
-                from a pet profile when you are ready.
+                {t('dashboard.noUpcoming')}
               </p>
             ) : (
               <ul className="dashboard-page__upcoming-list">
@@ -204,7 +257,7 @@ export function DashboardPage() {
                           {upcomingKindLabel(item.kind)}
                         </span>
                         <span className="dashboard-page__upcoming-title">
-                          {item.title}
+                          {upcomingItemTitle(item, t, appointmentType)}
                         </span>
                         <span className="dashboard-page__upcoming-pet">
                           {item.petName}
@@ -229,10 +282,10 @@ export function DashboardPage() {
           >
             <div className="dashboard-page__pets-header">
               <h2 id="dashboard-pets-title" className="dashboard-page__section-title">
-                Your pets
+                {t('dashboard.sectionYourPets')}
               </h2>
               <Link className="dashboard-page__text-link" to="/pets">
-                Manage pets
+                {t('dashboard.viewAllPets')}
               </Link>
             </div>
 
@@ -253,29 +306,35 @@ export function DashboardPage() {
                   const summaryParts: string[] = [];
                   if (summary.upcomingAppointments > 0) {
                     summaryParts.push(
-                      `${summary.upcomingAppointments} upcoming visit${summary.upcomingAppointments === 1 ? '' : 's'}`,
+                      summary.upcomingAppointments === 1
+                        ? t('appointments.upcomingCountOne')
+                        : t('appointments.upcomingCountMany', {
+                            count: summary.upcomingAppointments,
+                          }),
                     );
                   }
                   if (summary.pendingReminders > 0) {
                     summaryParts.push(
-                      `${summary.pendingReminders} pending reminder${summary.pendingReminders === 1 ? '' : 's'}`,
+                      summary.pendingReminders === 1
+                        ? t('reminders.countOne')
+                        : t('reminders.countMany', { count: summary.pendingReminders }),
                     );
                   }
                   if (summary.activeMedications > 0) {
                     summaryParts.push(
-                      `${summary.activeMedications} active medication${summary.activeMedications === 1 ? '' : 's'}`,
+                      `${summary.activeMedications} ${t('health.medications').toLowerCase()}`,
                     );
                   }
                   if (summary.overdueVaccinations > 0) {
                     summaryParts.push(
-                      `${summary.overdueVaccinations} overdue vaccination${summary.overdueVaccinations === 1 ? '' : 's'}`,
+                      `${summary.overdueVaccinations} ${t('enums.vaccinationDue.overdue').toLowerCase()}`,
                     );
                   }
 
                   const healthSummary =
                     summaryParts.length > 0
                       ? summaryParts.join(' · ')
-                      : 'No active items tracked yet';
+                      : t('dashboard.noAttention');
 
                   return (
                     <li key={summary.pet.id}>
@@ -294,7 +353,7 @@ export function DashboardPage() {
                         <div className="dashboard-page__pet-body">
                           <h3 className="dashboard-page__pet-name">{summary.pet.name}</h3>
                           <p className="dashboard-page__pet-meta">
-                            {summary.pet.species}
+                            {translatePetSpecies(summary.pet.species, t)}
                             {age ? ` · ${age}` : ''}
                           </p>
                           <p className="dashboard-page__pet-summary">{healthSummary}</p>

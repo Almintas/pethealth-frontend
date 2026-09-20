@@ -1,3 +1,5 @@
+import { i18n } from '../../../i18n';
+
 export function formatFullName(parts: {
   firstName: string;
   lastName: string;
@@ -12,19 +14,19 @@ export function parseFullName(fullName: string): {
   const trimmed = fullName.trim().replace(/\s+/g, ' ');
 
   if (trimmed.length < 2) {
-    throw new Error('Full name must be at least 2 characters.');
+    throw new Error(i18n.t('validation.fullNameMinLength'));
   }
 
   const segments = trimmed.split(' ');
   if (segments.length < 2) {
-    throw new Error('Enter your first and last name.');
+    throw new Error(i18n.t('validation.fullNameFirstLast'));
   }
 
   const firstName = segments[0];
   const lastName = segments.slice(1).join(' ');
 
   if (firstName.length < 1 || lastName.length < 1) {
-    throw new Error('Enter your first and last name.');
+    throw new Error(i18n.t('validation.fullNameFirstLast'));
   }
 
   return { firstName, lastName };

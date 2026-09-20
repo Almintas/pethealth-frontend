@@ -1,6 +1,7 @@
 import type { ApolloClient } from '@apollo/client';
 import { useApolloClient, useQuery } from '@apollo/client/react';
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as appointmentsService from '../../appointments/appointments.service';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import * as medicationsService from '../../medications/medications.service';
@@ -64,6 +65,7 @@ async function loadPetHealthBundle(
 }
 
 export function useDashboardHealthData() {
+  const { t } = useTranslation();
   const client = useApolloClient();
   const {
     data: petsData,
@@ -114,9 +116,7 @@ export function useDashboardHealthData() {
       setHealthState({
         bundles,
         healthLoading: false,
-        healthError: allFailed
-          ? 'We could not load health details right now. Try again in a moment.'
-          : null,
+        healthError: allFailed ? t('dashboard.healthLoadFailed') : null,
         partialHealthErrors,
       });
     };
@@ -126,7 +126,7 @@ export function useDashboardHealthData() {
     return () => {
       cancelled = true;
     };
-  }, [client, petList, petsLoading]);
+  }, [client, petList, petsLoading, t]);
 
   const insights = useMemo(() => {
     const { bundles } = healthState;

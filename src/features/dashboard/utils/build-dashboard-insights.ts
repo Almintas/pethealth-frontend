@@ -68,8 +68,10 @@ export function buildAttentionItems(
           id: `reminder-overdue-${reminder.id}`,
           petId: pet.id,
           petName: pet.name,
-          label: `Overdue reminder: ${reminder.title}`,
+          label: reminder.title,
           href,
+          attentionKind: 'reminder-overdue',
+          reminderTitle: reminder.title,
         });
       }
     }
@@ -80,8 +82,10 @@ export function buildAttentionItems(
           id: `vaccination-overdue-${vaccination.id}`,
           petId: pet.id,
           petName: pet.name,
-          label: `Vaccination overdue: ${vaccination.vaccineName}`,
+          label: vaccination.vaccineName,
           href,
+          attentionKind: 'vaccination-overdue',
+          vaccineName: vaccination.vaccineName,
         });
       }
     }
@@ -96,8 +100,10 @@ export function buildAttentionItems(
           id: `medication-ended-active-${medication.id}`,
           petId: pet.id,
           petName: pet.name,
-          label: `Medication ended but still active: ${medication.name}`,
+          label: medication.name,
           href,
+          attentionKind: 'medication-ended-active',
+          medicationName: medication.name,
         });
       }
     }
@@ -126,6 +132,7 @@ export function buildUpcomingItems(
         petName: pet.name,
         kind: 'appointment',
         title: appointment.type,
+        appointmentType: appointment.type,
         at: appointment.scheduledAt,
         href,
       });
@@ -163,7 +170,8 @@ export function buildUpcomingItems(
         petId: pet.id,
         petName: pet.name,
         kind: 'vaccination',
-        title: `${vaccination.vaccineName} due`,
+        title: vaccination.vaccineName,
+        vaccineName: vaccination.vaccineName,
         at: vaccination.nextDueAt,
         href,
       });
@@ -186,7 +194,8 @@ export function buildUpcomingItems(
         petId: pet.id,
         petName: pet.name,
         kind: 'medication',
-        title: `${medication.name} course ends`,
+        title: medication.name,
+        medicationName: medication.name,
         at: medication.endDate,
         href,
       });

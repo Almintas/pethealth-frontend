@@ -6,6 +6,7 @@ import {
   useState,
   type KeyboardEvent,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import './searchable-combobox.css';
 
 type SearchableComboboxProps = {
@@ -20,6 +21,10 @@ type SearchableComboboxProps = {
   error?: string;
   allowCustom?: boolean;
   hint?: string;
+  /** Maps stored option values to localized labels (value stays canonical). */
+  optionLabel?: (value: string) => string;
+  /** When set, blur resolves typed text to a canonical option value. */
+  resolveCanonicalValue?: (input: string) => string;
 };
 
 export function SearchableCombobox({
@@ -28,34 +33,63 @@ export function SearchableCombobox({
   value,
   onChange,
   options,
-  placeholder = 'Type or select…',
+  placeholder,
   disabled = false,
   required = false,
   error,
   allowCustom = true,
   hint,
+  optionLabel,
+  resolveCanonicalValue,
 }: SearchableComboboxProps) {
+  const { t, i18n } = useTranslation();
+  const resolvedPlaceholder = placeholder ?? t('common.typeOrSelect');
   const listId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [draft, setDraft] = useState<string | null>(null);
+  const [isFocused, setIsFocused] = useState(false);
+
+  const labelFor = (option: string) => optionLabel?.(option) ?? option;
+
+  const displayValue = useMemo(() => {
+    if (isFocused && draft !== null) {
+      return draft;
+    }
+    if (value && options.some((option) => option === value)) {
+      return labelFor(value);
+    }
+    return value;
+  }, [draft, isFocused, options, optionLabel, value, i18n.language]);
 
   const filteredOptions = useMemo(() => {
-    const query = value.trim().toLowerCase();
+    const query = (isFocused && draft !== null ? draft : displayValue)
+      .trim()
+      .toLowerCase();
     const base = query
-      ? options.filter((option) => option.toLowerCase().includes(query))
+      ? options.filter((option) => {
+          const localized = labelFor(option).toLowerCase();
+          return (
+            option.toLowerCase().includes(query) || localized.includes(query)
+          );
+        })
       : [...options];
 
     if (
       allowCustom &&
       query &&
-      !options.some((option) => option.toLowerCase() === query)
+      !options.some(
+        (option) =>
+          option.toLowerCase() === query ||
+          labelFor(option).toLowerCase() === query,
+      )
     ) {
       return base;
     }
 
     return base;
-  }, [allowCustom, options, value]);
+  }, [allowCustom, displayValue, draft, isFocused, options, optionLabel, i18n.language]);
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {
@@ -69,8 +103,25 @@ export function SearchableCombobox({
     return () => document.removeEventListener('mousedown', handlePointerDown);
   }, []);
 
+  const commitValue = (next: string) => {
+    const resolved = resolveCanonicalValue?.(next) ?? next;
+    onChange(resolved);
+    setDraft(null);
+  };
+
   const selectOption = (option: string) => {
-    onChange(option);
+    commitValue(option);
+    setIsOpen(false);
+    setActiveIndex(-1);
+    setIsFocused(false);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    if (draft !== null) {
+      commitValue(draft);
+    }
+    setDraft(null);
     setIsOpen(false);
     setActiveIndex(-1);
   };
@@ -79,6 +130,7 @@ export function SearchableCombobox({
     if (event.key === 'Escape') {
       setIsOpen(false);
       setActiveIndex(-1);
+      setDraft(null);
       return;
     }
 
@@ -111,9 +163,11 @@ export function SearchableCombobox({
 
   const showCustomHint =
     allowCustom &&
-    value.trim().length > 0 &&
+    (isFocused ? draft ?? displayValue : displayValue).trim().length > 0 &&
     !options.some(
-      (option) => option.toLowerCase() === value.trim().toLowerCase(),
+      (option) =>
+        option.toLowerCase() === (draft ?? value).trim().toLowerCase() ||
+        labelFor(option).toLowerCase() === (draft ?? displayValue).trim().toLowerCase(),
     );
 
   return (
@@ -143,22 +197,29 @@ export function SearchableCombobox({
           aria-expanded={isOpen}
           aria-controls={listId}
           aria-invalid={Boolean(error)}
-          value={value}
-          placeholder={placeholder}
+          value={displayValue}
+          placeholder={resolvedPlaceholder}
           disabled={disabled}
           required={required}
           onChange={(event) => {
-            onChange(event.target.value);
+            const next = event.target.value;
+            setDraft(next);
+            onChange(next);
             setIsOpen(true);
             setActiveIndex(-1);
           }}
-          onFocus={() => setIsOpen(true)}
+          onFocus={() => {
+            setIsFocused(true);
+            setDraft(displayValue);
+            setIsOpen(true);
+          }}
+          onBlur={handleBlur}
           onKeyDown={handleKeyDown}
         />
         <button
           type="button"
           className="searchable-combobox__toggle"
-          aria-label={`Show ${label} options`}
+          aria-label={t('common.showOptionsFor', { label })}
           disabled={disabled}
           onClick={() => setIsOpen((open) => !open)}
         >
@@ -186,7 +247,7 @@ export function SearchableCombobox({
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => selectOption(option)}
               >
-                {option}
+                {labelFor(option)}
               </button>
             </li>
           ))}
@@ -195,7 +256,9 @@ export function SearchableCombobox({
 
       {showCustomHint && isOpen ? (
         <p className="searchable-combobox__custom-hint" role="status">
-          Using custom value: {value.trim()}
+          {t('common.usingCustomValue', {
+            value: (draft ?? displayValue).trim(),
+          })}
         </p>
       ) : null}
 

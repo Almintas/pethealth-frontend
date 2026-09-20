@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { formatPetDate } from '../../pets/utils/format-pet-date';
 import type { Medication } from '../types';
 import {
@@ -26,6 +27,7 @@ export function MedicationCard({
   isDeleting,
   onDelete,
 }: MedicationCardProps) {
+  const { t } = useTranslation();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const treatmentStatus = getMedicationTreatmentStatus(medication);
@@ -93,19 +95,21 @@ export function MedicationCard({
 
         <div className="medications-section__date-row">
           <div className="medications-section__date-block">
-            <span className="medications-section__date-label">Started</span>
+            <span className="medications-section__date-label">{t('health.started')}</span>
             <time dateTime={medication.startDate}>
               {formatPetDate(medication.startDate)}
             </time>
           </div>
           <div className="medications-section__date-block">
-            <span className="medications-section__date-label">Ends</span>
+            <span className="medications-section__date-label">{t('health.ends')}</span>
             {medication.endDate ? (
               <time dateTime={medication.endDate}>
                 {formatPetDate(medication.endDate)}
               </time>
             ) : (
-              <span className="medications-section__ongoing-label">Ongoing</span>
+              <span className="medications-section__ongoing-label">
+                {t('health.ongoingLabel')}
+              </span>
             )}
           </div>
         </div>
@@ -113,13 +117,13 @@ export function MedicationCard({
         <dl className="medications-section__record-facts">
           {medication.veterinarianName ? (
             <div>
-              <dt>Veterinarian</dt>
+              <dt>{t('appointments.veterinarian')}</dt>
               <dd>{medication.veterinarianName}</dd>
             </div>
           ) : null}
           {medication.clinicName ? (
             <div>
-              <dt>Clinic</dt>
+              <dt>{t('appointments.clinic')}</dt>
               <dd>{medication.clinicName}</dd>
             </div>
           ) : null}
@@ -128,13 +132,13 @@ export function MedicationCard({
         {notes ? (
           notesAreLong ? (
             <details className="medications-section__record-details">
-              <summary>Notes</summary>
+              <summary>{t('pets.notes')}</summary>
               <p>{notes}</p>
             </details>
           ) : (
             <p className="medications-section__record-snippet">
               <span className="medications-section__record-snippet-label">
-                Notes:
+                {t('pets.notes')}:
               </span>{' '}
               {notes}
             </p>
@@ -145,14 +149,14 @@ export function MedicationCard({
         <div className="medications-section__record-actions">
           {confirmDelete ? (
             <div className="medications-section__delete-confirm" role="status">
-              <span>Delete this medication?</span>
+              <span>{t('health.deleteMedicationConfirm')}</span>
               <button
                 type="button"
                 className="medications-section__delete-confirm-yes"
                 onClick={handleDeleteClick}
                 disabled={isDeleting}
               >
-                {isDeleting ? 'Deleting…' : 'Yes, delete'}
+                {isDeleting ? t('common.saving') : `${t('common.yes')}, ${t('common.delete').toLowerCase()}`}
               </button>
               <button
                 type="button"
@@ -160,7 +164,7 @@ export function MedicationCard({
                 onClick={() => setConfirmDelete(false)}
                 disabled={isDeleting}
               >
-                Cancel
+                {t('common.cancel')}
               </button>
             </div>
           ) : (
@@ -170,7 +174,7 @@ export function MedicationCard({
               onClick={handleDeleteClick}
               disabled={isDeleting}
             >
-              Delete medication
+              {t('health.deleteMedication')}
             </button>
           )}
         </div>

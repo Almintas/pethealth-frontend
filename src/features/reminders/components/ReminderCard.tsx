@@ -1,15 +1,15 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useEnumLabels } from '../../../i18n/useEnumLabels';
 import { ReminderStatus, type Reminder } from '../types';
 import {
   formatReminderDate,
   formatReminderTime,
 } from '../utils/format-reminder-datetime';
 import {
-  formatReminderSource,
   getReminderDueUrgency,
   getReminderDueUrgencyLabel,
-  getReminderStatusLabel,
-  getReminderTypeLabel,
+  formatReminderSource,
 } from '../utils/reminder-list-utils';
 
 const LONG_MESSAGE_THRESHOLD = 140;
@@ -52,6 +52,8 @@ export function ReminderCard({
   onDismiss,
   onDelete,
 }: ReminderCardProps) {
+  const { t } = useTranslation();
+  const { reminderStatus, reminderType } = useEnumLabels();
   const [confirmDelete, setConfirmDelete] = useState(false);
 
   const message = reminder.message?.trim() ?? '';
@@ -117,13 +119,13 @@ export function ReminderCard({
               `reminders-section__status-badge--${statusModifier(reminder.status)}`,
             ].join(' ')}
           >
-            {getReminderStatusLabel(reminder.status)}
+            {reminderStatus(reminder.status)}
           </span>
         </div>
 
         <div className="reminders-section__meta-row">
           <span className="reminders-section__type-chip">
-            {getReminderTypeLabel(reminder.type)}
+            {reminderType(reminder.type)}
           </span>
           {sourceLabel ? (
             <span className="reminders-section__source-chip">{sourceLabel}</span>
@@ -155,20 +157,20 @@ export function ReminderCard({
               </time>
             </div>
           ) : (
-            <span className="reminders-section__due-none">No due date set</span>
+            <span className="reminders-section__due-none">{t('health.noDueDateSet')}</span>
           )}
         </div>
 
         {message ? (
           messageIsLong ? (
             <details className="reminders-section__record-details">
-              <summary>Notes</summary>
+              <summary>{t('appointments.notes')}</summary>
               <p>{message}</p>
             </details>
           ) : (
             <p className="reminders-section__record-snippet">
               <span className="reminders-section__record-snippet-label">
-                Notes:
+                {t('appointments.notes')}:
               </span>{' '}
               {message}
             </p>
@@ -183,7 +185,7 @@ export function ReminderCard({
               onClick={onEdit}
               disabled={isActionRunning}
             >
-              Edit
+              {t('common.edit')}
             </button>
             <button
               type="button"
@@ -191,7 +193,7 @@ export function ReminderCard({
               onClick={onComplete}
               disabled={isActionRunning}
             >
-              {isCompleting ? 'Completing…' : 'Complete'}
+              {isCompleting ? t('common.saving') : t('reminders.complete')}
             </button>
             <button
               type="button"
@@ -199,18 +201,18 @@ export function ReminderCard({
               onClick={onDismiss}
               disabled={isActionRunning}
             >
-              {isDismissing ? 'Dismissing…' : 'Dismiss'}
+              {isDismissing ? t('common.saving') : t('reminders.dismiss')}
             </button>
             {confirmDelete ? (
               <div className="reminders-section__delete-confirm" role="status">
-                <span>Delete?</span>
+                <span>{t('reminders.deleteConfirm')}</span>
                 <button
                   type="button"
                   className="reminders-section__delete-confirm-yes"
                   onClick={handleDeleteClick}
                   disabled={isActionRunning}
                 >
-                  {isDeleting ? 'Deleting…' : 'Yes'}
+                  {isDeleting ? t('common.saving') : t('common.yes')}
                 </button>
                 <button
                   type="button"
@@ -218,7 +220,7 @@ export function ReminderCard({
                   onClick={() => setConfirmDelete(false)}
                   disabled={isActionRunning}
                 >
-                  No
+                  {t('common.no')}
                 </button>
               </div>
             ) : (
@@ -228,7 +230,7 @@ export function ReminderCard({
                 onClick={handleDeleteClick}
                 disabled={isActionRunning}
               >
-                Delete
+                {t('common.delete')}
               </button>
             )}
           </div>
@@ -240,18 +242,18 @@ export function ReminderCard({
               onClick={onEdit}
               disabled={isActionRunning}
             >
-              Edit
+              {t('common.edit')}
             </button>
             {confirmDelete ? (
               <div className="reminders-section__delete-confirm" role="status">
-                <span>Delete this reminder?</span>
+                <span>{t('reminders.deleteConfirm')}</span>
                 <button
                   type="button"
                   className="reminders-section__delete-confirm-yes"
                   onClick={handleDeleteClick}
                   disabled={isActionRunning}
                 >
-                  {isDeleting ? 'Deleting…' : 'Yes, delete'}
+                  {isDeleting ? t('common.saving') : `${t('common.yes')}, ${t('common.delete').toLowerCase()}`}
                 </button>
                 <button
                   type="button"
@@ -259,7 +261,7 @@ export function ReminderCard({
                   onClick={() => setConfirmDelete(false)}
                   disabled={isActionRunning}
                 >
-                  Cancel
+                  {t('common.cancel')}
                 </button>
               </div>
             ) : (
@@ -269,7 +271,7 @@ export function ReminderCard({
                 onClick={handleDeleteClick}
                 disabled={isActionRunning}
               >
-                Delete reminder
+                {t('common.delete')}
               </button>
             )}
           </div>

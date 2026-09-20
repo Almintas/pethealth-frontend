@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { ReactNode } from 'react';
 import './reminder-dialog.css';
 
@@ -15,6 +16,7 @@ export function ReminderDialog({
   onClose,
   children,
 }: ReminderDialogProps) {
+  const { t } = useTranslation();
   const titleId = useId();
   const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -51,7 +53,7 @@ export function ReminderDialog({
       <button
         type="button"
         className="reminder-dialog__backdrop"
-        aria-label="Close dialog"
+        aria-label={t('common.close')}
         onClick={onClose}
       />
       <div
@@ -69,7 +71,7 @@ export function ReminderDialog({
             type="button"
             className="reminder-dialog__close"
             onClick={onClose}
-            aria-label="Close"
+            aria-label={t('common.close')}
           >
             ×
           </button>
