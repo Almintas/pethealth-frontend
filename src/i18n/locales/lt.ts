@@ -417,6 +417,7 @@ const lt = {
     serverUnreachable: 'Nepavyko pasiekti serverio. Įsitikinkite, kad API veikia, ir bandykite dar kartą.',
     notFound: 'Nepavyko rasti prašomo įrašo.',
     invalidCredentials: 'Neteisingas el. paštas arba slaptažodis.',
+    currentPasswordIncorrect: 'Dabartinis slaptažodis neteisingas.',
     petPhotoUploadUnavailable:
       'Augintinio nuotraukų įkėlimas šiuo metu nepasiekiamas. Patikrinkite, ar serveryje sukonfigūruotas Cloudinary, ir bandykite dar kartą.',
     petPhotoInvalid:

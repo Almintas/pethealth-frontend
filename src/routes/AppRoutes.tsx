@@ -1,15 +1,51 @@
+import { lazy, Suspense, type ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navigate, Route, Routes } from 'react-router';
+import { LoadingState } from '../components/feedback';
 import { LoginPage } from '../features/auth/pages/LoginPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
 import { MainLayout } from '../layouts/MainLayout';
-import { PetsPage } from '../features/pets';
-import { PetDetailsPage } from '../features/pets/pages/PetDetailsPage';
-import { ProfilePage, SettingsPage } from '../features/account';
-import { HomePage } from '../pages/HomePage';
 import { ProtectedRoute } from './ProtectedRoute';
 import { PublicRoute } from './PublicRoute';
 import { RootRedirect } from './RootRedirect';
+
+/*
+ * Authenticated pages are code-split so the login/register screens do not
+ * download the whole application up front.
+ */
+const HomePage = lazy(() =>
+  import('../pages/HomePage').then((module) => ({ default: module.HomePage })),
+);
+const PetsPage = lazy(() =>
+  import('../features/pets/pages/PetsPage').then((module) => ({
+    default: module.PetsPage,
+  })),
+);
+const PetDetailsPage = lazy(() =>
+  import('../features/pets/pages/PetDetailsPage').then((module) => ({
+    default: module.PetDetailsPage,
+  })),
+);
+const ProfilePage = lazy(() =>
+  import('../features/account/pages/ProfilePage').then((module) => ({
+    default: module.ProfilePage,
+  })),
+);
+const SettingsPage = lazy(() =>
+  import('../features/account/pages/SettingsPage').then((module) => ({
+    default: module.SettingsPage,
+  })),
+);
+
+function LazyPage({ children }: { children: ReactNode }) {
+  const { t } = useTranslation();
+  return (
+    <Suspense fallback={<LoadingState message={t('common.loading')} skeleton />}>
+      {children}
+    </Suspense>
+  );
+}
 
 export function AppRoutes() {
   return (
@@ -37,11 +73,46 @@ export function AppRoutes() {
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthenticatedLayout />}>
-          <Route path="/dashboard" element={<HomePage />} />
-          <Route path="/pets" element={<PetsPage />} />
-          <Route path="/pets/:id" element={<PetDetailsPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
+          <Route
+            path="/dashboard"
+            element={
+              <LazyPage>
+                <HomePage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/pets"
+            element={
+              <LazyPage>
+                <PetsPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/pets/:id"
+            element={
+              <LazyPage>
+                <PetDetailsPage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <LazyPage>
+                <ProfilePage />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <LazyPage>
+                <SettingsPage />
+              </LazyPage>
+            }
+          />
         </Route>
       </Route>
 

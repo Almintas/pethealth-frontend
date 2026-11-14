@@ -45,7 +45,7 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
     fetchPolicy: 'network-only',
   });
 
-  const appointments = data?.appointments ?? [];
+  const appointments = useMemo(() => data?.appointments ?? [], [data]);
 
   const { upcoming, history } = useMemo(
     () => partitionAppointments(appointments),

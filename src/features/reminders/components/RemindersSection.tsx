@@ -54,7 +54,7 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
     fetchPolicy: 'network-only',
   });
 
-  const reminders = data?.reminders ?? [];
+  const reminders = useMemo(() => data?.reminders ?? [], [data]);
 
   const { pending, history } = useMemo(
     () => partitionReminders(reminders),

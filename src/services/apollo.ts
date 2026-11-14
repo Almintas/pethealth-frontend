@@ -1,6 +1,11 @@
 import { ApolloClient, ApolloLink, HttpLink, InMemoryCache } from '@apollo/client';
+import { CombinedGraphQLErrors } from '@apollo/client/errors';
 import { SetContextLink } from '@apollo/client/link/context';
-import { getAccessToken } from '../features/auth/token-storage';
+import { ErrorLink } from '@apollo/client/link/error';
+import {
+  getAccessToken,
+  notifySessionExpired,
+} from '../features/auth/token-storage';
 
 function getGraphqlUrl(): string {
   const url = import.meta.env.VITE_GRAPHQL_URL;
@@ -24,11 +29,30 @@ const authLink = new SetContextLink((prevContext) => {
   };
 });
 
+/*
+ * The JWT guard rejects expired or invalid tokens with a bare "Unauthorized"
+ * error. Credential failures (wrong password) use other messages and are
+ * handled by the forms themselves, so they must not end the session.
+ */
+const sessionErrorLink = new ErrorLink(({ error }) => {
+  if (!CombinedGraphQLErrors.is(error)) {
+    return;
+  }
+  const tokenRejected = error.errors.some(
+    (graphQLError) =>
+      graphQLError.extensions?.code === 'UNAUTHENTICATED' &&
+      graphQLError.message.trim().toLowerCase() === 'unauthorized',
+  );
+  if (tokenRejected) {
+    notifySessionExpired();
+  }
+});
+
 const httpLink = new HttpLink({
   uri: getGraphqlUrl(),
 });
 
 export const apolloClient = new ApolloClient({
-  link: ApolloLink.from([authLink, httpLink]),
+  link: ApolloLink.from([sessionErrorLink, authLink, httpLink]),
   cache: new InMemoryCache(),
 });
