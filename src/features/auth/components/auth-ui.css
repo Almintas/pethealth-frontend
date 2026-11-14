@@ -24,6 +24,15 @@
   margin-bottom: var(--ph-space-4);
 }
 
+.auth-shell__eyebrow {
+  margin: 0 0 var(--ph-space-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ph-color-primary);
+}
+
 .auth-shell__brand-title {
   margin: 0;
   font-size: 1.75rem;
@@ -90,9 +99,23 @@
 }
 
 .auth-switch__button {
+  /* Also used on <button>: drop the browser's default button box. */
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
   color: var(--ph-color-primary);
   font-weight: 600;
   text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.auth-switch__button:focus-visible {
+  outline: none;
+  box-shadow: var(--ph-focus-ring);
 }
 
 .auth-switch__button:hover {
@@ -107,7 +130,8 @@
   .auth-shell__brand {
     border-right: none;
     border-bottom: 1px solid var(--ph-color-border);
-    padding: var(--ph-space-6) var(--ph-space-4);
+    /* Leave room for the language picker in the top-right corner. */
+    padding: calc(var(--ph-space-6) + 2.5rem) var(--ph-space-4) var(--ph-space-6);
   }
 
   .auth-shell__brand-inner {

@@ -79,9 +79,7 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
   };
 
   const recordCountLabel =
-    records.length === 1
-      ? t('health.recordCountOne')
-      : t('health.recordCountMany', { count: records.length });
+    t('health.recordCount', { count: records.length });
 
   return (
     <section
@@ -140,9 +138,6 @@ export function MedicalRecordsSection({ petId }: MedicalRecordsSectionProps) {
             .filter(Boolean)
             .join(' ')}
         >
-          {readOnly ? (
-            <span className="ph-clinic-badge">{t('health.managedByClinic')}</span>
-          ) : null}
           <h3 className="medical-records-section__empty-title">
             {emptyTitle}
           </h3>

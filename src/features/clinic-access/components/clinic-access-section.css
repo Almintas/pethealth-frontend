@@ -38,15 +38,19 @@
 
 .clinic-access-section__primary {
   flex-shrink: 0;
-  padding: 0.5rem 0.95rem;
-  font-size: 0.875rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   color: var(--ph-color-on-primary);
   background: var(--ph-color-primary);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .clinic-access-section__primary:hover:not(:disabled) {
@@ -168,14 +172,18 @@
 }
 
 .clinic-access-section__revoke {
-  padding: 0.4rem 0.85rem;
-  font-size: 0.8125rem;
+  padding: 0 var(--ph-btn-padding-x-sm);
+  min-height: var(--ph-btn-height-sm);
+  font-size: var(--ph-btn-font-size-sm);
   font-weight: 600;
   color: var(--ph-color-danger-text);
   background: transparent;
   border: 1px solid var(--ph-color-danger-text);
-  border-radius: 999px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .clinic-access-section__revoke:hover:not(:disabled) {

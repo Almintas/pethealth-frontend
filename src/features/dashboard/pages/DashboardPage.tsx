@@ -14,7 +14,7 @@ import type {
   DashboardAttentionItem,
   DashboardUpcomingItem,
 } from '../types';
-import { formatPetAge } from '../utils/format-pet-age';
+import { formatPetAge } from '../../../utils/format-pet-age';
 import './dashboard-page.css';
 
 function formatUpcomingWhen(item: DashboardUpcomingItem): string {
@@ -108,9 +108,7 @@ export function DashboardPage() {
 
   const isLoadingOverview = petsLoading || (pets.length > 0 && healthLoading);
   const petCountLabel =
-    stats.petCount === 1
-      ? t('dashboard.petCountOne')
-      : t('dashboard.petCountMany', { count: stats.petCount });
+    t('dashboard.petCount', { count: stats.petCount });
 
   return (
     <div className="dashboard-page ph-page">
@@ -306,23 +304,17 @@ export function DashboardPage() {
                   const summaryParts: string[] = [];
                   if (summary.upcomingAppointments > 0) {
                     summaryParts.push(
-                      summary.upcomingAppointments === 1
-                        ? t('appointments.upcomingCountOne')
-                        : t('appointments.upcomingCountMany', {
-                            count: summary.upcomingAppointments,
-                          }),
+                      t('appointments.upcomingCount', { count: summary.upcomingAppointments }),
                     );
                   }
                   if (summary.pendingReminders > 0) {
                     summaryParts.push(
-                      summary.pendingReminders === 1
-                        ? t('reminders.countOne')
-                        : t('reminders.countMany', { count: summary.pendingReminders }),
+                      t('reminders.count', { count: summary.pendingReminders }),
                     );
                   }
                   if (summary.activeMedications > 0) {
                     summaryParts.push(
-                      `${summary.activeMedications} ${t('health.medications').toLowerCase()}`,
+                      t('health.medicationCount', { count: summary.activeMedications }),
                     );
                   }
                   if (summary.overdueVaccinations > 0) {

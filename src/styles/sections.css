@@ -51,15 +51,19 @@
 .medications-section__add-button,
 .medical-records-section__add-button,
 .vaccinations-section__add-button {
-  padding: 0.5rem 0.875rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
   border: 1px solid var(--ph-color-border-strong);
-  border-radius: var(--ph-radius-md);
+  border-radius: var(--ph-btn-radius);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   color: var(--ph-color-primary);
   background: var(--ph-color-surface-elevated);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .appointments-section__add-button:hover:not(:disabled),
@@ -171,20 +175,24 @@
 }
 
 .reminders-section__action {
-  padding: 0.45rem 0.75rem;
-  border-radius: var(--ph-radius-sm);
+  padding: 0 var(--ph-btn-padding-x-sm);
+  min-height: var(--ph-btn-height-sm);
+  border-radius: var(--ph-btn-radius);
   border: 1px solid var(--ph-color-border-strong);
   font: inherit;
-  font-size: 0.8125rem;
+  font-size: var(--ph-btn-font-size-sm);
   font-weight: 600;
   cursor: pointer;
   background: var(--ph-color-surface-elevated);
   color: var(--ph-color-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .reminders-section__action--complete {
-  color: var(--ph-color-success);
-  border-color: rgba(52, 211, 153, 0.35);
+  color: var(--ph-color-success-text);
+  border-color: color-mix(in srgb, var(--ph-color-success) 35%, transparent);
 }
 
 .reminders-section__action--dismiss {

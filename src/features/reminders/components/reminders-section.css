@@ -69,15 +69,19 @@
 
 .reminders-section__add-button {
   flex-shrink: 0;
-  padding: 0.5rem 0.95rem;
-  font-size: 0.875rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   color: var(--ph-color-on-primary);
   background: var(--rem-accent);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .reminders-section__add-button:hover:not(:disabled) {
@@ -550,19 +554,23 @@
 }
 
 .reminders-section__action {
-  padding: 0.4rem 0.75rem;
-  font-size: 0.8125rem;
+  padding: 0 var(--ph-btn-padding-x-sm);
+  min-height: var(--ph-btn-height-sm);
+  font-size: var(--ph-btn-font-size-sm);
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
   border: 1px solid var(--rem-border);
   background: var(--rem-surface-elevated);
   color: var(--rem-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .reminders-section__action--complete {
-  color: var(--ph-color-on-primary);
-  background: var(--rem-success-text);
+  color: #ffffff;
+  background: var(--ph-color-success-strong);
   border-color: transparent;
 }
 
@@ -573,6 +581,11 @@
 
 .reminders-section__action:hover:not(:disabled) {
   filter: brightness(1.05);
+}
+
+.reminders-section__action--complete:hover:not(:disabled) {
+  filter: none;
+  background: var(--ph-color-success-strong-hover);
 }
 
 .reminders-section__action:focus-visible {
@@ -586,15 +599,19 @@
 }
 
 .reminders-section__delete {
-  padding: 0.35rem 0.65rem;
-  font-size: 0.75rem;
+  padding: 0 var(--ph-btn-padding-x-sm);
+  min-height: var(--ph-btn-height-sm);
+  font-size: var(--ph-btn-font-size-sm);
   font-weight: 500;
   color: var(--rem-muted);
   background: transparent;
   border: 1px solid var(--rem-border);
-  border-radius: 6px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
   margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 @media (max-width: 480px) {
@@ -602,12 +619,20 @@
     margin-left: 0;
     width: 100%;
     text-align: center;
-  }
+  min-height: var(--ph-btn-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
   .reminders-section__action {
     flex: 1 1 calc(50% - 0.45rem);
     min-width: 7rem;
-  }
+  min-height: var(--ph-btn-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 }
 
 .reminders-section__delete:hover:not(:disabled) {
@@ -633,20 +658,28 @@
 
 .reminders-section__delete-confirm-yes,
 .reminders-section__delete-confirm-no {
-  padding: 0.3rem 0.55rem;
-  font-size: 0.75rem;
+  padding: 0 var(--ph-btn-padding-x-sm);
+  min-height: var(--ph-btn-height-sm);
+  font-size: var(--ph-btn-font-size-sm);
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
   border: 1px solid var(--rem-border);
   background: var(--rem-surface-elevated);
   color: var(--rem-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .reminders-section__delete-confirm-yes {
   color: var(--ph-color-danger-text);
   border-color: rgba(248, 113, 113, 0.45);
   background: var(--rem-danger-soft);
+  min-height: var(--ph-btn-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .reminders-section__delete-confirm-yes:disabled,

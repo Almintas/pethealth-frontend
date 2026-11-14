@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
 import { EmptyState, ErrorAlert, LoadingState } from '../../../components/feedback';
 import { PetAvatar } from '../../../components/PetAvatar';
-import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
+import {
+  getUserFacingErrorMessage,
+  isNotFoundError,
+} from '../../auth/utils/get-auth-error-message';
 import { AppointmentsSection } from '../../appointments';
 import { ClinicAccessSection } from '../../clinic-access';
 import { RemindersSection } from '../../reminders';
@@ -84,11 +87,11 @@ export function PetDetailsPage() {
         }
       } catch (error) {
         if (!cancelled) {
-          const message = getUserFacingErrorMessage(error, 'load-pet');
-          if (message.toLowerCase().includes('not found')) {
+          // Decide on the raw API error: the user-facing message is translated.
+          if (isNotFoundError(error)) {
             setNotFound(true);
           } else {
-            setErrorMessage(message);
+            setErrorMessage(getUserFacingErrorMessage(error, 'load-pet'));
           }
         }
       } finally {
@@ -188,7 +191,9 @@ export function PetDetailsPage() {
   return (
     <section className="pet-details ph-page" aria-labelledby="pet-details-title">
       <div className="pet-details__toolbar">
-        <Link className="ph-link ph-link--muted" to="/pets">{t('pets.backToPets')}</Link>
+        <Link className="ph-link" to="/pets">
+          ← {t('pets.backToPets')}
+        </Link>
       </div>
 
       {loading ? (

@@ -109,14 +109,18 @@
 }
 
 .reminder-form__submit {
-  padding: 0.55rem 1.25rem;
-  font-size: 0.9375rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   color: var(--ph-color-on-primary);
   background: var(--rem-accent, var(--ph-color-primary));
   border: none;
-  border-radius: 8px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .reminder-form__submit:hover:not(:disabled) {
@@ -134,14 +138,18 @@
 }
 
 .reminder-form__cancel {
-  padding: 0.55rem 1rem;
-  font-size: 0.9375rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  font-size: var(--ph-btn-font-size);
   font-weight: 500;
   color: var(--rem-muted, var(--ph-color-text-secondary));
   background: transparent;
   border: 1px solid var(--rem-border, var(--ph-color-border));
-  border-radius: 8px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .reminder-form__cancel:hover:not(:disabled) {

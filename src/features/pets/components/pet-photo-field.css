@@ -63,17 +63,20 @@
 }
 
 .pet-photo-field__action {
-  min-height: var(--ph-control-height);
-  padding: 0 1rem;
-  border-radius: var(--ph-radius-md);
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  border-radius: var(--ph-btn-radius);
   border: 1px solid var(--ph-color-border);
   background: var(--ph-color-surface);
   color: var(--ph-color-text);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .pet-photo-field__action:focus-visible {
@@ -123,4 +126,42 @@
   margin: 0;
   font-size: 0.8125rem;
   color: var(--ph-color-danger);
+}
+
+/* Phones: compact photo control so the pet's name and actions stay above the fold. */
+@media (max-width: 640px) {
+  .pet-photo-field--hero {
+    padding: 0;
+    border: 0;
+    background: none;
+    align-items: center;
+  }
+
+  .pet-photo-field--hero .pet-photo-field__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .pet-photo-field--hero .pet-photo-field__row {
+    flex-direction: row;
+    justify-content: center;
+    gap: var(--ph-space-3);
+  }
+
+  .pet-photo-field--hero .pet-photo-field__preview .pet-avatar--lg {
+    width: 4.5rem;
+    height: 4.5rem;
+  }
+
+  .pet-photo-field--hero .pet-photo-field__actions {
+    width: auto;
+  }
+
+  .pet-photo-field--hero .pet-photo-field__hint {
+    text-align: center;
+  }
 }

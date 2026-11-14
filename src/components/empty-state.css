@@ -44,4 +44,8 @@
 
 .empty-state__action {
   margin-top: var(--ph-space-4);
+  min-height: var(--ph-btn-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
