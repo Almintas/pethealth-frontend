@@ -81,6 +81,15 @@ function mapKnownBackendMessage(message: string): string | null {
   ) {
     return i18n.t('errors.invalidCredentials');
   }
+  if (normalized.includes('already created an account for this email')) {
+    return i18n.t('errors.accountActivationRequired');
+  }
+  if (normalized.includes('account is already active')) {
+    return i18n.t('errors.accountAlreadyActive');
+  }
+  if (normalized.includes('activation link is invalid or has expired')) {
+    return i18n.t('errors.activationLinkInvalid');
+  }
   if (normalized.includes('not found')) {
     return i18n.t('errors.notFound');
   }

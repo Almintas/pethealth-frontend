@@ -17,6 +17,7 @@ export type AuthContextValue = {
   login: (input: LoginInput) => Promise<void>;
   register: (input: RegisterInput) => Promise<AuthUser>;
   logout: () => Promise<void>;
+  activateAccount: (token: string, password: string) => Promise<void>;
   updateSessionUser: (user: AuthUser) => void;
   getAccessToken: () => string | null;
 };
@@ -73,6 +74,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
     [client],
   );
 
+  const activateAccount = useCallback(
+    async (token: string, password: string) => {
+      const authenticatedUser = await authService.activateAccount(
+        client,
+        token,
+        password,
+      );
+      setUser(authenticatedUser);
+    },
+    [client],
+  );
+
   const logout = useCallback(async () => {
     await authService.logout(client);
     setUser(null);
@@ -94,10 +107,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
       login,
       register,
       logout,
+      activateAccount,
       updateSessionUser,
       getAccessToken: authService.getAccessToken,
     }),
-    [user, isInitializing, login, register, logout, updateSessionUser],
+    [
+      user,
+      isInitializing,
+      login,
+      register,
+      logout,
+      activateAccount,
+      updateSessionUser,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -6,6 +6,7 @@ import { EmptyState, ErrorAlert, LoadingState } from '../../../components/feedba
 import { PetAvatar } from '../../../components/PetAvatar';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { AppointmentsSection } from '../../appointments';
+import { ClinicAccessSection } from '../../clinic-access';
 import { RemindersSection } from '../../reminders';
 import { MedicalRecordsSection } from '../../medical-records';
 import { MedicationsSection } from '../../medications';
@@ -335,6 +336,7 @@ export function PetDetailsPage() {
             </nav>
           </section>
 
+          <ClinicAccessSection petId={pet.id} petName={pet.name} />
           <MedicalRecordsSection petId={pet.id} />
           <VaccinationsSection petId={pet.id} />
           <MedicationsSection petId={pet.id} />

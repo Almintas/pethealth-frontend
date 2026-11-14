@@ -91,6 +91,13 @@ export function LoginPage() {
           {t('auth.createOne')}
         </Link>
       </p>
+
+      <p className="auth-switch">
+        {t('activation.clinicCreatedAccount')}{' '}
+        <Link className="auth-switch__button" to="/activate-account">
+          {t('activation.activateLink')}
+        </Link>
+      </p>
     </AuthShell>
   );
 }

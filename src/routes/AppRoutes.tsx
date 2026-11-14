@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router';
+import { ActivateAccountPage } from '../features/auth/pages/ActivateAccountPage';
 import { LoginPage } from '../features/auth/pages/LoginPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
@@ -15,6 +16,16 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<RootRedirect />} />
+
+      {/* Reachable signed in or out: the emailed link must always work. */}
+      <Route
+        path="/activate-account"
+        element={
+          <MainLayout>
+            <ActivateAccountPage />
+          </MainLayout>
+        }
+      />
 
       <Route element={<PublicRoute />}>
         <Route

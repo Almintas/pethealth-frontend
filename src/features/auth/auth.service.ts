@@ -1,9 +1,11 @@
 import type { ApolloClient } from '@apollo/client';
 import {
+  ACTIVATE_ACCOUNT_MUTATION,
   CHANGE_PASSWORD_MUTATION,
   LOGIN_MUTATION,
   ME_QUERY,
   REGISTER_MUTATION,
+  REQUEST_ACCOUNT_ACTIVATION_MUTATION,
   UPDATE_NOTIFICATION_PREFERENCES_MUTATION,
   UPDATE_PROFILE_MUTATION,
 } from './graphql';
@@ -56,6 +58,44 @@ export async function login(
 
   setAccessToken(payload.accessToken);
   return payload.user;
+}
+
+type ActivateAccountMutationResult = {
+  activateAccount: AuthPayload;
+};
+
+/**
+ * Sets the first password on a clinic-created account using the emailed
+ * activation token, then starts a session.
+ */
+export async function activateAccount(
+  client: ApolloClient,
+  token: string,
+  password: string,
+): Promise<AuthUser> {
+  const { data } = await client.mutate<ActivateAccountMutationResult>({
+    mutation: ACTIVATE_ACCOUNT_MUTATION,
+    variables: { input: { token, password } },
+  });
+
+  const payload = data?.activateAccount;
+  if (!payload?.accessToken || !payload.user) {
+    throw new Error('Activation failed: missing authentication payload.');
+  }
+
+  setAccessToken(payload.accessToken);
+  return payload.user;
+}
+
+/** Always resolves; the API never reveals whether the email exists. */
+export async function requestAccountActivation(
+  client: ApolloClient,
+  email: string,
+): Promise<void> {
+  await client.mutate({
+    mutation: REQUEST_ACCOUNT_ACTIVATION_MUTATION,
+    variables: { input: { email } },
+  });
 }
 
 export async function register(

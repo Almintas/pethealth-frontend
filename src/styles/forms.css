@@ -272,3 +272,13 @@
 .pet-form__required {
   color: var(--ph-color-danger);
 }
+
+.auth-notice {
+  margin: 0;
+  padding: var(--ph-space-3) var(--ph-space-4);
+  border-radius: var(--ph-radius-md);
+  font-size: 0.875rem;
+  background: var(--ph-color-success-soft);
+  color: var(--ph-color-success-text);
+  border: 1px solid var(--ph-color-success-text);
+}

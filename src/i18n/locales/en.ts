@@ -65,6 +65,45 @@ const en = {
     haveAccount: 'Already have an account?',
     signInLink: 'Sign in',
   },
+  activation: {
+    title: 'Activate your account',
+    subtitle:
+      'Your veterinary clinic created a PetHealth account for you. Choose a password to see all of your pet’s health information.',
+    newPassword: 'New password',
+    activate: 'Activate account',
+    activating: 'Activating…',
+    linkExpired: 'Link expired?',
+    requestNewLink: 'Get a new link',
+    requestTitle: 'Get an activation link',
+    requestSubtitle:
+      'Enter the email address you gave your veterinary clinic. We will send you a link to set your password.',
+    sendLink: 'Send link',
+    sending: 'Sending…',
+    requestSent:
+      'If a clinic created an account with this email, you will receive an activation email shortly. Check your spam folder too.',
+    clinicCreatedAccount: 'Did your clinic create an account for you?',
+    activateLink: 'Activate it',
+  },
+  clinicAccess: {
+    title: 'Clinic access',
+    intro:
+      'A veterinary clinic can see and update your pet’s health records only with your consent. During a visit, create a code and show it to the clinic staff.',
+    createCode: 'Create code for clinic',
+    newCode: 'Create a new code',
+    creatingCode: 'Creating…',
+    codeLabel: 'One-time access code',
+    codeExpiresIn: 'Valid for {{time}}',
+    codeExpired: 'This code has expired. Create a new one if needed.',
+    codeHint: 'The code can be used only once. Share it only with your veterinary clinic.',
+    refreshList: 'Refresh clinic list',
+    clinicsTitle: 'Clinics with access',
+    noClinics: 'No clinic has access to this pet yet.',
+    grantedOn: 'Access granted {{date}}',
+    revoke: 'Revoke access',
+    revoking: 'Revoking…',
+    revokeConfirm:
+      'Revoke {{clinic}}’s access to {{pet}}? The clinic will no longer be able to see or update their records.',
+  },
   validation: {
     emailRequired: 'Email is required.',
     emailInvalid: 'Enter a valid email address.',
@@ -419,6 +458,11 @@ const en = {
     serverUnreachable: "We couldn't reach the server. Make sure the API is running, then try again.",
     notFound: 'The requested item could not be found.',
     invalidCredentials: 'Invalid email or password.',
+    accountActivationRequired:
+      'Your veterinary clinic has already created an account for this email. We sent you an email with a link to activate it.',
+    activationLinkInvalid:
+      'This activation link is invalid or has expired. Request a new one.',
+    accountAlreadyActive: 'This account is already active. Sign in instead.',
     petPhotoUploadUnavailable:
       'Pet photo uploads are not available right now. Check that Cloudinary is configured on the server, then try again.',
     petPhotoInvalid:

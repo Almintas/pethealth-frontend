@@ -67,6 +67,45 @@ const lt = {
     haveAccount: 'Jau turite paskyrą?',
     signInLink: 'Prisijunkite',
   },
+  activation: {
+    title: 'Aktyvuokite paskyrą',
+    subtitle:
+      'Jūsų veterinarijos klinika sukūrė jums PetHealth paskyrą. Susikurkite slaptažodį ir matysite visą savo augintinio sveikatos informaciją.',
+    newPassword: 'Naujas slaptažodis',
+    activate: 'Aktyvuoti paskyrą',
+    activating: 'Aktyvuojama…',
+    linkExpired: 'Nuoroda nebegalioja?',
+    requestNewLink: 'Gauti naują nuorodą',
+    requestTitle: 'Gaukite aktyvavimo nuorodą',
+    requestSubtitle:
+      'Įveskite el. paštą, kurį nurodėte veterinarijos klinikoje. Atsiųsime nuorodą slaptažodžiui susikurti.',
+    sendLink: 'Siųsti nuorodą',
+    sending: 'Siunčiama…',
+    requestSent:
+      'Jei klinika yra sukūrusi paskyrą šiuo el. paštu, netrukus gausite laišką su aktyvavimo nuoroda. Patikrinkite ir šlamšto aplanką.',
+    clinicCreatedAccount: 'Paskyrą jums sukūrė klinika?',
+    activateLink: 'Aktyvuokite ją',
+  },
+  clinicAccess: {
+    title: 'Klinikų prieiga',
+    intro:
+      'Veterinarijos klinika mato ir pildo augintinio sveikatos įrašus tik tada, kai jūs tam duodate sutikimą. Vizito metu sukurkite kodą ir parodykite jį klinikos darbuotojui.',
+    createCode: 'Sukurti kodą klinikai',
+    newCode: 'Sukurti naują kodą',
+    creatingCode: 'Kuriama…',
+    codeLabel: 'Vienkartinis prieigos kodas',
+    codeExpiresIn: 'Galioja dar {{time}}',
+    codeExpired: 'Kodas nebegalioja. Prireikus sukurkite naują.',
+    codeHint: 'Kodą galima panaudoti tik vieną kartą. Jį pateikite tik savo veterinarijos klinikai.',
+    refreshList: 'Atnaujinti klinikų sąrašą',
+    clinicsTitle: 'Klinikos, turinčios prieigą',
+    noClinics: 'Kol kas jokia klinika neturi prieigos prie šio augintinio.',
+    grantedOn: 'Prieiga suteikta {{date}}',
+    revoke: 'Atšaukti prieigą',
+    revoking: 'Atšaukiama…',
+    revokeConfirm:
+      'Atšaukti klinikos „{{clinic}}“ prieigą prie augintinio {{pet}}? Klinika nebegalės matyti ir pildyti jo įrašų.',
+  },
   validation: {
     emailRequired: 'El. paštas privalomas.',
     emailInvalid: 'Įveskite tinkamą el. pašto adresą.',
@@ -417,6 +456,11 @@ const lt = {
     serverUnreachable: 'Nepavyko pasiekti serverio. Įsitikinkite, kad API veikia, ir bandykite dar kartą.',
     notFound: 'Nepavyko rasti prašomo įrašo.',
     invalidCredentials: 'Neteisingas el. paštas arba slaptažodis.',
+    accountActivationRequired:
+      'Jūsų veterinarijos klinika jau sukūrė paskyrą šiuo el. paštu. Išsiuntėme laišką su nuoroda jai aktyvuoti.',
+    activationLinkInvalid:
+      'Ši aktyvavimo nuoroda neteisinga arba nebegalioja. Paprašykite naujos.',
+    accountAlreadyActive: 'Ši paskyra jau aktyvuota. Prisijunkite.',
     petPhotoUploadUnavailable:
       'Augintinio nuotraukų įkėlimas šiuo metu nepasiekiamas. Patikrinkite, ar serveryje sukonfigūruotas Cloudinary, ir bandykite dar kartą.',
     petPhotoInvalid:
