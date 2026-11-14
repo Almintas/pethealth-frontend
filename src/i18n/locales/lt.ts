@@ -66,6 +66,32 @@ const lt = {
     createOne: 'Sukurkite',
     haveAccount: 'Jau turite paskyrą?',
     signInLink: 'Prisijunkite',
+    forgotPassword: 'Pamiršote slaptažodį?',
+    forgotPasswordTitle: 'Atkurkite slaptažodį',
+    forgotPasswordSubtitle:
+      'Įveskite paskyros el. paštą ir atsiųsime nuorodą naujam slaptažodžiui nustatyti.',
+    sendLink: 'Siųsti nuorodą',
+    sendingLink: 'Siunčiama…',
+    rememberedPassword: 'Prisiminėte?',
+    checkInboxTitle: 'Patikrinkite el. paštą',
+    checkInboxSubtitle: 'Jei {{email}} paskyra egzistuoja, išsiuntėme į jį nuorodą.',
+    checkInboxHint:
+      'Nuoroda veikia vieną kartą ir galioja 1 valandą (klinikos sukurtoms paskyroms – 3 dienas). Jei laiško nėra, patikrinkite šlamšto aplanką.',
+    useDifferentEmail: 'Naudoti kitą el. paštą',
+    backToSignIn: 'Grįžti į prisijungimą',
+    resetPasswordTitle: 'Pasirinkite naują slaptažodį',
+    resetPasswordSubtitle:
+      'Naudokite 8–72 simbolius. Taip taip pat aktyvuojama klinikos sukurta paskyra.',
+    newPassword: 'Naujas slaptažodis',
+    savePassword: 'Išsaugoti slaptažodį',
+    savingPassword: 'Saugoma…',
+    passwordSetTitle: 'Slaptažodis išsaugotas',
+    passwordSetSubtitle:
+      'Dabar galite prisijungti nauju slaptažodžiu. Kituose įrenginiuose buvote atjungti.',
+    linkInvalidTitle: 'Ši nuoroda nebegalioja',
+    linkInvalidSubtitle:
+      'Atkūrimo nuorodos veikia vieną kartą ir po kurio laiko nustoja galioti. Paprašykite naujos.',
+    requestNewLink: 'Gauti naują nuorodą',
   },
   activation: {
     title: 'Aktyvuokite paskyrą',
@@ -111,6 +137,7 @@ const lt = {
     emailInvalid: 'Įveskite tinkamą el. pašto adresą.',
     passwordRequired: 'Slaptažodis privalomas.',
     passwordMin: 'Slaptažodis turi būti bent 8 simbolių.',
+    passwordMax: 'Slaptažodis gali būti ne ilgesnis nei {{max}} simbolių.',
     passwordsMismatch: 'Slaptažodžiai nesutampa.',
     firstNameRequired: 'Vardas privalomas.',
     lastNameRequired: 'Pavardė privaloma.',

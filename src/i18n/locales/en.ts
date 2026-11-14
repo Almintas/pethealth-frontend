@@ -64,6 +64,32 @@ const en = {
     createOne: 'Create one',
     haveAccount: 'Already have an account?',
     signInLink: 'Sign in',
+    forgotPassword: 'Forgot password?',
+    forgotPasswordTitle: 'Reset your password',
+    forgotPasswordSubtitle:
+      "Enter your account email and we'll send you a link to choose a new password.",
+    sendLink: 'Send reset link',
+    sendingLink: 'Sending…',
+    rememberedPassword: 'Remembered it?',
+    checkInboxTitle: 'Check your inbox',
+    checkInboxSubtitle: 'If an account exists for {{email}}, we sent a link to it.',
+    checkInboxHint:
+      'The link works once and expires in 1 hour (3 days for accounts created by your clinic). Check your spam folder if it does not arrive.',
+    useDifferentEmail: 'Use a different email',
+    backToSignIn: 'Back to sign in',
+    resetPasswordTitle: 'Choose a new password',
+    resetPasswordSubtitle:
+      'Use 8–72 characters. This also activates accounts created by your clinic.',
+    newPassword: 'New password',
+    savePassword: 'Save password',
+    savingPassword: 'Saving…',
+    passwordSetTitle: 'Password saved',
+    passwordSetSubtitle:
+      'You can now sign in with your new password. Other devices were signed out.',
+    linkInvalidTitle: 'This link is no longer valid',
+    linkInvalidSubtitle:
+      'Reset links work once and expire after a while. Request a new one to continue.',
+    requestNewLink: 'Request a new link',
   },
   activation: {
     title: 'Activate your account',
@@ -109,6 +135,7 @@ const en = {
     emailInvalid: 'Enter a valid email address.',
     passwordRequired: 'Password is required.',
     passwordMin: 'Password must be at least 8 characters.',
+    passwordMax: 'Password must be at most {{max}} characters.',
     passwordsMismatch: 'Passwords do not match.',
     firstNameRequired: 'First name is required.',
     lastNameRequired: 'Last name is required.',

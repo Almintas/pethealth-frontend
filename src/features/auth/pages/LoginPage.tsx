@@ -80,6 +80,10 @@ export function LoginPage() {
           disabled={isSubmitting}
         />
 
+        <Link className="auth-forgot-link" to="/forgot-password">
+          {t('auth.forgotPassword')}
+        </Link>
+
         <button className="auth-submit" type="submit" disabled={isSubmitting}>
           {isSubmitting ? t('auth.signingIn') : t('auth.signIn')}
         </button>

@@ -6,6 +6,8 @@ import {
   ME_QUERY,
   REGISTER_MUTATION,
   REQUEST_ACCOUNT_ACTIVATION_MUTATION,
+  REQUEST_PASSWORD_RESET_MUTATION,
+  RESET_PASSWORD_MUTATION,
   UPDATE_NOTIFICATION_PREFERENCES_MUTATION,
   UPDATE_PROFILE_MUTATION,
 } from './graphql';
@@ -21,6 +23,7 @@ import type {
   ChangePasswordInput,
   LoginInput,
   RegisterInput,
+  ResetPasswordInput,
   UpdateNotificationPreferencesInput,
   UpdateProfileInput,
 } from './types';
@@ -229,4 +232,33 @@ export async function updateNotificationPreferences(
 
   syncAuthUserCache(client, user);
   return user;
+}
+
+/**
+ * Asks the API to email a password reset / account activation link.
+ * The API always reports success so it never reveals whether an email exists.
+ */
+export async function requestPasswordReset(
+  client: ApolloClient,
+  email: string,
+): Promise<void> {
+  await client.mutate<{ requestPasswordReset: boolean }>({
+    mutation: REQUEST_PASSWORD_RESET_MUTATION,
+    variables: { input: { email } },
+  });
+}
+
+/** Sets a new password using the token from the emailed link. */
+export async function resetPassword(
+  client: ApolloClient,
+  input: ResetPasswordInput,
+): Promise<void> {
+  const { data } = await client.mutate<{ resetPassword: boolean }>({
+    mutation: RESET_PASSWORD_MUTATION,
+    variables: { input },
+  });
+
+  if (!data?.resetPassword) {
+    throw new Error('Failed to reset password.');
+  }
 }

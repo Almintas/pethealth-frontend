@@ -9,7 +9,12 @@ export type RegisterField =
   | 'email'
   | 'password';
 
+export type ResetPasswordField = 'newPassword' | 'confirmPassword';
+
 export type FieldErrors<T extends string> = Partial<Record<T, string>>;
+
+/** The API rejects passwords longer than this (bcrypt's 72-byte limit). */
+export const PASSWORD_MAX_LENGTH = 72;
 
 function validateEmail(email: string): string | undefined {
   const trimmed = email.trim();
@@ -30,6 +35,41 @@ function validatePassword(password: string): string | undefined {
     return i18n.t('validation.passwordMin');
   }
   return undefined;
+}
+
+function validateNewPassword(password: string): string | undefined {
+  const baseError = validatePassword(password);
+  if (baseError) {
+    return baseError;
+  }
+  if (password.length > PASSWORD_MAX_LENGTH) {
+    return i18n.t('validation.passwordMax', { max: PASSWORD_MAX_LENGTH });
+  }
+  return undefined;
+}
+
+export function validateForgotPasswordForm(values: {
+  email: string;
+}): FieldErrors<'email'> {
+  const emailError = validateEmail(values.email);
+  return emailError ? { email: emailError } : {};
+}
+
+export function validateResetPasswordForm(values: {
+  newPassword: string;
+  confirmPassword: string;
+}): FieldErrors<ResetPasswordField> {
+  const errors: FieldErrors<ResetPasswordField> = {};
+
+  const passwordError = validateNewPassword(values.newPassword);
+  if (passwordError) {
+    errors.newPassword = passwordError;
+  }
+  if (!passwordError && values.confirmPassword !== values.newPassword) {
+    errors.confirmPassword = i18n.t('validation.passwordsMismatch');
+  }
+
+  return errors;
 }
 
 export function validateLoginForm(values: {
@@ -70,7 +110,7 @@ export function validateRegisterForm(values: {
     errors.email = emailError;
   }
 
-  const passwordError = validatePassword(values.password);
+  const passwordError = validateNewPassword(values.password);
   if (passwordError) {
     errors.password = passwordError;
   }
