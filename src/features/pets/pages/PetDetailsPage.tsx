@@ -4,7 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate, useParams } from 'react-router';
 import { EmptyState, ErrorAlert, LoadingState } from '../../../components/feedback';
 import { PetAvatar } from '../../../components/PetAvatar';
-import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
+import {
+  getUserFacingErrorMessage,
+  isNotFoundError,
+} from '../../auth/utils/get-auth-error-message';
 import { AppointmentsSection } from '../../appointments';
 import { RemindersSection } from '../../reminders';
 import { MedicalRecordsSection } from '../../medical-records';
@@ -83,11 +86,10 @@ export function PetDetailsPage() {
         }
       } catch (error) {
         if (!cancelled) {
-          const message = getUserFacingErrorMessage(error, 'load-pet');
-          if (message.toLowerCase().includes('not found')) {
+          if (isNotFoundError(error)) {
             setNotFound(true);
           } else {
-            setErrorMessage(message);
+            setErrorMessage(getUserFacingErrorMessage(error, 'load-pet'));
           }
         }
       } finally {

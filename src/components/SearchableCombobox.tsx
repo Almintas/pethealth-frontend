@@ -1,4 +1,5 @@
 import {
+  useCallback,
   useEffect,
   useId,
   useMemo,
@@ -51,7 +52,10 @@ export function SearchableCombobox({
   const [draft, setDraft] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
 
-  const labelFor = (option: string) => optionLabel?.(option) ?? option;
+  const labelFor = useCallback(
+    (option: string) => optionLabel?.(option) ?? option,
+    [optionLabel],
+  );
 
   const displayValue = useMemo(() => {
     if (isFocused && draft !== null) {
@@ -61,7 +65,7 @@ export function SearchableCombobox({
       return labelFor(value);
     }
     return value;
-  }, [draft, isFocused, options, optionLabel, value, i18n.language]);
+  }, [draft, isFocused, options, labelFor, value, i18n.language]);
 
   const filteredOptions = useMemo(() => {
     const query = (isFocused && draft !== null ? draft : displayValue)
@@ -89,7 +93,7 @@ export function SearchableCombobox({
     }
 
     return base;
-  }, [allowCustom, displayValue, draft, isFocused, options, optionLabel, i18n.language]);
+  }, [allowCustom, displayValue, draft, isFocused, options, labelFor, i18n.language]);
 
   useEffect(() => {
     const handlePointerDown = (event: MouseEvent) => {

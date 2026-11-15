@@ -1,7 +1,7 @@
 import type { ApolloClient } from '@apollo/client';
 import { i18n } from '../../i18n';
 import { getApiBaseUrl } from '../../config/api-base-url';
-import { getAccessToken } from '../auth/token-storage';
+import { getAccessToken, notifySessionExpired } from '../auth/token-storage';
 import type { PetPhotoIntent } from './constants/pet-photo';
 import {
   CREATE_PET_MUTATION,
@@ -106,6 +106,15 @@ export async function deletePet(
 }
 
 async function parsePetPhotoError(response: Response): Promise<string> {
+  if (response.status === 401) {
+    notifySessionExpired();
+    return i18n.t('errors.sessionExpired');
+  }
+  if (response.status >= 500) {
+    return response.status === 503
+      ? i18n.t('errors.petPhotoUploadUnavailable')
+      : i18n.t('errors.petPhotoUpdateFailed');
+  }
   try {
     const body = (await response.json()) as { message?: string | string[] };
     if (Array.isArray(body.message)) {

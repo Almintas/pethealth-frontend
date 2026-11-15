@@ -419,6 +419,7 @@ const en = {
     serverUnreachable: "We couldn't reach the server. Make sure the API is running, then try again.",
     notFound: 'The requested item could not be found.',
     invalidCredentials: 'Invalid email or password.',
+    currentPasswordIncorrect: 'Your current password is incorrect.',
     petPhotoUploadUnavailable:
       'Pet photo uploads are not available right now. Check that Cloudinary is configured on the server, then try again.',
     petPhotoInvalid:

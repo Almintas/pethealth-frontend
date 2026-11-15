@@ -8,6 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import * as authService from './auth.service';
+import { onSessionExpired } from './token-storage';
 import type { AuthUser, LoginInput, RegisterInput } from './types';
 
 export type AuthContextValue = {
@@ -51,6 +52,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       cancelled = true;
     };
   }, [client]);
+
+  useEffect(
+    () =>
+      onSessionExpired(() => {
+        setUser(null);
+        void client.clearStore();
+      }),
+    [client],
+  );
 
   const login = useCallback(
     async (input: LoginInput) => {

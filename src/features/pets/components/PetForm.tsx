@@ -158,7 +158,6 @@ export function PetForm({
     kind: 'unchanged',
   });
   const photoIntentRef = useRef(photoIntent);
-  photoIntentRef.current = photoIntent;
 
   const handlePhotoIntentChange = (intent: PetPhotoIntent) => {
     photoIntentRef.current = intent;

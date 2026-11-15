@@ -7,3 +7,4 @@ React + TypeScript app built with [Vite](https://vite.dev/).
 - `npm run dev` — start the development server
 - `npm run build` — type-check and build for production
 - `npm run preview` — preview the production build locally
+- `npm run lint` — run ESLint (TypeScript + React hooks rules)

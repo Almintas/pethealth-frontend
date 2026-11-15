@@ -12,6 +12,7 @@ import {
   getAccessToken,
   setAccessToken,
 } from './token-storage';
+import { isUnauthorizedError } from './utils/get-auth-error-message';
 import type {
   AuthPayload,
   AuthUser,
@@ -75,6 +76,17 @@ export async function register(
   return user;
 }
 
+/*
+ * Only drop the stored token when the API actually rejected it. Network
+ * failures (offline, API cold start) keep the token so a reload can restore
+ * the session once the API is reachable again.
+ */
+function clearTokenIfRejected(error: unknown): void {
+  if (error === undefined || isUnauthorizedError(error)) {
+    clearAccessToken();
+  }
+}
+
 export async function fetchCurrentUser(
   client: ApolloClient,
 ): Promise<AuthUser | null> {
@@ -89,13 +101,13 @@ export async function fetchCurrentUser(
     });
 
     if (error || !data?.me) {
-      clearAccessToken();
+      clearTokenIfRejected(error);
       return null;
     }
 
     return data.me;
-  } catch {
-    clearAccessToken();
+  } catch (error) {
+    clearTokenIfRejected(error);
     return null;
   }
 }
