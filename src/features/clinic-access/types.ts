@@ -26,3 +26,23 @@ export type CreatePetShareCodeMutationResult = {
 export type RevokePetClinicAccessMutationResult = {
   revokePetClinicAccess: boolean;
 };
+
+export type PetActivityEvent = {
+  id: string;
+  action: string;
+  entityType: string;
+  actorType: string;
+  actorName?: string | null;
+  clinicName?: string | null;
+  summary?: string | null;
+  createdAt: string;
+};
+
+export type PetActivityLogQueryResult = {
+  petActivityLog: PetActivityEvent[];
+};
+
+export type PetActivityLogQueryVariables = {
+  petId: string;
+  limit?: number;
+};

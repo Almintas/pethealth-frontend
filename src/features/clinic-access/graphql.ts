@@ -26,3 +26,18 @@ export const REVOKE_PET_CLINIC_ACCESS_MUTATION = gql`
     revokePetClinicAccess(petId: $petId, clinicId: $clinicId)
   }
 `;
+
+export const PET_ACTIVITY_LOG_QUERY = gql`
+  query PetActivityLog($petId: ID!, $limit: Int) {
+    petActivityLog(petId: $petId, limit: $limit) {
+      id
+      action
+      entityType
+      actorType
+      actorName
+      clinicName
+      summary
+      createdAt
+    }
+  }
+`;

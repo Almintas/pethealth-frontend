@@ -9,7 +9,7 @@ import {
   isNotFoundError,
 } from '../../auth/utils/get-auth-error-message';
 import { AppointmentsSection } from '../../appointments';
-import { ClinicAccessSection } from '../../clinic-access';
+import { ClinicAccessSection, PetActivitySection } from '../../clinic-access';
 import { RemindersSection } from '../../reminders';
 import { MedicalRecordsSection } from '../../medical-records';
 import { MedicationsSection } from '../../medications';
@@ -347,6 +347,7 @@ export function PetDetailsPage() {
           <MedicationsSection petId={pet.id} />
           <AppointmentsSection petId={pet.id} />
           <RemindersSection petId={pet.id} />
+          <PetActivitySection petId={pet.id} />
         </>
       ) : null}
     </section>
