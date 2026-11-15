@@ -1,0 +1,174 @@
+name: E2E (browser, all four apps)
+
+# Builds both APIs and both apps from dev (this repository at the pushed
+# commit), starts them against MongoDB and runs the Playwright journey in
+# pethealth-vet-frontend/e2e. The same workflow lives in pethealth-frontend
+# and pethealth-vet-frontend.
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  OWNER_SERVICE_SECRET: ci-owner-service-secret-at-least-32-chars
+  OWNER_MONGODB_URI: mongodb://localhost:27017/pethealth_e2e_owner
+  VET_MONGODB_URI: mongodb://localhost:27017/pethealth_e2e_vet
+
+jobs:
+  e2e:
+    name: Browser journey
+    # Playwright 1.56 ships browsers for Ubuntu 24.04, not yet for ubuntu-latest (26.04).
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    steps:
+      - name: Checkout owner-app
+        uses: actions/checkout@v4
+        with:
+          path: owner-app
+
+      - name: Checkout vet-app
+        uses: actions/checkout@v4
+        with:
+          repository: Almintas/pethealth-vet-frontend
+          ref: dev
+          path: vet-app
+
+      - name: Checkout owner-api
+        uses: actions/checkout@v4
+        with:
+          repository: Almintas/pethealth-backend
+          ref: dev
+          path: owner-api
+
+      - name: Checkout vet-api
+        uses: actions/checkout@v4
+        with:
+          repository: Almintas/pethealth-vet-backend
+          ref: dev
+          path: vet-api
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            owner-api/package-lock.json
+            vet-api/package-lock.json
+            owner-app/package-lock.json
+            vet-app/package-lock.json
+
+      - name: Build owner API
+        working-directory: owner-api
+        run: npm ci && npm run build
+
+      - name: Build clinic API
+        working-directory: vet-api
+        run: npm ci && npm run build
+
+      - name: Build owner app
+        working-directory: owner-app
+        env:
+          VITE_GRAPHQL_URL: http://localhost:3000/graphql
+        run: npm ci && npm run build
+
+      - name: Build clinic app
+        working-directory: vet-app
+        env:
+          VITE_GRAPHQL_URL: http://localhost:3001/graphql
+        run: npm ci && npm run build
+
+      - name: Start owner API
+        working-directory: owner-api
+        env:
+          NODE_ENV: development
+          PORT: '3000'
+          MONGODB_URI: ${{ env.OWNER_MONGODB_URI }}
+          JWT_SECRET: ci-owner-jwt-secret-with-sufficient-length
+          VET_GRAPHQL_URL: http://localhost:3001/graphql
+          FRONTEND_URL: http://localhost:5173
+          THROTTLE_AUTH_LIMIT: '100'
+        run: nohup npm run start:prod > "$RUNNER_TEMP/owner-api.log" 2>&1 &
+
+      - name: Start clinic API
+        working-directory: vet-api
+        env:
+          NODE_ENV: development
+          PORT: '3001'
+          MONGODB_URI: ${{ env.VET_MONGODB_URI }}
+          JWT_SECRET: ci-vet-jwt-secret-with-sufficient-length
+          OWNER_GRAPHQL_URL: http://localhost:3000/graphql
+          VET_FRONTEND_URL: http://localhost:5174
+        run: nohup npm run start:prod > "$RUNNER_TEMP/vet-api.log" 2>&1 &
+
+      - name: Serve both apps
+        run: |
+          (cd owner-app && nohup npx vite preview --port 5173 --strictPort > "$RUNNER_TEMP/owner-app.log" 2>&1 &)
+          (cd vet-app && nohup npx vite preview --port 5174 --strictPort > "$RUNNER_TEMP/vet-app.log" 2>&1 &)
+
+      - name: Install Playwright
+        working-directory: vet-app/e2e
+        run: npm install && npx playwright install --with-deps chromium
+
+      - name: Wait for all services
+        run: |
+          for url in http://localhost:3000/graphql http://localhost:3001/graphql; do
+            for i in $(seq 1 60); do
+              curl -s -o /dev/null -X POST -H 'content-type: application/json' \
+                -d '{"query":"{ __typename }"}' "$url" && break
+              sleep 1
+            done
+          done
+          for url in http://localhost:5173 http://localhost:5174; do
+            for i in $(seq 1 60); do curl -sf -o /dev/null "$url" && break; sleep 1; done
+          done
+
+      - name: Run browser journey
+        working-directory: vet-app/e2e
+        env:
+          OWNER_APP_URL: http://localhost:5173
+          VET_APP_URL: http://localhost:5174
+          VET_BACKEND_DIR: ${{ github.workspace }}/vet-api
+          MONGODB_URI: ${{ env.VET_MONGODB_URI }}
+        run: npx playwright test
+
+      - name: Upload report, screenshots and traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: |
+            vet-app/e2e/playwright-report
+            vet-app/e2e/test-results
+          retention-days: 7
+
+      - name: Show service logs
+        if: always()
+        run: |
+          for name in owner-api vet-api owner-app vet-app; do
+            echo "::group::$name"
+            cat "$RUNNER_TEMP/$name.log" || true
+            echo "::endgroup::"
+          done

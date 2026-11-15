@@ -5,7 +5,7 @@ import { ErrorAlert, LoadingState } from '../../../components/feedback';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { formatPetDate } from '../../pets/utils/format-pet-date';
 import * as clinicAccessService from '../clinic-access.service';
-import { PET_CLINIC_ACCESS_QUERY } from '../graphql';
+import { PET_ACTIVITY_LOG_QUERY, PET_CLINIC_ACCESS_QUERY } from '../graphql';
 import type {
   PetClinicAccessQueryResult,
   PetClinicAccessQueryVariables,
@@ -85,7 +85,11 @@ export function ClinicAccessSection({ petId, petName }: ClinicAccessSectionProps
     setRevokingClinicId(clinicId);
     try {
       await clinicAccessService.revokePetClinicAccess(client, petId, clinicId);
-      await refetch();
+      // The revocation is also an activity log entry; refresh both sections.
+      await Promise.all([
+        refetch(),
+        client.refetchQueries({ include: [PET_ACTIVITY_LOG_QUERY] }),
+      ]);
     } catch (revokeError) {
       setActionError(getUserFacingErrorMessage(revokeError, 'generic-save'));
     } finally {
