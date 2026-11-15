@@ -52,8 +52,13 @@ export function PetActivitySection({ petId }: PetActivitySectionProps) {
   };
 
   // For the owner's own changes, the subject is the clinic they acted on.
-  const describeSubject = (event: PetActivityEvent): string | null =>
-    event.summary ?? (event.actorType === 'OWNER' ? (event.clinicName ?? null) : null);
+  // Pet-level events would only repeat this pet's name, so they have none.
+  const describeSubject = (event: PetActivityEvent): string | null => {
+    if (event.actorType === 'OWNER') {
+      return event.clinicName ?? null;
+    }
+    return event.entityType === 'PATIENT' ? null : (event.summary ?? null);
+  };
 
   return (
     <section
