@@ -48,7 +48,7 @@ function mapCredentialFailure(error: unknown): string | null {
   return null;
 }
 
-function isUnauthorizedError(error: unknown): boolean {
+export function isUnauthorizedError(error: unknown): boolean {
   if (CombinedGraphQLErrors.is(error)) {
     return error.errors.some((graphQLError) => {
       const code = graphQLError.extensions?.code;
