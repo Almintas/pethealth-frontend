@@ -117,9 +117,7 @@ export function RemindersSection({ petId }: RemindersSectionProps) {
   };
 
   const countLabel =
-    reminders.length === 1
-      ? t('reminders.countOne')
-      : t('reminders.countMany', { count: reminders.length });
+    t('reminders.count', { count: reminders.length });
 
   const pendingCountLabel =
     pendingCount === 0

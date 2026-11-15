@@ -85,9 +85,7 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
   };
 
   const countLabel =
-    vaccinations.length === 1
-      ? t('health.vaccinationCountOne')
-      : t('health.vaccinationCountMany', { count: vaccinations.length });
+    t('health.vaccinationCount', { count: vaccinations.length });
 
   return (
     <section
@@ -146,9 +144,6 @@ export function VaccinationsSection({ petId }: VaccinationsSectionProps) {
             .filter(Boolean)
             .join(' ')}
         >
-          {readOnly ? (
-            <span className="ph-clinic-badge">{t('health.managedByClinic')}</span>
-          ) : null}
           <h3 className="vaccinations-section__empty-title">
             {emptyTitle}
           </h3>

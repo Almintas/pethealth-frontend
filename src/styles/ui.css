@@ -1,6 +1,6 @@
 .ph-page {
   width: 100%;
-  max-width: var(--ph-content-max);
+  max-width: var(--ph-page-max);
   margin: 0 auto;
   padding: var(--ph-space-5) var(--ph-space-5) var(--ph-space-8);
   min-width: 0;
@@ -84,12 +84,12 @@ a.ph-card:focus-visible {
   align-items: center;
   justify-content: center;
   gap: var(--ph-space-2);
-  min-height: var(--ph-control-height);
-  padding: 0 1rem;
-  border-radius: var(--ph-radius-md);
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  border-radius: var(--ph-btn-radius);
   border: 1px solid transparent;
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   line-height: 1.25;
   cursor: pointer;

@@ -288,7 +288,7 @@
   min-width: 0;
 }
 
-.authenticated-layout__mobile-toggle {
+.authenticated-layout__mobile-bar {
   display: none;
 }
 
@@ -301,22 +301,52 @@
     grid-template-columns: 1fr;
   }
 
+  /* Phones: sticky app bar with the brand and the menu button. */
+  .authenticated-layout__mobile-bar {
+    position: sticky;
+    top: 0;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--ph-space-3);
+    min-height: 3.5rem;
+    padding: var(--ph-space-2) var(--ph-space-4);
+    background: color-mix(in srgb, var(--ph-color-surface) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--ph-color-border);
+  }
+
+  .authenticated-layout__mobile-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--ph-space-2);
+    font-weight: 700;
+    color: var(--ph-color-text);
+  }
+
+  .authenticated-layout__mobile-brand .brand-mark {
+    width: 2rem;
+    height: 2rem;
+  }
+
   .authenticated-layout__mobile-toggle {
     display: inline-flex;
     align-items: center;
     gap: var(--ph-space-2);
-    position: fixed;
-    top: var(--ph-space-3);
-    left: var(--ph-space-3);
-    z-index: 30;
-    min-height: var(--ph-control-height);
-    padding: 0 0.75rem;
+    min-height: var(--ph-btn-height-sm);
+    padding: 0 var(--ph-btn-padding-x-sm);
     border: 1px solid var(--ph-color-border);
-    border-radius: var(--ph-radius-md);
+    border-radius: var(--ph-btn-radius);
     background: var(--ph-color-surface);
-    box-shadow: var(--ph-shadow-md);
     cursor: pointer;
     color: var(--ph-color-text);
+  }
+
+  .authenticated-layout__mobile-toggle-icon {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 3px;
   }
 
   .authenticated-layout__mobile-toggle:focus-visible {
@@ -369,6 +399,6 @@
   }
 
   .authenticated-layout__content {
-    padding-top: 3.5rem;
+    padding-top: 0;
   }
 }

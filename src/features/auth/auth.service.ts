@@ -1,9 +1,13 @@
 import type { ApolloClient } from '@apollo/client';
 import {
+  ACTIVATE_ACCOUNT_MUTATION,
   CHANGE_PASSWORD_MUTATION,
   LOGIN_MUTATION,
   ME_QUERY,
   REGISTER_MUTATION,
+  REQUEST_ACCOUNT_ACTIVATION_MUTATION,
+  REQUEST_PASSWORD_RESET_MUTATION,
+  RESET_PASSWORD_MUTATION,
   UPDATE_NOTIFICATION_PREFERENCES_MUTATION,
   UPDATE_PROFILE_MUTATION,
 } from './graphql';
@@ -19,6 +23,7 @@ import type {
   ChangePasswordInput,
   LoginInput,
   RegisterInput,
+  ResetPasswordInput,
   UpdateNotificationPreferencesInput,
   UpdateProfileInput,
 } from './types';
@@ -57,6 +62,44 @@ export async function login(
 
   setAccessToken(payload.accessToken);
   return payload.user;
+}
+
+type ActivateAccountMutationResult = {
+  activateAccount: AuthPayload;
+};
+
+/**
+ * Sets the first password on a clinic-created account using the emailed
+ * activation token, then starts a session.
+ */
+export async function activateAccount(
+  client: ApolloClient,
+  token: string,
+  password: string,
+): Promise<AuthUser> {
+  const { data } = await client.mutate<ActivateAccountMutationResult>({
+    mutation: ACTIVATE_ACCOUNT_MUTATION,
+    variables: { input: { token, password } },
+  });
+
+  const payload = data?.activateAccount;
+  if (!payload?.accessToken || !payload.user) {
+    throw new Error('Activation failed: missing authentication payload.');
+  }
+
+  setAccessToken(payload.accessToken);
+  return payload.user;
+}
+
+/** Always resolves; the API never reveals whether the email exists. */
+export async function requestAccountActivation(
+  client: ApolloClient,
+  email: string,
+): Promise<void> {
+  await client.mutate({
+    mutation: REQUEST_ACCOUNT_ACTIVATION_MUTATION,
+    variables: { input: { email } },
+  });
 }
 
 export async function register(
@@ -189,4 +232,33 @@ export async function updateNotificationPreferences(
 
   syncAuthUserCache(client, user);
   return user;
+}
+
+/**
+ * Asks the API to email a password reset / account activation link.
+ * The API always reports success so it never reveals whether an email exists.
+ */
+export async function requestPasswordReset(
+  client: ApolloClient,
+  email: string,
+): Promise<void> {
+  await client.mutate<{ requestPasswordReset: boolean }>({
+    mutation: REQUEST_PASSWORD_RESET_MUTATION,
+    variables: { input: { email } },
+  });
+}
+
+/** Sets a new password using the token from the emailed link. */
+export async function resetPassword(
+  client: ApolloClient,
+  input: ResetPasswordInput,
+): Promise<void> {
+  const { data } = await client.mutate<{ resetPassword: boolean }>({
+    mutation: RESET_PASSWORD_MUTATION,
+    variables: { input },
+  });
+
+  if (!data?.resetPassword) {
+    throw new Error('Failed to reset password.');
+  }
 }

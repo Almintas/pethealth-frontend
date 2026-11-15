@@ -9,6 +9,7 @@ import {
   isNotFoundError,
 } from '../../auth/utils/get-auth-error-message';
 import { AppointmentsSection } from '../../appointments';
+import { ClinicAccessSection } from '../../clinic-access';
 import { RemindersSection } from '../../reminders';
 import { MedicalRecordsSection } from '../../medical-records';
 import { MedicationsSection } from '../../medications';
@@ -86,6 +87,7 @@ export function PetDetailsPage() {
         }
       } catch (error) {
         if (!cancelled) {
+          // Decide on the raw API error: the user-facing message is translated.
           if (isNotFoundError(error)) {
             setNotFound(true);
           } else {
@@ -189,7 +191,9 @@ export function PetDetailsPage() {
   return (
     <section className="pet-details ph-page" aria-labelledby="pet-details-title">
       <div className="pet-details__toolbar">
-        <Link className="ph-link ph-link--muted" to="/pets">{t('pets.backToPets')}</Link>
+        <Link className="ph-link" to="/pets">
+          ← {t('pets.backToPets')}
+        </Link>
       </div>
 
       {loading ? (
@@ -337,6 +341,7 @@ export function PetDetailsPage() {
             </nav>
           </section>
 
+          <ClinicAccessSection petId={pet.id} petName={pet.name} />
           <MedicalRecordsSection petId={pet.id} />
           <VaccinationsSection petId={pet.id} />
           <MedicationsSection petId={pet.id} />

@@ -51,6 +51,11 @@ export type ChangePasswordInput = {
   newPassword: string;
 };
 
+export type ResetPasswordInput = {
+  token: string;
+  newPassword: string;
+};
+
 export type UpdateNotificationPreferencesInput = {
   emailAppointmentReminders?: boolean;
   emailMedicationReminders?: boolean;

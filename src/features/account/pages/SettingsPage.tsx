@@ -10,15 +10,6 @@ import { ME_QUERY } from '../../auth/graphql';
 import type { AuthUser, NotificationPreferences } from '../../auth/types';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { useTheme, type ThemePreference } from '../../../theme';
-import {
-  formatSampleDate,
-  formatSampleTime,
-  loadUserPreferences,
-  saveUserPreferences,
-  type DateFormatPreference,
-  type TimeFormatPreference,
-  type UserPreferences,
-} from '../utils/user-preferences';
 import '../../../components/language-selector.css';
 import './account-page.css';
 
@@ -64,9 +55,6 @@ export function SettingsPage() {
 
   const user = data?.me ?? authUser;
 
-  const [preferences, setPreferences] = useState<UserPreferences>(() =>
-    loadUserPreferences(),
-  );
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
   const [notificationPrefs, setNotificationPrefs] =
     useState<NotificationPreferences>(DEFAULT_NOTIFICATION_PREFERENCES);
@@ -88,15 +76,6 @@ export function SettingsPage() {
     const timer = window.setTimeout(() => setSavedMessage(null), 2500);
     return () => window.clearTimeout(timer);
   }, [savedMessage]);
-
-  const updatePreferences = (patch: Partial<UserPreferences>) => {
-    setPreferences((current) => {
-      const next = { ...current, ...patch };
-      saveUserPreferences(next);
-      return next;
-    });
-    setSavedMessage(t('common.preferencesSavedDevice'));
-  };
 
   const handleNotificationToggle = async (
     key: NotificationToggleKey,
@@ -122,8 +101,6 @@ export function SettingsPage() {
     }
   };
 
-  const sampleDate = formatSampleDate(preferences);
-  const sampleTime = formatSampleTime(preferences);
   const notificationsLoading = isInitializing || loading || !user;
 
   return (
@@ -227,62 +204,6 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section className="ph-card ph-card--pad account-card" aria-labelledby="settings-datetime-heading">
-          <div className="account-card__header">
-            <h2 id="settings-datetime-heading" className="account-card__title">
-              {t('settings.dateTime')}
-            </h2>
-            <p className="account-card__hint">{t('settings.dateTimeHint')}</p>
-          </div>
-
-          <div className="account-settings__section">
-            <div className="ph-form__row ph-form__row--split">
-              <div className="ph-form__field">
-                <label className="ph-form__label" htmlFor="settings-date-format">
-                  {t('settings.dateFormat')}
-                </label>
-                <select
-                  id="settings-date-format"
-                  className="ph-form__select"
-                  value={preferences.dateFormat}
-                  onChange={(event) =>
-                    updatePreferences({
-                      dateFormat: event.target.value as DateFormatPreference,
-                    })
-                  }
-                >
-                  <option value="DMY">DD/MM/YYYY</option>
-                  <option value="MDY">MM/DD/YYYY</option>
-                  <option value="YMD">YYYY-MM-DD</option>
-                </select>
-              </div>
-
-              <div className="ph-form__field">
-                <label className="ph-form__label" htmlFor="settings-time-format">
-                  {t('settings.timeFormat')}
-                </label>
-                <select
-                  id="settings-time-format"
-                  className="ph-form__select"
-                  value={preferences.timeFormat}
-                  onChange={(event) =>
-                    updatePreferences({
-                      timeFormat: event.target.value as TimeFormatPreference,
-                    })
-                  }
-                >
-                  <option value="24">{t('settings.time24')}</option>
-                  <option value="12">{t('settings.time12')}</option>
-                </select>
-              </div>
-            </div>
-
-            <p className="account-settings__preview">
-              {t('settings.preview', { date: sampleDate, time: sampleTime })}
-            </p>
-          </div>
-        </section>
-
         <section className="ph-card ph-card--pad account-card" aria-labelledby="settings-language-heading">
           <div className="account-card__header">
             <h2 id="settings-language-heading" className="account-card__title">
@@ -307,14 +228,19 @@ export function SettingsPage() {
             {t('settings.dangerZone')}
           </h2>
           <p className="account-danger__text">{t('settings.deleteAccountHint')}</p>
-          <button
-            type="button"
-            className="ph-btn ph-btn--danger-ghost"
-            disabled
-            title={t('settings.comingSoon')}
-          >
-            {t('settings.deleteAccount')}
-          </button>
+          <div className="account-danger__actions">
+            <button
+              type="button"
+              className="ph-btn ph-btn--danger-ghost"
+              disabled
+              aria-describedby="settings-delete-account-status"
+            >
+              {t('settings.deleteAccount')}
+            </button>
+            <span id="settings-delete-account-status" className="ph-badge">
+              {t('settings.comingSoon')}
+            </span>
+          </div>
         </section>
       </div>
     </div>

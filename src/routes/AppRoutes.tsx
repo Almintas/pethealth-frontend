@@ -2,8 +2,11 @@ import { lazy, Suspense, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, Route, Routes } from 'react-router';
 import { LoadingState } from '../components/feedback';
+import { ActivateAccountPage } from '../features/auth/pages/ActivateAccountPage';
+import { ForgotPasswordPage } from '../features/auth/pages/ForgotPasswordPage';
 import { LoginPage } from '../features/auth/pages/LoginPage';
 import { RegisterPage } from '../features/auth/pages/RegisterPage';
+import { ResetPasswordPage } from '../features/auth/pages/ResetPasswordPage';
 import { AuthenticatedLayout } from '../layouts/AuthenticatedLayout';
 import { MainLayout } from '../layouts/MainLayout';
 import { ProtectedRoute } from './ProtectedRoute';
@@ -52,6 +55,16 @@ export function AppRoutes() {
     <Routes>
       <Route path="/" element={<RootRedirect />} />
 
+      {/* Reachable signed in or out: the emailed link must always work. */}
+      <Route
+        path="/activate-account"
+        element={
+          <MainLayout>
+            <ActivateAccountPage />
+          </MainLayout>
+        }
+      />
+
       <Route element={<PublicRoute />}>
         <Route
           path="/login"
@@ -69,7 +82,25 @@ export function AppRoutes() {
             </MainLayout>
           }
         />
+        <Route
+          path="/forgot-password"
+          element={
+            <MainLayout>
+              <ForgotPasswordPage />
+            </MainLayout>
+          }
+        />
       </Route>
+
+      {/* Reached from emailed links, so it must work whether or not someone is signed in. */}
+      <Route
+        path="/reset-password"
+        element={
+          <MainLayout>
+            <ResetPasswordPage />
+          </MainLayout>
+        }
+      />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AuthenticatedLayout />}>

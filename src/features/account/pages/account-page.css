@@ -278,3 +278,15 @@
   font-size: 0.9375rem;
   color: var(--ph-color-text);
 }
+
+.account-danger__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ph-space-3);
+}
+
+/* Keep the focus ring visible on the selected option too. */
+.account-settings__theme-segment-btn[aria-pressed='true']:focus-visible {
+  box-shadow: var(--ph-focus-ring);
+}

@@ -87,13 +87,14 @@
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 0.95rem;
-  font-size: 0.875rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   color: var(--ph-color-on-primary);
   background: var(--med-accent);
   border: none;
-  border-radius: 999px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
   white-space: nowrap;
 }
@@ -461,14 +462,18 @@
 }
 
 .medications-section__delete {
-  padding: 0.35rem 0.65rem;
-  font-size: 0.75rem;
+  padding: 0 var(--ph-btn-padding-x-sm);
+  min-height: var(--ph-btn-height-sm);
+  font-size: var(--ph-btn-font-size-sm);
   font-weight: 500;
   color: var(--med-muted);
   background: transparent;
   border: 1px solid var(--med-border);
-  border-radius: 6px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .medications-section__delete:hover:not(:disabled) {
@@ -493,20 +498,28 @@
 
 .medications-section__delete-confirm-yes,
 .medications-section__delete-confirm-no {
-  padding: 0.3rem 0.55rem;
-  font-size: 0.75rem;
+  padding: 0 var(--ph-btn-padding-x-sm);
+  min-height: var(--ph-btn-height-sm);
+  font-size: var(--ph-btn-font-size-sm);
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: var(--ph-btn-radius);
   cursor: pointer;
   border: 1px solid var(--med-border);
   background: var(--med-surface-elevated);
   color: var(--med-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .medications-section__delete-confirm-yes {
   color: var(--ph-color-danger-text);
   border-color: rgba(248, 113, 113, 0.45);
   background: var(--med-danger-soft);
+  min-height: var(--ph-btn-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .medications-section__delete-confirm-yes:disabled,

@@ -2,13 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="48x48" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#f4f6f8" />
     <script>
       (function () {
         var key = 'pethealth-theme';
-        var stored = localStorage.getItem(key);
+        var stored = null;
+        try {
+          stored = localStorage.getItem(key);
+        } catch (error) {
+          // Storage unavailable (private mode): fall back to the system theme.
+        }
         var preference =
           stored === 'light' || stored === 'dark' || stored === 'system'
             ? stored
@@ -30,8 +36,11 @@
         }
       })();
     </script>
-    <meta name="description" content="PetHealth frontend" />
-    <link rel="apple-touch-icon" href="/logo192.png" />
+    <meta
+      name="description"
+      content="PetHealth: your pet's health records, vaccinations, medications and vet visits in one place."
+    />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.json" />
     <title>PetHealth</title>
   </head>

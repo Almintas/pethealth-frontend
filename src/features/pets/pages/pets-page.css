@@ -80,9 +80,10 @@
   justify-content: center;
   margin-top: auto;
   padding-top: var(--ph-space-3);
-  font-size: 0.8125rem;
+  font-size: var(--ph-btn-font-size-sm);
   font-weight: 600;
   color: var(--ph-color-primary);
+  min-height: var(--ph-btn-height-sm);
 }
 
 .pets-page__card:hover .pets-page__cta {
@@ -117,5 +118,9 @@
   .pets-page__cta {
     margin-top: var(--ph-space-2);
     padding-top: 0;
-  }
+  min-height: var(--ph-btn-height);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 }

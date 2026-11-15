@@ -199,6 +199,9 @@ export function ProfilePage() {
         currentPassword,
         newPassword,
       });
+      // Changing the password revokes every existing access token, including
+      // this session's, so sign in again with the new password.
+      await authService.login(client, { email: user.email, password: newPassword });
       setIsPasswordDialogOpen(false);
       setPasswordSuccessMessage(t('profile.passwordUpdatedSuccess'));
     } finally {

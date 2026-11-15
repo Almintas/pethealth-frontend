@@ -24,6 +24,15 @@
   margin-bottom: var(--ph-space-4);
 }
 
+.auth-shell__eyebrow {
+  margin: 0 0 var(--ph-space-2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ph-color-primary);
+}
+
 .auth-shell__brand-title {
   margin: 0;
   font-size: 1.75rem;
@@ -90,13 +99,69 @@
 }
 
 .auth-switch__button {
+  /* Also used on <button>: drop the browser's default button box. */
+  appearance: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
   color: var(--ph-color-primary);
   font-weight: 600;
   text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  border-radius: 0.25rem;
+}
+
+.auth-switch__button:focus-visible {
+  outline: none;
+  box-shadow: var(--ph-focus-ring);
 }
 
 .auth-switch__button:hover {
   color: var(--ph-color-primary-hover);
+}
+
+.auth-switch__button--plain {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.auth-forgot-link {
+  align-self: flex-end;
+  margin-top: calc(var(--ph-space-2) * -1);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+  text-decoration: none;
+}
+
+.auth-forgot-link:hover {
+  color: var(--ph-color-primary-hover);
+  text-decoration: underline;
+}
+
+.auth-notice {
+  margin: 0;
+  padding: var(--ph-space-3) var(--ph-space-4);
+  border-radius: var(--ph-radius-md);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  background: var(--ph-color-success-soft);
+  color: var(--ph-color-success-text);
+  border: 1px solid
+    color-mix(in srgb, var(--ph-color-success) 25%, var(--ph-color-border));
+}
+
+.auth-submit--link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  text-decoration: none;
 }
 
 @media (max-width: 900px) {
@@ -107,7 +172,8 @@
   .auth-shell__brand {
     border-right: none;
     border-bottom: 1px solid var(--ph-color-border);
-    padding: var(--ph-space-6) var(--ph-space-4);
+    /* Leave room for the language picker in the top-right corner. */
+    padding: calc(var(--ph-space-6) + 2.5rem) var(--ph-space-4) var(--ph-space-6);
   }
 
   .auth-shell__brand-inner {

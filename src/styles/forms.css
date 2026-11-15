@@ -194,16 +194,19 @@
 .medical-record-form__submit,
 .vaccination-form__submit,
 .auth-submit {
-  min-height: var(--ph-control-height);
-  padding: 0 1.25rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
   border: none;
-  border-radius: var(--ph-radius-md);
+  border-radius: var(--ph-btn-radius);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   color: var(--ph-color-on-primary);
   background: var(--ph-color-primary);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ph-form__submit:focus-visible,
@@ -236,16 +239,19 @@
 .medication-form__cancel,
 .medical-record-form__cancel,
 .vaccination-form__cancel {
-  min-height: var(--ph-control-height);
-  padding: 0 1.25rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
   border: 1px solid var(--ph-color-border);
-  border-radius: var(--ph-radius-md);
+  border-radius: var(--ph-btn-radius);
   font: inherit;
-  font-size: 0.875rem;
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   color: var(--ph-color-text-secondary);
   background: var(--ph-color-surface);
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .ph-form__cancel:focus-visible,
@@ -271,4 +277,14 @@
 
 .pet-form__required {
   color: var(--ph-color-danger);
+}
+
+.auth-notice {
+  margin: 0;
+  padding: var(--ph-space-3) var(--ph-space-4);
+  border-radius: var(--ph-radius-md);
+  font-size: 0.875rem;
+  background: var(--ph-color-success-soft);
+  color: var(--ph-color-success-text);
+  border: 1px solid var(--ph-color-success-text);
 }

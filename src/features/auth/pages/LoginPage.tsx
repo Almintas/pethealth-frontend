@@ -80,6 +80,10 @@ export function LoginPage() {
           disabled={isSubmitting}
         />
 
+        <Link className="auth-forgot-link" to="/forgot-password">
+          {t('auth.forgotPassword')}
+        </Link>
+
         <button className="auth-submit" type="submit" disabled={isSubmitting}>
           {isSubmitting ? t('auth.signingIn') : t('auth.signIn')}
         </button>
@@ -89,6 +93,13 @@ export function LoginPage() {
         {t('auth.noAccount')}{' '}
         <Link className="auth-switch__button" to="/register">
           {t('auth.createOne')}
+        </Link>
+      </p>
+
+      <p className="auth-switch">
+        {t('activation.clinicCreatedAccount')}{' '}
+        <Link className="auth-switch__button" to="/activate-account">
+          {t('activation.activateLink')}
         </Link>
       </p>
     </AuthShell>

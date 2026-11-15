@@ -21,6 +21,7 @@ export function AuthShell({ title, subtitle, children }: AuthShellProps) {
           <div className="auth-shell__logo">
             <BrandMark size="md" />
           </div>
+          <p className="auth-shell__eyebrow">{t('auth.audience')}</p>
           <h1 className="auth-shell__brand-title">PetHealth</h1>
           <p className="auth-shell__brand-copy">{t('common.brandTaglineAuth')}</p>
         </div>

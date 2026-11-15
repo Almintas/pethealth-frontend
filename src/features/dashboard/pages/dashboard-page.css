@@ -375,13 +375,13 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: var(--ph-control-height);
-  padding: 0 1.15rem;
-  font-size: 0.875rem;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  font-size: var(--ph-btn-font-size);
   font-weight: 600;
   color: var(--ph-color-on-primary);
   background: var(--ph-color-primary);
-  border-radius: var(--ph-radius-md);
+  border-radius: var(--ph-btn-radius);
   text-decoration: none;
 }
 

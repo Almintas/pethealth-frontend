@@ -112,16 +112,12 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
   };
 
   const countLabel =
-    medications.length === 1
-      ? t('health.medicationCountOne')
-      : t('health.medicationCountMany', { count: medications.length });
+    t('health.medicationCount', { count: medications.length });
 
   const activeCountLabel =
     activeCount === 0
       ? null
-      : activeCount === 1
-        ? t('health.activeMedicationCountOne')
-        : t('health.activeMedicationCountMany', { count: activeCount });
+      : t('health.activeMedicationCount', { count: activeCount });
 
   return (
     <section
@@ -186,9 +182,6 @@ export function MedicationsSection({ petId }: MedicationsSectionProps) {
             .filter(Boolean)
             .join(' ')}
         >
-          {readOnly ? (
-            <span className="ph-clinic-badge">{t('health.managedByClinic')}</span>
-          ) : null}
           <h3 className="medications-section__empty-title">
             {emptyTitle}
           </h3>

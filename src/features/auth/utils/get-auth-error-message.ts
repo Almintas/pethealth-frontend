@@ -30,7 +30,7 @@ function readRawErrorMessages(error: unknown): string[] {
 }
 
 /**
- * Credential failures are also 401/UNAUTHENTICATED responses, so they must be
+ * Wrong credentials also come back as 401/UNAUTHENTICATED, so they must be
  * recognised before the generic "session expired" handling.
  */
 function mapCredentialFailure(error: unknown): string | null {
@@ -46,20 +46,6 @@ function mapCredentialFailure(error: unknown): string | null {
     return i18n.t('errors.currentPasswordIncorrect');
   }
   return null;
-}
-
-/** True when the API reported that the requested resource does not exist. */
-export function isNotFoundError(error: unknown): boolean {
-  if (CombinedGraphQLErrors.is(error)) {
-    return error.errors.some(
-      (graphQLError) =>
-        graphQLError.extensions?.code === 'NOT_FOUND' ||
-        graphQLError.message.toLowerCase().includes('not found'),
-    );
-  }
-  return (
-    error instanceof Error && error.message.toLowerCase().includes('not found')
-  );
 }
 
 export function isUnauthorizedError(error: unknown): boolean {
@@ -124,6 +110,15 @@ function mapKnownBackendMessage(message: string): string | null {
   ) {
     return i18n.t('errors.invalidCredentials');
   }
+  if (normalized.includes('already created an account for this email')) {
+    return i18n.t('errors.accountActivationRequired');
+  }
+  if (normalized.includes('account is already active')) {
+    return i18n.t('errors.accountAlreadyActive');
+  }
+  if (normalized.includes('activation link is invalid or has expired')) {
+    return i18n.t('errors.activationLinkInvalid');
+  }
   if (normalized.includes('not found')) {
     return i18n.t('errors.notFound');
   }
@@ -146,6 +141,18 @@ function readGraphQLErrorMessage(error: unknown): string | null {
 
   const combined = messages.join(' ');
   return mapKnownBackendMessage(combined) ?? combined;
+}
+
+/** True when the API reported that the requested item does not exist. */
+export function isNotFoundError(error: unknown): boolean {
+  if (CombinedGraphQLErrors.is(error)) {
+    return error.errors.some(
+      (graphQLError) =>
+        graphQLError.extensions?.code === 'NOT_FOUND' ||
+        graphQLError.message.toLowerCase().includes('not found'),
+    );
+  }
+  return error instanceof Error && error.message.toLowerCase().includes('not found');
 }
 
 export function getUserFacingErrorMessage(

@@ -95,16 +95,12 @@ export function AppointmentsSection({ petId }: AppointmentsSectionProps) {
   };
 
   const countLabel =
-    appointments.length === 1
-      ? t('appointments.countOne')
-      : t('appointments.countMany', { count: appointments.length });
+    t('appointments.count', { count: appointments.length });
 
   const upcomingCountLabel =
     upcoming.length === 0
       ? null
-      : upcoming.length === 1
-        ? t('appointments.upcomingCountOne')
-        : t('appointments.upcomingCountMany', { count: upcoming.length });
+      : t('appointments.upcomingCount', { count: upcoming.length });
 
   const historyDefaultOpen = history.length <= 4;
 

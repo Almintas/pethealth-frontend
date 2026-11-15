@@ -70,3 +70,33 @@ export const UPDATE_NOTIFICATION_PREFERENCES_MUTATION = gql`
   }
   ${AUTH_USER_FIELDS}
 `;
+
+export const ACTIVATE_ACCOUNT_MUTATION = gql`
+  mutation ActivateAccount($input: ActivateAccountInput!) {
+    activateAccount(input: $input) {
+      accessToken
+      user {
+        ...AuthUserFields
+      }
+    }
+  }
+  ${AUTH_USER_FIELDS}
+`;
+
+export const REQUEST_ACCOUNT_ACTIVATION_MUTATION = gql`
+  mutation RequestAccountActivation($input: RequestAccountActivationInput!) {
+    requestAccountActivation(input: $input)
+  }
+`;
+
+export const REQUEST_PASSWORD_RESET_MUTATION = gql`
+  mutation RequestPasswordReset($input: RequestPasswordResetInput!) {
+    requestPasswordReset(input: $input)
+  }
+`;
+
+export const RESET_PASSWORD_MUTATION = gql`
+  mutation ResetPassword($input: ResetPasswordInput!) {
+    resetPassword(input: $input)
+  }
+`;

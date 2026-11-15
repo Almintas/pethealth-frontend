@@ -55,20 +55,28 @@ export function AuthenticatedLayout() {
 
   return (
     <div className="authenticated-layout">
-      <button
-        type="button"
-        className="authenticated-layout__mobile-toggle"
-        aria-expanded={isMobileNavOpen}
-        aria-controls="app-sidebar"
-        onClick={() => setIsMobileNavOpen((open) => !open)}
-      >
-        <span className="authenticated-layout__mobile-toggle-bar" />
-        <span className="authenticated-layout__mobile-toggle-bar" />
-        <span className="authenticated-layout__mobile-toggle-bar" />
-        <span className="authenticated-layout__mobile-toggle-label">
-          {t('common.menu')}
+      <header className="authenticated-layout__mobile-bar">
+        <span className="authenticated-layout__mobile-brand">
+          <BrandMark size="sm" />
+          <span>PetHealth</span>
         </span>
-      </button>
+        <button
+          type="button"
+          className="authenticated-layout__mobile-toggle"
+          aria-expanded={isMobileNavOpen}
+          aria-controls="app-sidebar"
+          onClick={() => setIsMobileNavOpen((open) => !open)}
+        >
+          <span className="authenticated-layout__mobile-toggle-icon" aria-hidden="true">
+            <span className="authenticated-layout__mobile-toggle-bar" />
+            <span className="authenticated-layout__mobile-toggle-bar" />
+            <span className="authenticated-layout__mobile-toggle-bar" />
+          </span>
+          <span className="authenticated-layout__mobile-toggle-label">
+            {t('common.menu')}
+          </span>
+        </button>
+      </header>
 
       <aside
         id="app-sidebar"
