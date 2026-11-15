@@ -1,0 +1,22 @@
+.user-initials-avatar {
+  flex-shrink: 0;
+  border-radius: var(--ph-radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ph-color-primary-muted);
+  color: var(--ph-color-primary);
+  font-weight: 700;
+}
+
+.user-initials-avatar--md {
+  width: 2.375rem;
+  height: 2.375rem;
+  font-size: 0.8125rem;
+}
+
+.user-initials-avatar--lg {
+  width: 3.5rem;
+  height: 3.5rem;
+  font-size: 1.0625rem;
+}

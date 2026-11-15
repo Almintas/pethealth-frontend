@@ -1,0 +1,196 @@
+.clinic-access-section {
+  margin-top: 2rem;
+  padding: 1.35rem 1.25rem;
+  background: var(--ph-color-surface);
+  border: 1px solid var(--ph-color-border);
+  border-radius: 14px;
+  color: var(--ph-color-text);
+}
+
+@media (min-width: 640px) {
+  .clinic-access-section {
+    padding: 1.5rem;
+  }
+}
+
+.clinic-access-section__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.clinic-access-section__header h2 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.clinic-access-section__intro {
+  margin: 0.25rem 0 0;
+  max-width: 38rem;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.clinic-access-section__primary {
+  flex-shrink: 0;
+  padding: 0 var(--ph-btn-padding-x);
+  min-height: var(--ph-btn-height);
+  font-size: var(--ph-btn-font-size);
+  font-weight: 600;
+  color: var(--ph-color-on-primary);
+  background: var(--ph-color-primary);
+  border: none;
+  border-radius: var(--ph-btn-radius);
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clinic-access-section__primary:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.clinic-access-section__primary:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.clinic-access-section__code-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  text-align: center;
+  background: var(--ph-color-primary-soft);
+  border: 1px dashed var(--ph-color-primary);
+  border-radius: 12px;
+}
+
+.clinic-access-section__code-card--expired {
+  background: var(--ph-color-surface-muted);
+  border-color: var(--ph-color-border-strong);
+}
+
+.clinic-access-section__code-label,
+.clinic-access-section__code-meta,
+.clinic-access-section__code-hint {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.clinic-access-section__code {
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--ph-color-text);
+}
+
+.clinic-access-section__code-card--expired .clinic-access-section__code {
+  color: var(--ph-color-text-muted);
+  text-decoration: line-through;
+}
+
+.clinic-access-section__code-meta {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.clinic-access-section__link {
+  margin-top: 0.25rem;
+  padding: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ph-color-primary);
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.clinic-access-section__subtitle {
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.clinic-access-section__empty {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.clinic-access-section__list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.clinic-access-section__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  background: var(--ph-color-surface-elevated);
+  border: 1px solid var(--ph-color-border);
+  border-radius: 10px;
+}
+
+.clinic-access-section__item-main {
+  min-width: 0;
+}
+
+.clinic-access-section__clinic-name {
+  margin: 0;
+  font-weight: 600;
+}
+
+.clinic-access-section__clinic-meta {
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-text-secondary);
+}
+
+.clinic-access-section__clinic-meta:empty {
+  display: none;
+}
+
+.clinic-access-section__revoke {
+  padding: 0 var(--ph-btn-padding-x-sm);
+  min-height: var(--ph-btn-height-sm);
+  font-size: var(--ph-btn-font-size-sm);
+  font-weight: 600;
+  color: var(--ph-color-danger-text);
+  background: transparent;
+  border: 1px solid var(--ph-color-danger-text);
+  border-radius: var(--ph-btn-radius);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clinic-access-section__revoke:hover:not(:disabled) {
+  background: var(--ph-color-danger-soft);
+}
+
+.clinic-access-section__revoke:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}

@@ -4,13 +4,13 @@
   "terminals": [
     {
       "name": "dev-server",
-      "command": "BROWSER=none PORT=3000 npm start"
+      "command": "npm run dev -- --host"
     }
   ],
   "ports": [
     {
-      "name": "CRA dev server",
-      "port": 3000
+      "name": "Vite dev server",
+      "port": 5173
     }
   ]
 }

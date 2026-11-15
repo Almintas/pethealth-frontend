@@ -1,0 +1,282 @@
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useEnumLabels } from '../../../i18n/useEnumLabels';
+import { ReminderStatus, type Reminder } from '../types';
+import {
+  formatReminderDate,
+  formatReminderTime,
+} from '../utils/format-reminder-datetime';
+import {
+  getReminderDueUrgency,
+  getReminderDueUrgencyLabel,
+  formatReminderSource,
+} from '../utils/reminder-list-utils';
+
+const LONG_MESSAGE_THRESHOLD = 140;
+
+export type ReminderCardAction = 'complete' | 'dismiss' | 'delete';
+
+type ReminderCardProps = {
+  reminder: Reminder;
+  isLast: boolean;
+  isHistory: boolean;
+  pendingAction: ReminderCardAction | null;
+  isActionRunning: boolean;
+  onEdit: () => void;
+  onComplete: () => void;
+  onDismiss: () => void;
+  onDelete: () => void;
+};
+
+function statusModifier(status: Reminder['status']): string {
+  switch (status) {
+    case ReminderStatus.Pending:
+      return 'pending';
+    case ReminderStatus.Completed:
+      return 'completed';
+    case ReminderStatus.Dismissed:
+      return 'dismissed';
+    default:
+      return 'pending';
+  }
+}
+
+export function ReminderCard({
+  reminder,
+  isLast,
+  isHistory,
+  pendingAction,
+  isActionRunning,
+  onEdit,
+  onComplete,
+  onDismiss,
+  onDelete,
+}: ReminderCardProps) {
+  const { t } = useTranslation();
+  const { reminderStatus, reminderType } = useEnumLabels();
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const message = reminder.message?.trim() ?? '';
+  const messageIsLong = message.length > LONG_MESSAGE_THRESHOLD;
+  const dueUrgency = getReminderDueUrgency(reminder.dueAt);
+  const dueUrgencyLabel = getReminderDueUrgencyLabel(dueUrgency);
+  const sourceLabel = formatReminderSource(reminder);
+  const isPending = reminder.status === ReminderStatus.Pending;
+
+  const isCompleting = isActionRunning && pendingAction === 'complete';
+  const isDismissing = isActionRunning && pendingAction === 'dismiss';
+  const isDeleting = isActionRunning && pendingAction === 'delete';
+
+  const handleDeleteClick = () => {
+    if (!confirmDelete) {
+      setConfirmDelete(true);
+      return;
+    }
+    onDelete();
+    setConfirmDelete(false);
+  };
+
+  return (
+    <li
+      className={[
+        'reminders-section__timeline-item',
+        isHistory ? 'reminders-section__timeline-item--history' : '',
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
+      <div className="reminders-section__timeline-rail" aria-hidden="true">
+        <span
+          className={[
+            'reminders-section__timeline-dot',
+            isHistory ? 'reminders-section__timeline-dot--muted' : '',
+            isPending && dueUrgency === 'overdue'
+              ? 'reminders-section__timeline-dot--overdue'
+              : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+        />
+        {!isLast ? <span className="reminders-section__timeline-line" /> : null}
+      </div>
+
+      <article
+        className={[
+          'reminders-section__record-card',
+          isHistory ? 'reminders-section__record-card--history' : '',
+          isPending && dueUrgency === 'overdue'
+            ? 'reminders-section__record-card--overdue'
+            : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+      >
+        <div className="reminders-section__record-top">
+          <h3 className="reminders-section__record-title">{reminder.title}</h3>
+          <span
+            className={[
+              'reminders-section__status-badge',
+              `reminders-section__status-badge--${statusModifier(reminder.status)}`,
+            ].join(' ')}
+          >
+            {reminderStatus(reminder.status)}
+          </span>
+        </div>
+
+        <div className="reminders-section__meta-row">
+          <span className="reminders-section__type-chip">
+            {reminderType(reminder.type)}
+          </span>
+          {sourceLabel ? (
+            <span className="reminders-section__source-chip">{sourceLabel}</span>
+          ) : null}
+        </div>
+
+        <div
+          className={[
+            'reminders-section__due-hero',
+            `reminders-section__due-hero--${dueUrgency}`,
+          ].join(' ')}
+        >
+          <span className="reminders-section__due-hero-label">
+            {dueUrgencyLabel}
+          </span>
+          {reminder.dueAt ? (
+            <div className="reminders-section__due-hero-datetime">
+              <time
+                className="reminders-section__due-date"
+                dateTime={reminder.dueAt}
+              >
+                {formatReminderDate(reminder.dueAt)}
+              </time>
+              <time
+                className="reminders-section__due-time"
+                dateTime={reminder.dueAt}
+              >
+                {formatReminderTime(reminder.dueAt)}
+              </time>
+            </div>
+          ) : (
+            <span className="reminders-section__due-none">{t('health.noDueDateSet')}</span>
+          )}
+        </div>
+
+        {message ? (
+          messageIsLong ? (
+            <details className="reminders-section__record-details">
+              <summary>{t('appointments.notes')}</summary>
+              <p>{message}</p>
+            </details>
+          ) : (
+            <p className="reminders-section__record-snippet">
+              <span className="reminders-section__record-snippet-label">
+                {t('appointments.notes')}:
+              </span>{' '}
+              {message}
+            </p>
+          )
+        ) : null}
+
+        {isPending ? (
+          <div className="reminders-section__record-actions">
+            <button
+              type="button"
+              className="reminders-section__edit ph-btn ph-btn--secondary"
+              onClick={onEdit}
+              disabled={isActionRunning}
+            >
+              {t('common.edit')}
+            </button>
+            <button
+              type="button"
+              className="reminders-section__action reminders-section__action--complete"
+              onClick={onComplete}
+              disabled={isActionRunning}
+            >
+              {isCompleting ? t('common.saving') : t('reminders.complete')}
+            </button>
+            <button
+              type="button"
+              className="reminders-section__action reminders-section__action--dismiss"
+              onClick={onDismiss}
+              disabled={isActionRunning}
+            >
+              {isDismissing ? t('common.saving') : t('reminders.dismiss')}
+            </button>
+            {confirmDelete ? (
+              <div className="reminders-section__delete-confirm" role="status">
+                <span>{t('reminders.deleteConfirm')}</span>
+                <button
+                  type="button"
+                  className="reminders-section__delete-confirm-yes"
+                  onClick={handleDeleteClick}
+                  disabled={isActionRunning}
+                >
+                  {isDeleting ? t('common.saving') : t('common.yes')}
+                </button>
+                <button
+                  type="button"
+                  className="reminders-section__delete-confirm-no"
+                  onClick={() => setConfirmDelete(false)}
+                  disabled={isActionRunning}
+                >
+                  {t('common.no')}
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="reminders-section__delete"
+                onClick={handleDeleteClick}
+                disabled={isActionRunning}
+              >
+                {t('common.delete')}
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="reminders-section__record-actions">
+            <button
+              type="button"
+              className="reminders-section__edit ph-btn ph-btn--secondary"
+              onClick={onEdit}
+              disabled={isActionRunning}
+            >
+              {t('common.edit')}
+            </button>
+            {confirmDelete ? (
+              <div className="reminders-section__delete-confirm" role="status">
+                <span>{t('reminders.deleteConfirm')}</span>
+                <button
+                  type="button"
+                  className="reminders-section__delete-confirm-yes"
+                  onClick={handleDeleteClick}
+                  disabled={isActionRunning}
+                >
+                  {isDeleting ? t('common.saving') : `${t('common.yes')}, ${t('common.delete').toLowerCase()}`}
+                </button>
+                <button
+                  type="button"
+                  className="reminders-section__delete-confirm-no"
+                  onClick={() => setConfirmDelete(false)}
+                  disabled={isActionRunning}
+                >
+                  {t('common.cancel')}
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className="reminders-section__delete"
+                onClick={handleDeleteClick}
+                disabled={isActionRunning}
+              >
+                {t('common.delete')}
+              </button>
+            )}
+          </div>
+        )}
+      </article>
+    </li>
+  );
+}

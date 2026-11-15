@@ -1,0 +1,192 @@
+:root {
+  color-scheme: light;
+
+  --ph-font-sans: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, Roboto,
+    sans-serif;
+
+  /* Page & surfaces */
+  --ph-color-bg: #f4f6f8;
+  --ph-color-surface: #ffffff;
+  --ph-color-surface-elevated: #fcfdfe;
+  --ph-color-surface-muted: #f8fafc;
+  --ph-color-surface-hover: #eef2f6;
+
+  /* Brand accent — healthcare blue */
+  --ph-color-primary: #2563eb;
+  --ph-color-primary-hover: #1d4ed8;
+  --ph-color-primary-soft: #eff6ff;
+  --ph-color-primary-muted: #f0f7ff;
+  --ph-color-on-primary: #ffffff;
+
+  --ph-color-secondary: #3b82f6;
+  --ph-color-secondary-soft: #eff6ff;
+
+  /* Text */
+  --ph-color-text: #172033;
+  /* Both meet WCAG AA (4.5:1) on every light surface, including --ph-color-bg. */
+  --ph-color-text-secondary: #55657a;
+  --ph-color-text-muted: #5b6b80;
+
+  /* Borders */
+  --ph-color-border: #dce3ea;
+  --ph-color-border-strong: #c5d0db;
+
+  /* Inputs */
+  --ph-color-input-bg: #ffffff;
+  --ph-color-input-placeholder: #94a3b8;
+
+  /* Status */
+  --ph-color-success: #059669;
+  /* Solid success buttons: white text needs the darker shade for AA. */
+  --ph-color-success-strong: #047857;
+  --ph-color-success-strong-hover: #065f46;
+  --ph-color-success-soft: #ecfdf5;
+  --ph-color-success-text: #047857;
+  --ph-color-warning: #d97706;
+  --ph-color-warning-soft: #fffbeb;
+  --ph-color-warning-text: #b45309;
+  --ph-color-danger: #dc2626;
+  --ph-color-danger-soft: #fef2f2;
+  --ph-color-danger-text: #b91c1c;
+  --ph-color-info: #2563eb;
+  --ph-color-info-soft: #eff6ff;
+  --ph-color-neutral: #64748b;
+  --ph-color-neutral-soft: #f1f5f9;
+
+  --ph-radius-sm: 0.5rem;
+  --ph-radius-md: 0.625rem;
+  --ph-radius-lg: 0.75rem;
+  --ph-radius-xl: 1rem;
+  --ph-radius-full: 9999px;
+
+  --ph-shadow-sm: 0 1px 2px rgba(23, 32, 51, 0.04);
+  --ph-shadow-md: 0 4px 12px rgba(23, 32, 51, 0.06);
+  --ph-shadow-lg: 0 12px 28px rgba(23, 32, 51, 0.08);
+
+  --ph-space-1: 0.25rem;
+  --ph-space-2: 0.5rem;
+  --ph-space-3: 0.75rem;
+  --ph-space-4: 1rem;
+  --ph-space-5: 1.25rem;
+  --ph-space-6: 1.5rem;
+  --ph-space-8: 2rem;
+  --ph-space-10: 2.5rem;
+
+  --ph-sidebar-width: 15rem;
+  --ph-content-max: 68rem;
+  --ph-control-height: 2.75rem;
+  --ph-focus-ring: 0 0 0 3px rgba(37, 99, 235, 0.35);
+
+  /*
+   * Buttons — one system for both apps. The owner portal uses the default
+   * (calm, rounder); the vet app opts into data-density="compact".
+   */
+  --ph-btn-radius: 0.75rem;
+  --ph-btn-height: 2.75rem;
+  --ph-btn-height-sm: 2.25rem;
+  --ph-btn-padding-x: 1.125rem;
+  --ph-btn-padding-x-sm: 0.875rem;
+  --ph-btn-font-size: 0.9375rem;
+  --ph-btn-font-size-sm: 0.8125rem;
+
+  /* Page layout */
+  --ph-page-max: 72rem;
+  --ph-page-gap: var(--ph-space-6);
+  --ph-overlay: rgba(23, 32, 51, 0.45);
+
+  /* Semantic aliases (map to PetHealth tokens) */
+  --background: var(--ph-color-bg);
+  --foreground: var(--ph-color-text);
+  --card: var(--ph-color-surface);
+  --card-foreground: var(--ph-color-text);
+  --muted: var(--ph-color-surface-muted);
+  --muted-foreground: var(--ph-color-text-muted);
+  --border: var(--ph-color-border);
+  --input: var(--ph-color-border);
+  --input-background: var(--ph-color-input-bg);
+  --primary: var(--ph-color-primary);
+  --primary-foreground: var(--ph-color-on-primary);
+  --secondary: var(--ph-color-secondary-soft);
+  --secondary-foreground: var(--ph-color-text);
+  --accent: var(--ph-color-primary-soft);
+  --accent-foreground: var(--ph-color-primary);
+  --destructive: var(--ph-color-danger);
+  --destructive-foreground: var(--ph-color-on-primary);
+  --sidebar-background: var(--ph-color-surface);
+  --sidebar-foreground: var(--ph-color-text);
+  --sidebar-border: var(--ph-color-border);
+  --sidebar-hover: var(--ph-color-surface-muted);
+  --sidebar-active: var(--ph-color-primary-soft);
+  --success: var(--ph-color-success);
+  --warning: var(--ph-color-warning);
+}
+
+/* Clinic workspace: denser, work-focused controls. */
+[data-density='compact'] {
+  --ph-btn-radius: 0.5rem;
+  --ph-btn-height: 2.5rem;
+  --ph-btn-height-sm: 2rem;
+  --ph-btn-padding-x: 1rem;
+  --ph-btn-padding-x-sm: 0.75rem;
+  --ph-btn-font-size: 0.875rem;
+  --ph-btn-font-size-sm: 0.8125rem;
+  --ph-control-height: 2.5rem;
+  --ph-page-max: 80rem;
+  --ph-page-gap: var(--ph-space-5);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --ph-color-bg: #0f1419;
+  --ph-color-surface: #171c24;
+  --ph-color-surface-elevated: #1c2330;
+  --ph-color-surface-muted: #1a212c;
+  --ph-color-surface-hover: #232b38;
+
+  --ph-color-primary: #3b82f6;
+  --ph-color-primary-hover: #60a5fa;
+  --ph-color-primary-soft: rgba(59, 130, 246, 0.16);
+  --ph-color-primary-muted: rgba(59, 130, 246, 0.12);
+  --ph-color-on-primary: #ffffff;
+
+  --ph-color-secondary: #60a5fa;
+  --ph-color-secondary-soft: rgba(59, 130, 246, 0.12);
+
+  --ph-color-text: #f1f5f9;
+  --ph-color-text-secondary: #94a3b8;
+  --ph-color-text-muted: #8492a6;
+
+  --ph-color-border: #2a3341;
+  --ph-color-border-strong: #3d4a5c;
+
+  --ph-color-input-bg: #1c2330;
+  --ph-color-input-placeholder: #64748b;
+
+  --ph-color-success: #34d399;
+  --ph-color-success-soft: rgba(52, 211, 153, 0.14);
+  --ph-color-success-text: #6ee7b7;
+  --ph-color-success-strong: #047857;
+  --ph-color-success-strong-hover: #059669;
+  --ph-color-warning: #fbbf24;
+  --ph-color-warning-soft: rgba(251, 191, 36, 0.14);
+  --ph-color-warning-text: #fcd34d;
+  --ph-color-danger: #f87171;
+  --ph-color-danger-soft: rgba(248, 113, 113, 0.14);
+  --ph-color-danger-text: #fca5a5;
+  --ph-color-info: #60a5fa;
+  --ph-color-info-soft: rgba(96, 165, 250, 0.14);
+  --ph-color-neutral: #94a3b8;
+  --ph-color-neutral-soft: rgba(148, 163, 184, 0.12);
+
+  --ph-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.28);
+  --ph-shadow-md: 0 6px 16px rgba(0, 0, 0, 0.32);
+  --ph-shadow-lg: 0 16px 36px rgba(0, 0, 0, 0.42);
+
+  --ph-focus-ring: 0 0 0 3px rgba(59, 130, 246, 0.38);
+  --ph-overlay: rgba(2, 6, 23, 0.72);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+}

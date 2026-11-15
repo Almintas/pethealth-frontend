@@ -1,0 +1,90 @@
+import { gql } from '@apollo/client';
+
+export const AUTH_USER_FIELDS = gql`
+  fragment AuthUserFields on UserModel {
+    id
+    email
+    firstName
+    lastName
+    role
+    createdAt
+    updatedAt
+    notificationPreferences {
+      emailAppointmentReminders
+      emailMedicationReminders
+      emailVaccinationReminders
+    }
+  }
+`;
+
+export const LOGIN_MUTATION = gql`
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      accessToken
+      user {
+        ...AuthUserFields
+      }
+    }
+  }
+  ${AUTH_USER_FIELDS}
+`;
+
+export const REGISTER_MUTATION = gql`
+  mutation Register($input: RegisterInput!) {
+    register(input: $input) {
+      ...AuthUserFields
+    }
+  }
+  ${AUTH_USER_FIELDS}
+`;
+
+export const ME_QUERY = gql`
+  query Me {
+    me {
+      ...AuthUserFields
+    }
+  }
+  ${AUTH_USER_FIELDS}
+`;
+
+export const UPDATE_PROFILE_MUTATION = gql`
+  mutation UpdateProfile($input: UpdateProfileInput!) {
+    updateProfile(input: $input) {
+      ...AuthUserFields
+    }
+  }
+  ${AUTH_USER_FIELDS}
+`;
+
+export const CHANGE_PASSWORD_MUTATION = gql`
+  mutation ChangePassword($input: ChangePasswordInput!) {
+    changePassword(input: $input)
+  }
+`;
+
+export const UPDATE_NOTIFICATION_PREFERENCES_MUTATION = gql`
+  mutation UpdateNotificationPreferences($input: UpdateNotificationPreferencesInput!) {
+    updateNotificationPreferences(input: $input) {
+      ...AuthUserFields
+    }
+  }
+  ${AUTH_USER_FIELDS}
+`;
+
+export const ACTIVATE_ACCOUNT_MUTATION = gql`
+  mutation ActivateAccount($input: ActivateAccountInput!) {
+    activateAccount(input: $input) {
+      accessToken
+      user {
+        ...AuthUserFields
+      }
+    }
+  }
+  ${AUTH_USER_FIELDS}
+`;
+
+export const REQUEST_ACCOUNT_ACTIVATION_MUTATION = gql`
+  mutation RequestAccountActivation($input: RequestAccountActivationInput!) {
+    requestAccountActivation(input: $input)
+  }
+`;

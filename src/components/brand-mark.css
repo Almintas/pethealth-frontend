@@ -1,0 +1,22 @@
+.brand-mark {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Sidebar logo (~44px). SVG includes its own rounded tile background. */
+.brand-mark--sm {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.brand-mark--md {
+  width: 2.75rem;
+  height: 2.75rem;
+}
+
+.brand-mark__asset {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
