@@ -6,6 +6,7 @@ import { ErrorAlert } from '../../../components/feedback';
 import { useAuth } from '../../auth';
 import { getUserFacingErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { DELETE_MY_ACCOUNT_MUTATION } from '../account-data.graphql';
+import { rememberAccountDeletedNotice } from '../utils/account-deleted-notice';
 
 /**
  * Permanently deletes the owner's account. Asks for the password and an
@@ -39,6 +40,7 @@ export function DeleteAccountSection() {
     }
     try {
       await deleteAccount({ variables: { password } });
+      rememberAccountDeletedNotice();
       await logout();
       void navigate('/login?accountDeleted=1', { replace: true });
     } catch (deleteError) {

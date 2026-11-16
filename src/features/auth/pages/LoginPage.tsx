@@ -1,6 +1,10 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useSearchParams } from 'react-router';
+import {
+  clearAccountDeletedNotice,
+  hasAccountDeletedNotice,
+} from '../../account/utils/account-deleted-notice';
 import { AuthFormField } from '../components/AuthFormField';
 import { AuthShell } from '../components/AuthShell';
 import { useAuth } from '../useAuth';
@@ -15,7 +19,11 @@ import {
 export function LoginPage() {
   const { t } = useTranslation();
   const [searchParams] = useSearchParams();
-  const accountDeleted = searchParams.get('accountDeleted') === '1';
+  const [deletedFromStorage] = useState(hasAccountDeletedNotice);
+  useEffect(() => {
+    clearAccountDeletedNotice();
+  }, []);
+  const accountDeleted = deletedFromStorage || searchParams.get('accountDeleted') === '1';
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
