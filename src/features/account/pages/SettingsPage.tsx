@@ -11,6 +11,8 @@ import type { AuthUser, NotificationPreferences } from '../../auth/types';
 import { getAuthErrorMessage } from '../../auth/utils/get-auth-error-message';
 import { useTheme, type ThemePreference } from '../../../theme';
 import '../../../components/language-selector.css';
+import { DataExportCard } from '../components/DataExportCard';
+import { DeleteAccountSection } from '../components/DeleteAccountSection';
 import './account-page.css';
 
 type NotificationToggleKey = keyof NotificationPreferences;
@@ -220,28 +222,9 @@ export function SettingsPage() {
           </div>
         </section>
 
-        <section
-          className="ph-card ph-card--pad account-card"
-          aria-labelledby="settings-danger-heading"
-        >
-          <h2 id="settings-danger-heading" className="account-danger__title">
-            {t('settings.dangerZone')}
-          </h2>
-          <p className="account-danger__text">{t('settings.deleteAccountHint')}</p>
-          <div className="account-danger__actions">
-            <button
-              type="button"
-              className="ph-btn ph-btn--danger-ghost"
-              disabled
-              aria-describedby="settings-delete-account-status"
-            >
-              {t('settings.deleteAccount')}
-            </button>
-            <span id="settings-delete-account-status" className="ph-badge">
-              {t('settings.comingSoon')}
-            </span>
-          </div>
-        </section>
+        <DataExportCard />
+
+        <DeleteAccountSection />
       </div>
     </div>
   );

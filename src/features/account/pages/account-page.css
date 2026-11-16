@@ -290,3 +290,28 @@
 .account-settings__theme-segment-btn[aria-pressed='true']:focus-visible {
   box-shadow: var(--ph-focus-ring);
 }
+
+.account-danger__form {
+  display: grid;
+  gap: var(--ph-space-4);
+  margin-top: var(--ph-space-4);
+}
+
+.account-danger__list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: var(--ph-space-1);
+  font-size: 0.9375rem;
+}
+
+.account-danger__confirm {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--ph-space-2);
+  font-size: 0.9375rem;
+}
+
+.account-danger__confirm input {
+  margin-top: 0.2rem;
+}

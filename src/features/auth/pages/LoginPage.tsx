@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
+import { Link, useSearchParams } from 'react-router';
 import { AuthFormField } from '../components/AuthFormField';
 import { AuthShell } from '../components/AuthShell';
 import { useAuth } from '../useAuth';
@@ -14,6 +14,8 @@ import {
 
 export function LoginPage() {
   const { t } = useTranslation();
+  const [searchParams] = useSearchParams();
+  const accountDeleted = searchParams.get('accountDeleted') === '1';
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,6 +52,11 @@ export function LoginPage() {
       subtitle={t('auth.signInSubtitle')}
     >
       <form className="auth-form" onSubmit={handleSubmit} noValidate>
+        {accountDeleted ? (
+          <p className="auth-notice" role="status">
+            {t('auth.accountDeleted')}
+          </p>
+        ) : null}
         {formError ? (
           <p className="auth-alert" role="alert">
             {formError}
