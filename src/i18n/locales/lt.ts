@@ -137,6 +137,8 @@ const lt = {
       CREATED_APPOINTMENT: 'užregistravo vizitą',
       UPDATED_APPOINTMENT: 'pakeitė vizitą',
       CANCELLED_APPOINTMENT: 'atšaukė vizitą',
+      CREATED_ATTACHMENT: 'prisegė failą prie medicininio įrašo',
+      DELETED_ATTACHMENT: 'pašalino failą iš medicininio įrašo',
       OWNER_ACCESS_REVOKED: 'atšaukėte klinikos prieigą',
       fallback: 'atliko veiksmą su augintinio duomenimis',
     },
@@ -337,6 +339,9 @@ const lt = {
     count_other: '{{count}} priminimų',
   },
   health: {
+    attachmentsTitle: 'Priedai ({{count}})',
+    downloadAttachment: 'Atsisiųsti {{name}}',
+    attachmentDownloadFailed: 'Failo atsisiųsti nepavyko. Bandykite dar kartą.',
     medicalRecords: 'Medicininiai įrašai',
     medicalRecordsDesc: 'Vizitų pastabos ir diagnozės šiam augintiniui.',
     addMedicalRecord: 'Pridėti įrašą',
@@ -483,6 +488,7 @@ const lt = {
     comingSoon: 'Netrukus',
   },
   passport: {
+    attachments: 'Priedai',
     download: 'Sveikatos pasas (PDF)',
     preparing: 'Ruošiamas PDF…',
     failed: 'Nepavyko sukurti sveikatos paso. Bandykite dar kartą.',

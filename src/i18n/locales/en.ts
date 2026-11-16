@@ -135,6 +135,8 @@ const en = {
       CREATED_APPOINTMENT: 'booked an appointment',
       UPDATED_APPOINTMENT: 'changed an appointment',
       CANCELLED_APPOINTMENT: 'cancelled an appointment',
+      CREATED_ATTACHMENT: 'attached a file to a medical record',
+      DELETED_ATTACHMENT: 'removed a file from a medical record',
       OWNER_ACCESS_REVOKED: 'revoked a clinic’s access',
       fallback: 'did something with your pet’s data',
     },
@@ -329,6 +331,9 @@ const en = {
     count_other: '{{count}} reminders',
   },
   health: {
+    attachmentsTitle: 'Attachments ({{count}})',
+    downloadAttachment: 'Download {{name}}',
+    attachmentDownloadFailed: 'The file could not be downloaded. Please try again.',
     medicalRecords: 'Medical records',
     medicalRecordsDesc: 'Visit notes and diagnoses for this pet.',
     addMedicalRecord: 'Add record',
@@ -467,6 +472,7 @@ const en = {
     comingSoon: 'Coming soon',
   },
   passport: {
+    attachments: 'Attachments',
     download: 'Health passport (PDF)',
     preparing: 'Preparing PDF…',
     failed: 'Could not create the health passport. Please try again.',

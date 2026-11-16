@@ -90,6 +90,10 @@ function data(overrides: Partial<PassportData> = {}): PassportData {
         type: 'Checkup',
         title: 'Annual exam',
         diagnosis: 'Healthy',
+        attachments: [
+          { id: 'a1', fileName: 'blood.pdf', contentType: 'application/pdf', size: 10, createdAt: '' },
+          { id: 'a2', fileName: 'xray.png', contentType: 'image/png', size: 10, createdAt: '' },
+        ],
         ...stamp,
       },
     ],
@@ -144,7 +148,12 @@ describe('buildPassportModel', () => {
       ['Carprofen\n50 mg · 2x per day', '2026-02-01 – health.ongoingLabel', 'active', '—'],
     ]);
     expect(table(model, 'health.medicalRecords').rows).toEqual([
-      ['Annual exam\nhealth.diagnosis: Healthy', '2026-04-01', 'Checkup', '—'],
+      [
+        'Annual exam\nhealth.diagnosis: Healthy\npassport.attachments: blood.pdf, xray.png',
+        '2026-04-01',
+        'Checkup',
+        '—',
+      ],
     ]);
     expect(table(model, 'clinicAccess.clinicsTitle').rows).toEqual([
       ['Ąžuolo klinika', 'Vilnius', '—', '2026-01-05'],

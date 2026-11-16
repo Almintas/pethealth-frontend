@@ -12,6 +12,14 @@ export const MEDICAL_RECORD_FIELDS = gql`
     veterinarianName
     clinicName
     notes
+    attachments {
+      id
+      fileName
+      contentType
+      size
+      clinicName
+      createdAt
+    }
     createdAt
     updatedAt
   }

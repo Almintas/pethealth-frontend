@@ -1,3 +1,12 @@
+export type MedicalRecordAttachment = {
+  id: string;
+  fileName: string;
+  contentType: string;
+  size: number;
+  clinicName?: string | null;
+  createdAt: string;
+};
+
 export type MedicalRecord = {
   id: string;
   petId: string;
@@ -9,6 +18,8 @@ export type MedicalRecord = {
   veterinarianName?: string | null;
   clinicName?: string | null;
   notes?: string | null;
+  /** Files a clinic attached (lab results, X-rays…). */
+  attachments?: MedicalRecordAttachment[];
   createdAt: string;
   updatedAt: string;
 };

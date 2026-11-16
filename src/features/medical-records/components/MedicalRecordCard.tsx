@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { formatPetDate } from '../../pets/utils/format-pet-date';
 import type { MedicalRecord } from '../types';
+import { MedicalRecordAttachmentList } from './MedicalRecordAttachmentList';
 
 const LONG_TEXT_THRESHOLD = 140;
 
@@ -105,6 +106,11 @@ export function MedicalRecordCard({
             </p>
           )
         ) : null}
+
+        <MedicalRecordAttachmentList
+          recordId={record.id}
+          attachments={record.attachments ?? []}
+        />
 
         {onDelete ? (
         <div className="medical-records-section__record-actions">

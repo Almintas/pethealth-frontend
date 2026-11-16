@@ -142,6 +142,11 @@ export function buildPassportModel(
         row.title,
         row.diagnosis ? `${t('health.diagnosis')}: ${row.diagnosis}` : null,
         row.description,
+        row.attachments?.length
+          ? `${t('passport.attachments')}: ${row.attachments
+              .map((attachment) => attachment.fileName)
+              .join(', ')}`
+          : null,
       ),
       format.date(row.date),
       row.type.trim() || DASH,
