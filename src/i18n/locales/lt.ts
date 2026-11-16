@@ -141,6 +141,8 @@ const lt = {
       DELETED_ATTACHMENT: 'pašalino failą iš medicininio įrašo',
       CREATED_REMINDER: 'nustatė jums priminimą',
       DELETED_REMINDER: 'pašalino priminimą',
+      MICROCHIP_LOOKUP_PATIENT: 'ieškojo jūsų augintinio pagal mikroschemą',
+      OWNER_NOTIFIED_PATIENT: 'pranešė, kad jūsų augintinis yra pas juos (el. laišku)',
       OWNER_ACCESS_REVOKED: 'atšaukėte klinikos prieigą',
       fallback: 'atliko veiksmą su augintinio duomenimis',
     },

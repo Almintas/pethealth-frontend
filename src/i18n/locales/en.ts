@@ -139,6 +139,8 @@ const en = {
       DELETED_ATTACHMENT: 'removed a file from a medical record',
       CREATED_REMINDER: 'set a reminder for you',
       DELETED_REMINDER: 'removed a reminder',
+      MICROCHIP_LOOKUP_PATIENT: 'looked your pet up by its microchip',
+      OWNER_NOTIFIED_PATIENT: 'let you know your pet is with them (email)',
       OWNER_ACCESS_REVOKED: 'revoked a clinic’s access',
       fallback: 'did something with your pet’s data',
     },
