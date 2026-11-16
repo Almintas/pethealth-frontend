@@ -13,6 +13,7 @@ import { ClinicAccessSection, PetActivitySection } from '../../clinic-access';
 import { RemindersSection } from '../../reminders';
 import { MedicalRecordsSection } from '../../medical-records';
 import { MedicationsSection } from '../../medications';
+import { PetPassportButton } from '../../pet-passport';
 import { VaccinationsSection } from '../../vaccinations';
 import { PetForm } from '../components/PetForm';
 import { PetProfilePhotoControls } from '../components/PetProfilePhotoControls';
@@ -61,6 +62,7 @@ export function PetDetailsPage() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [passportError, setPassportError] = useState<string | null>(null);
   const [retryNonce, setRetryNonce] = useState(0);
 
   useEffect(() => {
@@ -251,6 +253,11 @@ export function PetDetailsPage() {
             </div>
 
             <div className="pet-details__actions">
+              <PetPassportButton
+                pet={pet}
+                disabled={isDeleting || isEditing}
+                onError={setPassportError}
+              />
               {!isEditing ? (
                 <button
                   type="button"
@@ -275,6 +282,8 @@ export function PetDetailsPage() {
               </button>
             </div>
           </header>
+
+          {passportError ? <ErrorAlert message={passportError} compact /> : null}
 
           {isEditing ? (
             <div
