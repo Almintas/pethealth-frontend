@@ -23,6 +23,15 @@ export const SourceType = {
 
 export type SourceType = (typeof SourceType)[keyof typeof SourceType];
 
+export const ReminderManagedBy = {
+  Owner: 'OWNER',
+  Clinic: 'CLINIC',
+  Automatic: 'AUTOMATIC',
+} as const;
+
+export type ReminderManagedBy =
+  (typeof ReminderManagedBy)[keyof typeof ReminderManagedBy];
+
 export type Reminder = {
   id: string;
   petId: string;
@@ -33,6 +42,10 @@ export type Reminder = {
   status: ReminderStatus;
   sourceType?: SourceType | null;
   sourceId?: string | null;
+  /** OWNER reminders can be edited; CLINIC and AUTOMATIC ones only completed or dismissed. */
+  managedBy?: ReminderManagedBy | null;
+  clinicName?: string | null;
+  createdByName?: string | null;
   createdAt: string;
   updatedAt: string;
 };

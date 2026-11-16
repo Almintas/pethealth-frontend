@@ -12,6 +12,8 @@ export type Appointment = {
   petId: string;
   scheduledAt: string;
   type: string;
+  /** Set when a clinic scheduled it; such appointments are read-only here. */
+  vetClinicId?: string | null;
   clinicName?: string | null;
   veterinarianName?: string | null;
   reason?: string | null;

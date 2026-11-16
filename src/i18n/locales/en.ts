@@ -137,6 +137,8 @@ const en = {
       CANCELLED_APPOINTMENT: 'cancelled an appointment',
       CREATED_ATTACHMENT: 'attached a file to a medical record',
       DELETED_ATTACHMENT: 'removed a file from a medical record',
+      CREATED_REMINDER: 'set a reminder for you',
+      DELETED_REMINDER: 'removed a reminder',
       OWNER_ACCESS_REVOKED: 'revoked a clinic’s access',
       fallback: 'did something with your pet’s data',
     },
@@ -284,6 +286,8 @@ const en = {
     remove: 'Remove',
   },
   appointments: {
+    scheduledByClinic: 'Scheduled by the clinic',
+    clinicManagedHint: 'To change or cancel this appointment, contact the clinic.',
     title: 'Appointments',
     description: 'Veterinary visits and check-ups for this pet.',
     add: 'Add appointment',
@@ -308,6 +312,8 @@ const en = {
     editTitle: 'Edit appointment',
   },
   reminders: {
+    fromClinic: 'From {{clinic}}',
+    automaticFromVaccination: 'Automatic, from the vaccination record',
     title: 'Reminders',
     description: 'Medication, vaccination, and general reminders.',
     add: 'Add reminder',

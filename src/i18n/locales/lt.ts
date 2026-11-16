@@ -139,6 +139,8 @@ const lt = {
       CANCELLED_APPOINTMENT: 'atšaukė vizitą',
       CREATED_ATTACHMENT: 'prisegė failą prie medicininio įrašo',
       DELETED_ATTACHMENT: 'pašalino failą iš medicininio įrašo',
+      CREATED_REMINDER: 'nustatė jums priminimą',
+      DELETED_REMINDER: 'pašalino priminimą',
       OWNER_ACCESS_REVOKED: 'atšaukėte klinikos prieigą',
       fallback: 'atliko veiksmą su augintinio duomenimis',
     },
@@ -286,6 +288,8 @@ const lt = {
     remove: 'Pašalinti',
   },
   appointments: {
+    scheduledByClinic: 'Suplanavo klinika',
+    clinicManagedHint: 'Norėdami pakeisti ar atšaukti šį vizitą, susisiekite su klinika.',
     title: 'Vizitai',
     description: 'Veterinariniai vizitai ir patikros šiam augintiniui.',
     add: 'Pridėti vizitą',
@@ -314,6 +318,8 @@ const lt = {
     editTitle: 'Redaguoti vizitą',
   },
   reminders: {
+    fromClinic: 'Nustatė {{clinic}}',
+    automaticFromVaccination: 'Automatinis, pagal skiepų įrašą',
     title: 'Priminimai',
     description: 'Vaistų, skiepų ir kiti priminimai.',
     add: 'Pridėti priminimą',

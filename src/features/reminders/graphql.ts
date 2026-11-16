@@ -11,6 +11,9 @@ export const REMINDER_FIELDS = gql`
     status
     sourceType
     sourceId
+    managedBy
+    clinicName
+    createdByName
     createdAt
     updatedAt
   }

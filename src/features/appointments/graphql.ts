@@ -6,6 +6,7 @@ export const APPOINTMENT_FIELDS = gql`
     petId
     scheduledAt
     type
+    vetClinicId
     clinicName
     veterinarianName
     reason

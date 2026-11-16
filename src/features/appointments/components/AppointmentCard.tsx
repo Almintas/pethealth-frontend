@@ -50,6 +50,8 @@ export function AppointmentCard({
   const notesAreLong = notes.length > LONG_TEXT_THRESHOLD;
   const statusKey = statusModifier(appointment.status);
   const typeLabel = appointmentType(normalizeAppointmentTypeValue(appointment.type));
+  // Scheduled by a clinic: only the clinic can change or cancel it.
+  const clinicManaged = Boolean(appointment.vetClinicId);
 
   const handleDeleteClick = () => {
     if (!confirmDelete) {
@@ -114,6 +116,11 @@ export function AppointmentCard({
           >
             {appointmentStatus(appointment.status)}
           </span>
+          {clinicManaged ? (
+            <span className="appointments-section__clinic-badge">
+              {t('appointments.scheduledByClinic')}
+            </span>
+          ) : null}
         </div>
 
         <dl className="appointments-section__record-facts">
@@ -163,6 +170,11 @@ export function AppointmentCard({
           )
         ) : null}
 
+        {clinicManaged ? (
+          <p className="appointments-section__clinic-note">
+            {t('appointments.clinicManagedHint')}
+          </p>
+        ) : (
         <div className="appointments-section__record-actions">
           <button
             type="button"
@@ -203,6 +215,7 @@ export function AppointmentCard({
             </button>
           )}
         </div>
+        )}
       </article>
     </li>
   );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useEnumLabels } from '../../../i18n/useEnumLabels';
-import { ReminderStatus, type Reminder } from '../types';
+import { ReminderManagedBy, ReminderStatus, type Reminder } from '../types';
 import {
   formatReminderDate,
   formatReminderTime,
@@ -62,6 +62,19 @@ export function ReminderCard({
   const dueUrgencyLabel = getReminderDueUrgencyLabel(dueUrgency);
   const sourceLabel = formatReminderSource(reminder);
   const isPending = reminder.status === ReminderStatus.Pending;
+  // Reminders from a clinic or a clinic record: complete or dismiss only.
+  const ownerManaged =
+    (reminder.managedBy ?? ReminderManagedBy.Owner) === ReminderManagedBy.Owner;
+  const originLabel =
+    reminder.managedBy === ReminderManagedBy.Clinic
+      ? t('reminders.fromClinic', {
+          clinic: [reminder.clinicName, reminder.createdByName]
+            .filter(Boolean)
+            .join(' · '),
+        })
+      : reminder.managedBy === ReminderManagedBy.Automatic
+        ? t('reminders.automaticFromVaccination')
+        : null;
 
   const isCompleting = isActionRunning && pendingAction === 'complete';
   const isDismissing = isActionRunning && pendingAction === 'dismiss';
@@ -127,8 +140,11 @@ export function ReminderCard({
           <span className="reminders-section__type-chip">
             {reminderType(reminder.type)}
           </span>
-          {sourceLabel ? (
+          {sourceLabel && ownerManaged ? (
             <span className="reminders-section__source-chip">{sourceLabel}</span>
+          ) : null}
+          {originLabel ? (
+            <span className="reminders-section__origin-chip">{originLabel}</span>
           ) : null}
         </div>
 
@@ -179,14 +195,16 @@ export function ReminderCard({
 
         {isPending ? (
           <div className="reminders-section__record-actions">
-            <button
-              type="button"
-              className="reminders-section__edit ph-btn ph-btn--secondary"
-              onClick={onEdit}
-              disabled={isActionRunning}
-            >
-              {t('common.edit')}
-            </button>
+            {ownerManaged ? (
+              <button
+                type="button"
+                className="reminders-section__edit ph-btn ph-btn--secondary"
+                onClick={onEdit}
+                disabled={isActionRunning}
+              >
+                {t('common.edit')}
+              </button>
+            ) : null}
             <button
               type="button"
               className="reminders-section__action reminders-section__action--complete"
@@ -203,7 +221,7 @@ export function ReminderCard({
             >
               {isDismissing ? t('common.saving') : t('reminders.dismiss')}
             </button>
-            {confirmDelete ? (
+            {!ownerManaged ? null : confirmDelete ? (
               <div className="reminders-section__delete-confirm" role="status">
                 <span>{t('reminders.deleteConfirm')}</span>
                 <button
@@ -234,7 +252,7 @@ export function ReminderCard({
               </button>
             )}
           </div>
-        ) : (
+        ) : ownerManaged ? (
           <div className="reminders-section__record-actions">
             <button
               type="button"
@@ -275,7 +293,7 @@ export function ReminderCard({
               </button>
             )}
           </div>
-        )}
+        ) : null}
       </article>
     </li>
   );

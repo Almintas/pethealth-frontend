@@ -574,3 +574,21 @@
   outline: 2px solid var(--apt-accent);
   outline-offset: 2px;
 }
+
+/* Appointments a clinic scheduled: shown read-only */
+.appointments-section__clinic-badge {
+  flex-shrink: 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--apt-accent);
+  background: var(--apt-accent-soft);
+  border: 1px solid var(--apt-accent);
+}
+
+.appointments-section__clinic-note {
+  margin: 0.75rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--ph-color-text-muted);
+}
